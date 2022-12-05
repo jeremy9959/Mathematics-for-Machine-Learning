@@ -1,0 +1,26 @@
+{
+  "index.qmd": {
+    "index.html": "153110de"
+  },
+  "chapters/01-linear-regression.md": {
+    "01-linear-regression.html": "6b5cca4c"
+  },
+  "chapters/02-pca.md": {
+    "02-pca.html": "cd713f87"
+  },
+  "chapters/03-probability.md": {
+    "03-probability.html": "9cc69789"
+  },
+  "chapters/04-naive-bayes.md": {
+    "04-naive-bayes.html": "98164961"
+  },
+  "chapters/05-logistic-regression.md": {
+    "05-logistic-regression.html": "eea9916e"
+  },
+  "chapters/06-svm.md": {
+    "06-svm.html": "85e07cb6"
+  },
+  "chapters/20-references.md": {
+    "20-references.html": "6c57f4be"
+  }
+}

@@ -1,0 +1,37 @@
+project:
+  type: book
+
+book:
+  title: "Lectures on Machine Learning"
+  author: "Jeremy Teitelbaum"
+  date: "12/1/2022"
+  chapters:
+    - index.qmd
+    - chapters/01-linear-regression.md
+    - chapters/02-pca.md
+    - chapters/03-probability.md
+    - chapters/04-naive-bayes.md
+    - chapters/05-logistic-regression.md
+    - chapters/06-svm.md
+    - chapters/20-references.md
+
+bibliography: references/references.bib
+
+reference-section-title: References
+csl: references/stat.csl
+
+
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+    include-in-header: 
+      - text: |
+          \usepackage{listings}
+      - file: chapters/macros.tex
+      
+
+
+

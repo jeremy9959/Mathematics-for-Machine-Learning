@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lectures on Machine Learning - 5&nbsp; Logistic Regression</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/06-svm.html" rel="next">
+<link href="../chapters/04-naive-bayes.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Logistic Regression</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Lectures on Machine Learning</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-linear-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-pca.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-probability.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Probability and Bayes Theorem</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-naive-bayes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-logistic-regression.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Logistic Regression</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#likelihood-and-logistic-regression" id="toc-likelihood-and-logistic-regression" class="nav-link active" data-scroll-target="#likelihood-and-logistic-regression"><span class="toc-section-number">5.1</span>  Likelihood and Logistic Regression</a>
+  <ul class="collapse">
+  <li><a href="#another-point-of-view-on-logistic-regression" id="toc-another-point-of-view-on-logistic-regression" class="nav-link" data-scroll-target="#another-point-of-view-on-logistic-regression"><span class="toc-section-number">5.1.1</span>  Another point of view on logistic regression</a></li>
+  <li><a href="#logistic-regression-with-multiple-features" id="toc-logistic-regression-with-multiple-features" class="nav-link" data-scroll-target="#logistic-regression-with-multiple-features"><span class="toc-section-number">5.1.2</span>  Logistic regression with multiple features</a></li>
+  </ul></li>
+  <li><a href="#finding-the-maximum-likelihood-solution-by-gradient-descent" id="toc-finding-the-maximum-likelihood-solution-by-gradient-descent" class="nav-link" data-scroll-target="#finding-the-maximum-likelihood-solution-by-gradient-descent"><span class="toc-section-number">5.2</span>  Finding the maximum likelihood solution by gradient descent</a>
+  <ul class="collapse">
+  <li><a href="#gradient-descent" id="toc-gradient-descent" class="nav-link" data-scroll-target="#gradient-descent"><span class="toc-section-number">5.2.1</span>  Gradient descent</a></li>
+  </ul></li>
+  <li><a href="#gradient-descent-and-logistic-regression" id="toc-gradient-descent-and-logistic-regression" class="nav-link" data-scroll-target="#gradient-descent-and-logistic-regression"><span class="toc-section-number">5.3</span>  Gradient Descent and Logistic Regression</a>
+  <ul class="collapse">
+  <li><a href="#gradient-descent-on-our-synthetic-data" id="toc-gradient-descent-on-our-synthetic-data" class="nav-link" data-scroll-target="#gradient-descent-on-our-synthetic-data"><span class="toc-section-number">5.3.1</span>  Gradient Descent on our synthetic data</a></li>
+  <li><a href="#gradient-descent-and-logistic-regression-on-real-data" id="toc-gradient-descent-and-logistic-regression-on-real-data" class="nav-link" data-scroll-target="#gradient-descent-and-logistic-regression-on-real-data"><span class="toc-section-number">5.3.2</span>  Gradient Descent and Logistic Regression on “real” data</a></li>
+  </ul></li>
+  <li><a href="#logistic-regression-and-classification" id="toc-logistic-regression-and-classification" class="nav-link" data-scroll-target="#logistic-regression-and-classification"><span class="toc-section-number">5.4</span>  Logistic Regression and classification</a>
+  <ul class="collapse">
+  <li><a href="#weights-as-filters" id="toc-weights-as-filters" class="nav-link" data-scroll-target="#weights-as-filters"><span class="toc-section-number">5.4.1</span>  Weights as filters</a></li>
+  </ul></li>
+  <li><a href="#multiclass-logistic-regression" id="toc-multiclass-logistic-regression" class="nav-link" data-scroll-target="#multiclass-logistic-regression"><span class="toc-section-number">5.5</span>  Multiclass Logistic Regression</a>
+  <ul class="collapse">
+  <li><a href="#multiclass-logistic-regression---the-likelihood" id="toc-multiclass-logistic-regression---the-likelihood" class="nav-link" data-scroll-target="#multiclass-logistic-regression---the-likelihood"><span class="toc-section-number">5.5.1</span>  Multiclass logistic regression - the likelihood</a></li>
+  <li><a href="#multiclass-logistic-regression---the-gradient." id="toc-multiclass-logistic-regression---the-gradient." class="nav-link" data-scroll-target="#multiclass-logistic-regression---the-gradient."><span class="toc-section-number">5.5.2</span>  Multiclass logistic regression - the gradient.</a></li>
+  </ul></li>
+  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Logistic Regression</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Suppose that we are trying to convince customers to buy our product by showing them advertising. Our experience teaches us that there is no deterministic relationship between how often a potential customer sees one of our ads and whether or not they purchase our product, nevertheless it is the case that as they see more ads they become more likely to make a purchase. Logistic regression is a statistical model that can capture the essence of this idea.</p>
+<p>To make this problem more abstract, let’s imagine that we are trying to model a random event that depends on a parameter. As in our introduction above, the random event might be a user deciding to make a purchase from a website, which, in our very simple model, depends on how many times the user saw an advertisement for the product in question. But we could imagine other situations where the chance of an event happening depends on a paramter. For example, we could imagine that a student’s score on a certain test depends on how much studying they do, with the likelihood of passing the test increasing with the amount of studying.</p>
+<p>To construct this model, we assume that the probability of a certain event <span class="math inline">\(p\)</span> is related to some parameter <span class="math inline">\(x\)</span> by the following relationship:</p>
+<p><span id="eq-logistic_1"><span class="math display">\[
+\log\frac{p}{1-p} = ax+b
+\tag{5.1}\]</span></span></p>
+<p>where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are constants. The quantity <span class="math inline">\(\frac{p}{1-p}\)</span> is the “odds” of the event occurring. We often use this quantity colloquially; if the chance of our team winning a football game is <span class="math inline">\(1\)</span> in <span class="math inline">\(3\)</span>, then we would say the odds of a win are <span class="math inline">\(1\)</span>-to-<span class="math inline">\(2\)</span>, which we can interpret as meaning they are twice as likely to lose as to win. The quantity <span class="math inline">\(\log\frac{p}{1-p}\)</span> is, for obvious reasons, called the log-odds of the event.</p>
+<p>The assumption in <a href="#eq-logistic_1">Equation&nbsp;<span>5.1</span></a> can be written <span class="math display">\[
+\frac{p}{1-p} = e^{ax+b}
+\]</span> and we interpret this as telling us that if the parameter <span class="math inline">\(x\)</span> increases by <span class="math inline">\(1\)</span>, the odds of our event happening go up by a factor of <span class="math inline">\(e^{a}\)</span>. So, to be even more concrete, if <span class="math inline">\(a=\log 2\)</span>, then our logistic model would say that an increase of <span class="math inline">\(1\)</span> in our parameter <span class="math inline">\(x\)</span> doubles the odds of our event taking place.</p>
+<p>In terms of the probability <span class="math inline">\(p\)</span>, <a href="#eq-logistic_1">Equation&nbsp;<span>5.1</span></a> can be rewritten <span class="math display">\[
+p = \frac{1}{1+e^{-ax-b}}
+\]</span> This proposed relationship between the probability <span class="math inline">\(p\)</span> and the parameter <span class="math inline">\(x\)</span> is called the <em>logistic model.</em> The function <span class="math display">\[
+\sigma(x) = \frac{1}{1+e^{-x}}
+\]</span> is called the <em>logistic function</em> and yields an S-shaped curve.</p>
+<div id="fig-logistic_curve" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/logistic_curve.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.1: Logistic Curve</figcaption><p></p>
+</figure>
+</div>
+<p>To fully put the logistic model in perspective, let’s choose some explicit parameters and look at what data arising from such a model would look like. Imagine therefore that <span class="math inline">\(a=\log 2\)</span> and <span class="math inline">\(b=0\)</span>, so that the probability of the event we are interested occurring is given by the formula <span class="math display">\[
+p(x) = \frac{1}{1+e^{-(\log 2)x}} = \frac{1}{1+(.5)^x}.
+\]</span> Our data consists of counts of how often our event happened for a range of values of <span class="math inline">\(x\)</span>. To generate this data, we can pick <span class="math inline">\(x\)</span> values from the set <span class="math inline">\(\{-3,-2,-1,0,1,2,3\}\)</span> yielding probabilities <span class="math inline">\(\{.11,.2,.33,.4,.56,.67,.8\}\)</span>. Now our data consists of, for each value of <span class="math inline">\(x\)</span>, the result of <span class="math inline">\(100\)</span> independent Bernoulli trials with probability <span class="math inline">\(p(x)\)</span>. For example, we might find that our event occurred <span class="math inline">\(\{10, 18, 38, 50, 69, 78, 86\}\)</span> times respectively for each of the <span class="math inline">\(x\)</span> values.</p>
+<section id="likelihood-and-logistic-regression" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="likelihood-and-logistic-regression"><span class="header-section-number">5.1</span> Likelihood and Logistic Regression</h2>
+<p>In applications, our goal is to choose the parameters of a logistic model to accurately predict the likelihood of the event under study occurring as a function of the measured parameter. Let’s imagine that we collected the data that we generated above, without knowing that it’s source was a logistic model. So <a href="#tbl-logistic_data">Table&nbsp;<span>5.1</span></a> shows the number of times the event occurred, for each of the measured values of the <span class="math inline">\(x\)</span> parameter.</p>
+<div id="tbl-logistic_data" class="anchored">
+<table class="table">
+<caption>Table&nbsp;5.1: Sample Data</caption>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(x\)</span></th>
+<th>-3</th>
+<th>-2</th>
+<th>-1</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Occurrences (out of 100)</td>
+<td>10</td>
+<td>18</td>
+<td>38</td>
+<td>50</td>
+<td>69</td>
+<td>78</td>
+<td>86</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Our objective now is to find a logistic model which best explains this data. Concretely, we need to estimate the coefficients <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> that yield <span id="eq-logistic_a_b"><span class="math display">\[
+p(x) = \frac{1}{1+e^{-ax-b}}
+\tag{5.2}\]</span></span></p>
+<p>where the resulting probabilities best estimate the data. As we have seen, this notion of “best” can have different interpretations. For example, we could approach this from a Bayesian point of view, adopt a prior distribution on the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, and use the data to obtain this prior and obtain a posterior distribution on <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. For this first look at logistic regression, we will instead adopt a “maximum likelihood” notion of “best” and ask what is the most likely choice of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> to yield this data.</p>
+<p>To apply the maximum likelihood approach, we need to ask “for (fixed, but unknown) values of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, what is the likelihood that a logistic model with those parameters would yield the data we have collected?” Each column in <a href="#tbl-logistic_data">Table&nbsp;<span>5.1</span></a> represents <span class="math inline">\(100\)</span> Bernoulli trials with a fixed probability <span class="math inline">\(p(x)\)</span>. So, for example, the chance <span class="math inline">\(q\)</span> of obtaining <span class="math inline">\(10\)</span> positive results with <span class="math inline">\(x=-3\)</span> is given by <span class="math display">\[
+q(-3)=C p(-3)^{10}(1-p(-3))^{90}
+\]</span> where <span class="math inline">\(C\)</span> is a constant (it would be a binomial coefficient). Combining this for different values of <span class="math inline">\(x\)</span>, we see that the likelihood of the data is the product <span class="math display">\[
+L(a,b) = C' p(-3)^{10}(1-p(-3))^{90}p(-2)^{18}(1-p(-2))^{82}\cdots p(3)^{86}(1-p(3))^{14}
+\]</span> where <span class="math inline">\(C'\)</span> is another constant. Each <span class="math inline">\(p(x)\)</span> is a function of the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, so all together this is a function of those two parameters. Our goal is to maximize it.</p>
+<p>One step that simplifies matters is to consider the logarithm of the likelihood: <span class="math display">\[
+\log L (a,b)= \sum_{i=0}^{6} \left[ x_{i}\log(p(x_{i})) + (100-x_{i})\log(1-p(x_{i}))\right] +C''
+\]</span> where <span class="math inline">\(C''\)</span> is yet another constant. Since our ultimate goal is to maximize this, the value of <span class="math inline">\(C''\)</span> is irrelevant and we can drop it.</p>
+<section id="another-point-of-view-on-logistic-regression" class="level3" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="another-point-of-view-on-logistic-regression"><span class="header-section-number">5.1.1</span> Another point of view on logistic regression</h3>
+<p>In <a href="#tbl-logistic_data">Table&nbsp;<span>5.1</span></a> we summarize the results of our experiments in groups by the value of the <span class="math inline">\(x\)</span> parameter. We can think of the data somewhat differently, by instead considering each event separately, corresponding to a parameter value <span class="math inline">\(x\)</span> and an outcome <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>. From this point of view the data summarized in <a href="#tbl-logistic_data">Table&nbsp;<span>5.1</span></a> would correspond to a vector with <span class="math inline">\(700\)</span> rows. The first <span class="math inline">\(100\)</span> rows (corresponding to the first column of the table) would have first entry <span class="math inline">\(-3\)</span>, the next <span class="math inline">\(100\)</span> would have <span class="math inline">\(-2\)</span>, or so on. So our parameter values form a vector <span class="math inline">\(X\)</span>. Meanwhile, the outcomes form a vector <span class="math inline">\(Y\)</span> with entries <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>.</p>
+<p>More generally, imagine we are studying our advertising data and, for each potential customer, we record how many times they saw our ad. We create a vector <span class="math inline">\(X\)</span> whose entries are these numbers. Then we create another vector <span class="math inline">\(Y\)</span>, of the same length, whose entries are either <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span> depending of whether or not the customer purchased our product.</p>
+<p>One way to think about logistic regression in this setting is that we are trying to fit a function that, given the value <span class="math inline">\(x_i\)</span>, tries to yield the corresponding value <span class="math inline">\(y_i\)</span>. However, instead of finding a deterministic function, as we did in linear regression, instead we try to fit a logistic function that captures the likelihood that the <span class="math inline">\(y\)</span>-value is a <span class="math inline">\(1\)</span> given the <span class="math inline">\(x\)</span>-value. This “curve-fitting perspective” is why this is considered a regression problem.</p>
+<p>If, as above, we think of each row of the matrix as an independent trial, then the chance that <span class="math inline">\(y_i=1\)</span> is <span class="math inline">\(p(x_i)\)</span> and the chance that <span class="math inline">\(y_i=0\)</span> is <span class="math inline">\(1-p(x_i)\)</span>, where <span class="math inline">\(p(x)\)</span> is given by the logistic function as in <a href="#eq-logistic_a_b">Equation&nbsp;<span>5.2</span></a>. The likelihood of the results we obtained is therefore: <span class="math display">\[
+L(a,b) = C \prod_{i=0}^{N-1} p(x_i)^{y_i}(1-p(x_i))^{(1-y_i)}
+\]</span> where <span class="math inline">\(C\)</span> is a constant and we are exploiting the trick that, since <span class="math inline">\(y_i\)</span> is either zero or one, <span class="math inline">\(1-y_i\)</span> is correspondingly one or zero. Thus only <span class="math inline">\(p(x_i)\)</span> or <span class="math inline">\(1-p(x_i)\)</span> occurs in each term of the product. If we group the terms according to <span class="math inline">\(x_i\)</span> we obtain our earlier formula for <span class="math inline">\(L(a,b)\)</span>.</p>
+<p>This expresssion yields an apparently similar formula for the log-likelihood (up to an irrelevant constant): <span class="math display">\[
+\log L(X,a,b) = \sum_{i=0}^{N-1} y_i\log p(x_i) + (1-y_i)\log (1-p(x_i)).
+\]</span> Using vector notation, this can be further simplified, where again we drop irrelevant constants: <span class="math display">\[
+\log L(X,a,b) = Y\cdot\log p(X) + (1-Y)\cdot \log(1-p(X)).
+\]</span> To be absolutely concrete, in this formula, <span class="math inline">\(p(X)\)</span> is a vector <span class="math display">\[
+p(X)=[p(x_i)]_{i=0}^{N-1} = \left[\frac{1}{1+e^{-ax_i-b}} \right]_{i=0}^{N-1}
+\]</span> so its entries are functions of the unknown parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>.</p>
+<p>We might naively try to maximize this by taking the derivatives with respect to <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> and setting them to zero, but this turns out to be impractical. So we need a different approach to finding the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> which maximize this likelihood function. We will return to this problem later, but before we do so we will look at some generalizations and broader applications of the logistic model.</p>
+</section>
+<section id="logistic-regression-with-multiple-features" class="level3" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="logistic-regression-with-multiple-features"><span class="header-section-number">5.1.2</span> Logistic regression with multiple features</h3>
+<p>The next generalization we can consider of the logistic model is the situation where the log-odds of our event of interest depend linearly on multiple parameters. In other words, we have <span class="math display">\[
+\log\frac{p}{1-p} = m_0 x_0 + m_1 x _1 + \cdots + m_{k-1} x_{k-1} + b
+\]</span> where the <span class="math inline">\(a_i\)</span> and <span class="math inline">\(b\)</span> are constants. Under this model, notice that <em>the incremental effects of changes to the different parameters <span class="math inline">\(x_i\)</span> have independent effects on the probability.</em> So, for example, if <span class="math inline">\(x_1\)</span> were the number of times our potential customer saw an online advertisement and <span class="math inline">\(x_2\)</span> were the number of times they saw a print advertisement, by adopting this model we are assuming that the impact of seeing more online ads is completely unrelated to the impact of seeing more print ads.</p>
+<p>The probability is again given by a sigmoid function <span class="math display">\[
+p(x_1,\ldots, x_k) = \frac{1}{1+e^{-\sum_{i=0}^{k-1} m_i x_i +b}}
+\]</span></p>
+<p>This model has an <span class="math inline">\(N\times k\)</span> feature matrix whose rows are the values <span class="math inline">\(x_0,\ldots, x_{k-1}\)</span> for each sample. The outcome of our experimemt is recorded in an <span class="math inline">\(N\times 1\)</span> column vector <span class="math inline">\(Y\)</span> whose entries are <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>. The likelihood function is formally equivalent to what we computed in the case of a single feature, but it will be useful to be a bit careful about vector notation.</p>
+<p>Following the same pattern we adopted for linear regression, let <span class="math inline">\(X\)</span> be the <span class="math inline">\(N\times (k+1)\)</span> matrix whose first <span class="math inline">\(k\)</span> columns contain the values <span class="math inline">\(x_i\)</span> for each sample, and whose last column is all <span class="math inline">\(1\)</span>. Rename the “intercept” variable as <span class="math inline">\(a_{k+1}\)</span> and organize these parameters into a <span class="math inline">\((k+1)\times 1\)</span> matrix <span class="math inline">\(M\)</span>. Then <span class="math display">\[
+p(X)=\sigma(XM)
+\]</span> and our likelihood becomes <span id="eq-logisticregressionlikelihood"><span class="math display">\[
+\log L(M) = Y\cdot \log\sigma(XM) + (1-Y)\cdot(1-\log\sigma(XM)).
+\tag{5.3}\]</span></span></p>
+</section>
+</section>
+<section id="finding-the-maximum-likelihood-solution-by-gradient-descent" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="finding-the-maximum-likelihood-solution-by-gradient-descent"><span class="header-section-number">5.2</span> Finding the maximum likelihood solution by gradient descent</h2>
+<p>Given a set of features <span class="math inline">\(X\)</span> and targets <span class="math inline">\(Y\)</span> for a logistic model, we now want to find the values <span class="math inline">\(M\)</span> so that the log-likelihood of the model for those paramters, given the data, is maximized. While in linear regression we could find a nice closed form solution to this problem, the presence of the non-linear function <span class="math inline">\(\sigma(x)\)</span> in the likelihood makes that impossible for logistic regression. Thus we need to use a numerical approximation. The most straightforward such method is called gradient descent. It is at the foundation of many numerical optimization algorithms, and so while we will develop it here for logistic regression we will have other opportunities to apply it and we will discuss it more thoroughly on its own later.</p>
+<section id="gradient-descent" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="gradient-descent"><span class="header-section-number">5.2.1</span> Gradient descent</h3>
+<p>Suppose that we have a function <span class="math inline">\(f(x_0,\ldots, x_{k-1})\)</span> and we wish to find its minimum value. To apply gradient descent, we choose an initial starting point <span class="math inline">\(c=(c_0,\ldots, c_{k-1})\)</span> and we iteratively adjust the values of <span class="math inline">\(c\)</span> so that the values <span class="math inline">\(f(c)\)</span> decrease. When we can no longer do that, we’ve found what is at least a local minimum of <span class="math inline">\(f\)</span>.</p>
+<p>How should we make these adjustments? Let us remember the idea of the <em>directional derivative</em> from multivariate calculus. The directional derivative <span class="math inline">\(D_{v}f\)</span> measures the rate of change of <span class="math inline">\(f\)</span> as one moves with velocity vector <span class="math inline">\(v\)</span> from the point <span class="math inline">\(x\)</span> and it is defined as <span class="math display">\[
+D_{v}f(x) = \frac{d}{dt}f(x+tv)|_{t=0}
+\]</span> From the chain rule, we can compute that <span class="math display">\[
+D_{v}f(x) = \sum_{i=0}^{k-1} \frac{\partial f}{\partial x_{i}}\frac{dx_{i}}{dt} = (\nabla f)\cdot v
+\]</span> where <span class="math display">\[
+\nabla f = \left[\frac{\partial f}{\partial x_{i}}\right]_{i=0}^{k-1}
+\]</span> is the gradient of <span class="math inline">\(f\)</span>. This argument yields the following result.</p>
+<p><strong>Proposition:</strong> Let <span class="math inline">\(f(x_0,\ldots, x_{k-1})\)</span> be a smooth function from <span class="math inline">\(\mathbb{R}^{k}\to\mathbb{R}\)</span>. Then for every point <span class="math inline">\(c=(c_0,\ldots, c_{k-1})\)</span>, if <span class="math inline">\(\nabla f\not=0\)</span> then <span class="math inline">\(\nabla f\)</span> is a vector pointing in the direction in which <span class="math inline">\(f\)</span> increases most rapidly, and <span class="math inline">\(-\nabla f\)</span> is a vector pointing in the direction in which <span class="math inline">\(f\)</span> decreases most rapidly. If <span class="math inline">\(\nabla f = 0\)</span>, then <span class="math inline">\(c\)</span> is a critical point of <span class="math inline">\(f\)</span>.</p>
+<p><strong>Proof:</strong> The directional derivative <span class="math inline">\(D_{v}(f)=(\nabla f)\cdot v\)</span> measures the rate of change of <span class="math inline">\(f\)</span> if we travel with velocity <span class="math inline">\(v\)</span> from a point <span class="math inline">\(x\)</span>. To remove the dependence on the magnitude of <span class="math inline">\(v\)</span> (since obviously <span class="math inline">\(f\)</span> will change more quickly if we travel more quickly in a given direction), we scale <span class="math inline">\(v\)</span> to be a unit vector. Then the dot product giving the rate is maximized when <span class="math inline">\(v\)</span> is parallel to <span class="math inline">\(\nabla f\)</span>.</p>
+<p>This observation about the gradient yields the algorithm for gradient descent.</p>
+<p><strong>Gradient Descent Algorithm:</strong> Given a function <span class="math inline">\(f:\mathbb{R}^{k}\to \mathbb{R}\)</span>, choose a point <span class="math inline">\(c^{(0)}\)</span>, a small constant <span class="math inline">\(\nu\)</span> (called the <em>learning rate</em>) and a small constant <span class="math inline">\(\epsilon\)</span> (the <em>tolerance</em>). Then iteratively compute <span class="math display">\[
+c^{(n+1)}=c^{(n)} -\nu\nabla f(c^{(n)})
+\]</span> until <span class="math inline">\(|c^{(n+1)}-c^{(n)}|&lt;\epsilon\)</span>. Then <span class="math inline">\(c^{(n+1)}\)</span> is an (approximate) critical point of <span class="math inline">\(f\)</span>.</p>
+<div id="fig-graddescentillust" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/GradientDescentIllustration.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.2: Gradient Descent</figcaption><p></p>
+</figure>
+</div>
+<p>The behavior of gradient descent is illustrated in <a href="#fig-graddescentillust">Figure&nbsp;<span>5.2</span></a> for the function <span class="math display">\[
+f(x,y) = \frac{xy}{\sigma\sqrt{2\pi}}e^{(-x^2-y^2)/2\sigma^2}
+\]</span> where <span class="math inline">\(\sigma=4\)</span>. This function has two “upward” humps and two “downward” humps. Starting on the inside slope of one of the upward humps, gradient descent finds the bottom of an adjacent “downward” hump.</p>
+<p>To get a little more perspective on gradient descent, consider the one-dimensional case, with <span class="math inline">\(f(x)=4x^3-6x^2\)</span>. This is a cubic polynomial whose graph has a local maximum and a local minimum, depicted in <a href="#fig-graddescentcubic">Figure&nbsp;<span>5.3</span></a>.</p>
+<div id="fig-graddescentcubic" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/GradDescentCubic.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.3: A cubic polynomial</figcaption><p></p>
+</figure>
+</div>
+<p>In this case the gradient is just the derivative <span class="math inline">\(f'(x)=12x^2-12x\)</span> and the iteration is <span class="math display">\[
+c^{(n+1)} = c^{(n)}-12\nu((c^{(n)})^2-c^{(n)}).
+\]</span></p>
+<p>Even from this simple example we can see the power and also the pitfalls of this method. Suppose we choose <span class="math inline">\(x_0=2\)</span>, <span class="math inline">\(\nu=.01\)</span>, and <span class="math inline">\(\epsilon=.001\)</span>. Then the iteration yields:</p>
+<div id="tbl-graddescentiters" class="anchored">
+<table class="table">
+<caption>Table&nbsp;5.2: Gradient Descent Iterations</caption>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>x</td>
+<td>2.0</td>
+<td>0.8</td>
+<td>0.896</td>
+<td>0.952</td>
+<td>0.979</td>
+<td>0.991</td>
+<td>0.997</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>As you can see, the points move quickly to the (local) minimum at <span class="math inline">\(x=1\)</span>.</p>
+<p>There are two ways (at least) that things can go wrong, however. First suppose we use <span class="math inline">\(x_0=-1\)</span>, instead of <span class="math inline">\(x_0=2\)</span>, as our first guess. Then we are on the downslope on the left side of the graph, and following the gradient quickly takes us off to <span class="math inline">\(-\infty\)</span>.</p>
+<div id="tbl-graddescentfailone" class="anchored">
+<table class="table">
+<caption>Table&nbsp;5.3: Gradient Descent Iterations (first failure mode)</caption>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>x</td>
+<td>-1.00</td>
+<td>-2.20</td>
+<td>-6.42</td>
+<td>-35.04</td>
+<td>-792.70</td>
+<td>-378296.27</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Second, suppose we choose <span class="math inline">\(x_0=2\)</span>, but choose a somewhat larger learning rate – say, <span class="math inline">\(\nu=.1\)</span>. In this case, initially things look good, but the addition of the gradient causes an overshoot which once again takes us over the hump at <span class="math inline">\(x=0\)</span> and off to <span class="math inline">\(-\infty\)</span> heading to the left.</p>
+<div id="tbl-graddescentfailetwo" class="anchored">
+<table class="table">
+<caption>Table&nbsp;5.4: Gradient Descent Iterations (second failure mode)</caption>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>x</td>
+<td>2.00</td>
+<td>-0.11</td>
+<td>-0.24</td>
+<td>-0.56</td>
+<td>-1.49</td>
+<td>-5.42</td>
+<td>-42.23</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Based on these considerations, we see that, for general functions, <em>if gradient descent converges,</em> then it will converge to a local minimum of the function. But <em>it may not converge,</em> and even if it does, we can’t conclude anything about whether we’ve reached a <em>global</em> minimum.</p>
+</section>
+</section>
+<section id="gradient-descent-and-logistic-regression" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="gradient-descent-and-logistic-regression"><span class="header-section-number">5.3</span> Gradient Descent and Logistic Regression</h2>
+<p>We can use gradient descent to find the maximum likelihood set of parameters for our logistic model. As we saw earlier, in <a href="#eq-logisticregressionlikelihood">Equation&nbsp;<span>5.3</span></a>, we have the log likelihood function <span class="math display">\[
+L(M) = Y\cdot \log\sigma(XM) + (1-Y)\cdot\log(1-\sigma(XM))
+\]</span> where <span class="math inline">\(Y\)</span> are the target <span class="math inline">\(0/1\)</span> values, <span class="math inline">\(X\)</span> is our <span class="math inline">\(N\times (k+1)\)</span> data matrix whose last column is all ones, and <span class="math inline">\(M\)</span> is the <span class="math inline">\(k+1\times 1\)</span> column vector of unknown parameters. Since gradient descent is naturally a <em>minimizing</em> algorithm, we will minimize the function <span class="math inline">\(-L(M)\)</span>.</p>
+<p>The key piece of information that we need is the gradient <span class="math inline">\(-\nabla L\)</span>, where the variables are the entries of <span class="math inline">\(M\)</span>. The complicating features is the presence of the nonlinear function <span class="math inline">\(\sigma\)</span>, so let’s start with a simple observation about this function.</p>
+<p><strong>Lemma:</strong> The logistic function <span class="math inline">\(\sigma(x)\)</span> satisfies the differential equation <span class="math display">\[
+\frac{d\sigma}{dx} = \sigma(x)(1-\sigma(x)).
+\]</span></p>
+<p><strong>Proof:</strong> Since <span class="math display">\[
+\sigma(x)= \frac{1}{1+e^{-x}},
+\]</span> <span class="math display">\[
+1-\sigma(x) = \frac{e^{-x}}{1+e^{-x}}.
+\]</span> Then we calculate <span class="math display">\[
+\frac{d\sigma}{dx}=\left(\frac{1}{(1+e^{-x})}\right)^2e^{-x} = \left(\frac{1}{1+e^{-x}}\right)
+                                                                  \left(\frac{e^{-x}}{1+e^{-x}}\right)=\sigma(x)(1-\sigma(x))
+\]</span> which is what we claimed.</p>
+<p>We apply this differential equation to compute the gradient of <span class="math inline">\(L\)</span>.</p>
+<p><strong>Proposition:</strong> The gradient <span class="math inline">\(-\nabla L(M)\)</span> is given by <span class="math display">\[
+-\nabla L(M) = (\sigma(XM)-Y)^{\intercal} X.
+\]</span> Notice that the right side of this equation yields a <span class="math inline">\(1\times (k+1)\)</span> row vector. The entries of this vector are the partial derivatives with respect to the coefficients <span class="math inline">\(m_{i}\)</span> for <span class="math inline">\(i=0,\ldots, k\)</span>.</p>
+<p><strong>Proof:</strong> This is yet another exercise in the chain rule and keeping track of indices. Let’s first look at the term <span class="math inline">\(Y\cdot \log\sigma(XM)\)</span>. Writing it out, we have <span class="math display">\[
+Y\cdot \log\sigma(XM)=\sum_{i=0}^{N-1}y_{i}\log\sigma(\sum_{j=0}^{k}x_{ij}m_{j}).
+\]</span> Applying <span class="math inline">\(\partial/\partial m_{s}\)</span> to this yields <span class="math display">\[
+\sum_{i=0}^{N-1}y_{i}(1-\sigma(\sum_{j=0}^{k}x_{ij}m_{j}))x_{is}
+\]</span> where we’ve used the chain rule and the differential equation for <span class="math inline">\(\sigma\)</span> discussed above. At the same time, we can apply <span class="math inline">\(\partial/\partial m_{s}\)</span> to the second term <span class="math inline">\((1-Y)\cdot\log(1-\sigma(XM))\)</span> and obtain <span class="math display">\[
+-\sum_{i=0}^{N-1}(1-y_{i})\sigma(\sum_{j=0}^{k}x_{ij}m_{j})x_{is}.
+\]</span> The term <span class="math inline">\(\sum_{i=0}^{N-1} y_{i}\sigma(\sum_{j=0}^{k}x_{ij}m_{j})x_{is}\)</span> cancels, yielding <span class="math display">\[
+\frac{\partial L(M)}{m_{s}} = -\sum_{i=0}^{N-1} (y_{i}-\sigma(\sum_{j=0}^{k}x_{ij}m_{j}))x_{is}.
+\]</span><br>
+Looked at properly this is our desired formula: <span class="math display">\[
+-\nabla L(M) = (\sigma(XM)-Y)^{\intercal}X.
+\]</span></p>
+<section id="gradient-descent-on-our-synthetic-data" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="gradient-descent-on-our-synthetic-data"><span class="header-section-number">5.3.1</span> Gradient Descent on our synthetic data</h3>
+<p>Now we can apply gradient descent to find a maximum likelihood logistic model for the sample data that we generated from the logistic model and reported in <a href="#tbl-logistic_data">Table&nbsp;<span>5.1</span></a>. With the probability given as <span class="math display">\[
+p(x) = \frac{1}{1+e^{-ax-b}}
+\]</span> we make an initial guess of <span class="math inline">\(a=1\)</span> and <span class="math inline">\(b=0\)</span> set a learning rate <span class="math inline">\(\nu=.001\)</span>, and run the gradient descent algorithm for <span class="math inline">\(30\)</span> iterations. We plot the negative log-likelihood for this algorithm one the left in <a href="#fig-logisticloglike">Figure&nbsp;<span>5.4</span></a>, where we see that it drops swiftly to a minimum value. The corresponding parameter values are <span class="math inline">\(a=.6717\)</span> and <span class="math inline">\(b=-.0076\)</span>, and the fit of the the corresponding logistic curve to the observed data is shown on the right in <a href="#fig-logisticloglike">Figure&nbsp;<span>5.4</span></a>.</p>
+<div id="fig-logisticloglike" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/LogisticLogLikelihoodAndFit.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.4: Max Likelihood Gradient Descent for Logistic Fitting</figcaption><p></p>
+</figure>
+</div>
+<p>The parameters used to generate the data are close to this; they were <span class="math inline">\(a=log(2)=\)</span>.6931$ and <span class="math inline">\(b=0\)</span>.</p>
+</section>
+<section id="gradient-descent-and-logistic-regression-on-real-data" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="gradient-descent-and-logistic-regression-on-real-data"><span class="header-section-number">5.3.2</span> Gradient Descent and Logistic Regression on “real” data</h3>
+<p>We conclude this first look at logistic regression and gradient descent by analyzing some simple real data. This dataset consists of about <span class="math inline">\(2200\)</span> customers who patronize a certain food store. Among the features in the data set is a field giving the total dollars spent at the store by a customer; we will study that feature and its relationship to the question of whether or not the customer accepted a special offer from the store. (see <span class="citation" data-cites="KaggleFoodData">[<a href="20-references.html#ref-KaggleFoodData" role="doc-biblioref">1</a>]</span> for the original data source).</p>
+<div id="fig-fooddataplot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/FoodDataPlot.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.5: Food Marketing Data: Histograms of Expenditures and Response</figcaption><p></p>
+</figure>
+</div>
+<p>The two plots in <a href="#fig-fooddataplot">Figure&nbsp;<span>5.5</span></a> summarize the data. The first plot is a histogram showing the amounts spent by the customers; the second shows the distribution of responses.</p>
+<p>We would like to know how expenditures increase the likelihood of customers accepting our offer. We therefore fit a logistic model to the data. The result is shown in <a href="#fig-foodlogisticfit">Figure&nbsp;<span>5.6</span></a>.</p>
+<div id="fig-foodlogisticfit" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/FoodLogisticFit.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.6: Logistic Model for Food Marketing</figcaption><p></p>
+</figure>
+</div>
+</section>
+</section>
+<section id="logistic-regression-and-classification" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="logistic-regression-and-classification"><span class="header-section-number">5.4</span> Logistic Regression and classification</h2>
+<p>Beyond the kind of probability prediction that we have discussed up to this point, logistic regression is one of the most powerful techniques for attacking the classification problem. Let’s start our discussion with a sample problem that is a simplified version of one of the most famous machine learning benchmark problems, the MNIST (Modified National Institute of Science and Technology) dataset of handwritten numerals. This dataset consists of <span class="math inline">\(60000\)</span> labelled grayscale images of handwritten digits from <span class="math inline">\(0\)</span> to <span class="math inline">\(9\)</span>. Each image is stored as a <span class="math inline">\(28x28\)</span> array of integers from <span class="math inline">\(0\)</span> to <span class="math inline">\(255\)</span>. Each cell of the array corresponds to a “pixel” in the image, and the contents of that cell is a grayscale value. See <span class="citation" data-cites="MNISTDatabase">[<a href="20-references.html#ref-MNISTDatabase" role="doc-biblioref">2</a>]</span> for the a more detailed description of how the dataset was constructed.</p>
+<p>In <a href="#fig-MNISTOne">Figure&nbsp;<span>5.7</span></a> is a picture of a handwritten “1” from the MNIST dataset.</p>
+<div id="fig-MNISTOne" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/MNISTOne.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.7: Handwritten One from MNIST</figcaption><p></p>
+</figure>
+</div>
+<p><strong>Classification Problem for MNIST:</strong> Given a <span class="math inline">\(28x28\)</span> array of grayscale values, determine which digit is represented.</p>
+<p>At first glance, this does not look like a logistic regression problem. To make the connection clearer, let’s simplify the problem and imagine that our database contains only labelled images of zeros and ones – we’ll worry about how to handle the full problem later. So now our task is to determine which images are zeros, and which are ones.</p>
+<p>Our approach will be to view each image as a vector of length <span class="math inline">\(784=28*28\)</span> by stringing the pixel values row by row into a one dimensional vector, which following our conventions yields a matrix of size <span class="math inline">\(N\times 784\)</span> where <span class="math inline">\(N\)</span> is the number of images. Since we may also need an “intercept”, we add a column of <span class="math inline">\(1\)</span>’s to our images yielding a data matrix <span class="math inline">\(X\)</span> of size <span class="math inline">\(N\times 785\)</span>. The labels <span class="math inline">\(y\)</span> form a column vector of size <span class="math inline">\(N\)</span> containing zeros and ones.</p>
+<p>We will also simplify the data but converting the gray-scale images to monochrome by converting gray levels up to <span class="math inline">\(128\)</span> as “white” and beyond <span class="math inline">\(128\)</span> as “black”.</p>
+<p>The logistic regression approach asks us to find the “best” vector <span class="math inline">\(M\)</span> so that, for a given image vector <span class="math inline">\(x\)</span> (extended by adding a one at the end), the function <span class="math display">\[
+p(x)=\frac{1}{1+e^{-xM}}
+\]</span> is close to <span class="math inline">\(1\)</span> if <span class="math inline">\(x\)</span> represents a one, and is close to zero if <span class="math inline">\(x\)</span> represents zero. Essentially we think of <span class="math inline">\(p(x)\)</span> as giving the probability that the vector <span class="math inline">\(x\)</span> represents an image of a one. If we want a definite choice, then we can set a threshold value <span class="math inline">\(p_0\)</span> and say that the image <span class="math inline">\(x\)</span> is a one if <span class="math inline">\(p(x)&gt;p_0\)</span> and zero otherwise. The natural choice of <span class="math inline">\(p_0=.5\)</span> amounts to saying that we choose the more likely of the two options under the model.</p>
+<p>Since we are applying the logistic model we are assuming:</p>
+<ul>
+<li>that the value of each pixel in the image contributes something towards the chance of the total image being one;</li>
+<li>and the different pixels have independent, and additive effects on the odds of getting a one.</li>
+</ul>
+<p>If we take this point of view, then we can ask for the vector <span class="math inline">\(M\)</span> that is <em>most likely</em> to account for the labellings, and we can use our maximum likelihood gradient descent method to find <span class="math inline">\(M\)</span>.</p>
+<p>This approach is surprisingly effective. With the MNIST zeros and ones, and the gradient descent method discussed above, one can easily find <span class="math inline">\(M\)</span> so that the logistic model predicts the correct classification with accuracy in the high 90% range.</p>
+<section id="weights-as-filters" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="weights-as-filters"><span class="header-section-number">5.4.1</span> Weights as filters</h3>
+<p>One interesting aspect of using logistic regression on images for classification is that the we can interpret the optimum set of coefficients <span class="math inline">\(M\)</span> as a kind of filter for our images. Remember that <span class="math inline">\(M\)</span> is a vector with <span class="math inline">\(785\)</span> entries, the last of which is an “intercept”.<br>
+The logistic model says that, for an image vector <span class="math inline">\(x\)</span>, the log-odds that the image is a one is given by <span class="math display">\[
+\log \frac{p}{1-p} = \sum_{i=0}^{783} M_{i}x_{i} + M_{784}.
+\]</span> This means that if the value of <span class="math inline">\(M_{i}\)</span> is positive, then large values in the <span class="math inline">\(i^{th}\)</span> pixel <em>increase</em> the chance that our image is a one; while if <span class="math inline">\(M_{i}\)</span> is negative, large values <em>decrease</em> the chance. If <span class="math inline">\(M_{i}\)</span> is negative, the reverse is true. However, the values <span class="math inline">\(x_{i}\)</span> are the gray scale “darkness” of the image, so the entries of <span class="math inline">\(M\)</span> emphasize or de-emphasize dark pixels according to whether that dark pixel is more or less likely to occur in a one compared to a zero.</p>
+<p>This observation allows us to interpret the weights <span class="math inline">\(M\)</span> as a kind of “filter” for the image. In fact, if we rescale the entries of <span class="math inline">\(M\)</span> (omitting the intercept) so that they lie between <span class="math inline">\(0\)</span> and <span class="math inline">\(255\)</span>, we can arrange them as a <span class="math inline">\(28\times 28\)</span> array and plot them as an image. The result of doing this for a selection of MNIST zeros and ones is shown on the left in <a href="#fig-weights">Figure&nbsp;<span>5.8</span></a>. The red (or positive) weights in the middle of the image tell us that if those pixels are dark, the image is more likely to be a one; the blue (or negative) weights scattered farther out tell us that if those pixels are dark, the image is more likely to be a zero.</p>
+<div id="fig-weights" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/weights.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.8: Rescaled weights (blue is negative). Top: 0 vs 1. Bottom: 3 vs 8.</figcaption><p></p>
+</figure>
+</div>
+<p>What’s important to notice here is that we did not design this “filter” by hand, based on our understanding of the differences between a handwritten zero and one; instead, the algorithm “learned” the “best” filter to optimize its ability to distinguish these digits.</p>
+<p>Here’s another example. Suppose we redo the MNIST problem above, but we try to distinguish 3’s from 8’s.<br>
+We have about 4500 of each digit, and we label the 3’s with zero and the 8’s with one. Then we use our maximum likelihood optimization. In this case, the filter is shown on the bottom in <a href="#fig-weights">Figure&nbsp;<span>5.8</span></a>.</p>
+</section>
+</section>
+<section id="multiclass-logistic-regression" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="multiclass-logistic-regression"><span class="header-section-number">5.5</span> Multiclass Logistic Regression</h2>
+<p>One could attack the problem of classifying the ten distinct classes of digits by, for example, labelling all of the zeros as class zero and everything else as class one, and finding a set of weights that distinguishes zero from everything else. Then, in turn, one could do the same for each of the other digits. Given an unknown image, this would yield a set of probabilities from which one could choose the most likely class. This type of classification is called “one vs rest”, for obvious reasons. It seems more natural, however, to construct a model that, given an image, assigns a probability that it belongs to each of the different possibilities. It is this type of multiclass logistic regression that we will study now.</p>
+<p>Our goal is to build a model that, given an unknown image, returns a vector of ten probabilities, each of which we can interpret as the chance that our unknown image is in fact of a particular digit. If we <em>know</em> the image’s class, then it’s probability vector <em>should</em> be nine zeros with a single one in the position corresponding to the digit. So, for example, if our image is of a two, then the vector of probabilities</p>
+<p><span class="math display">\[
+\left[ \begin{matrix} p_0 &amp; p_1 &amp; p_2 &amp;\cdots &amp; p_8 &amp; p_9\\\end{matrix}\right]=\left[\begin{matrix} 0 &amp;0 &amp; 1 &amp; \cdots &amp; 0 &amp; 0\\\end{matrix}\right]
+\]</span></p>
+<p>where <span class="math inline">\(p_i\)</span> is the probability that our image is the digit <span class="math inline">\(i\)</span>. Notice also that the probabilities <span class="math inline">\(p_i\)</span> must sum to one. We encode the class membership of our samples by constructing an <span class="math inline">\(N\times r\)</span> matrix <span class="math inline">\(Y\)</span>, each row of which has a one in column <span class="math inline">\(j\)</span> if that sample belongs to class <span class="math inline">\(j\)</span>, and zeros elsewhere. This type of representation is sometimes called “one-hot” encoding.</p>
+<p>So let’s assume we have <span class="math inline">\(N\)</span> data points, each with <span class="math inline">\(k\)</span> features, and a one-hot encoded, <span class="math inline">\(N\times r\)</span> matrix of labels <span class="math inline">\(Y\)</span> encoding the data into <span class="math inline">\(r\)</span> classes. So our data matrix will be <span class="math inline">\(N\times k\)</span>.<br>
+Our goal will be to find a <span class="math inline">\(k\times r\)</span> matrix of “weights” <span class="math inline">\(M\)</span> so that, for each sample, we compute <span class="math inline">\(r\)</span> values, given by the rows of the matrix <span class="math inline">\(NM\)</span>. These <span class="math inline">\(r\)</span> values are linear functions of the features, but we need probabilities. In the one-dimensional case, we used the logistic functions <span class="math inline">\(\sigma\)</span> to convert our linear function to probabilities. In this higher dimensional case we use a generalization of <span class="math inline">\(\sigma\)</span> called the “softmax” function.</p>
+<p><strong>Definition:</strong> Let <span class="math inline">\(F:\mathbf{R}^r\to\mathbf{R}^{r}\)</span> be the function <span class="math display">\[
+F(z_1,\ldots, z_r) = \sum_{j=1}^{r} e^{z_{i}}
+\]</span> and let <span class="math inline">\(\sigma:\mathbf{R}^{r}\to \mathbf{R}^{r}\)</span> be the function <span class="math display">\[
+\sigma(z_1,\ldots, z_n) = \left[\begin{matrix} \frac{e^{z_1}}{F} &amp; \cdots &amp; \frac{e^{z_{r}}}{F}\end{matrix}\right].
+\]</span> Notice that the coordinates of the vector <span class="math inline">\(\sigma(z_1,\ldots,z_n)\)</span> are all between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, and their sum is one.</p>
+<p>Our multiclass logistic model will say that the probability vector that gives the probabilities that a particular sample belongs to a particular class is given by the rows of the matrix <span class="math inline">\(\sigma(XM)\)</span>, where <span class="math inline">\(\sigma(XM)\)</span> means applying the function <span class="math inline">\(\sigma\)</span> to each row of the <span class="math inline">\(N\times r\)</span> matrix <span class="math inline">\(XM\)</span>.</p>
+<section id="multiclass-logistic-regression---the-likelihood" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="multiclass-logistic-regression---the-likelihood"><span class="header-section-number">5.5.1</span> Multiclass logistic regression - the likelihood</h3>
+<p>The rows of the matrix <span class="math inline">\(\sigma(XM)\)</span> are the vectors of probabilities summing to one which are supposed to be the chances that the corresponding sample belongs to each of the possible classes. If the <span class="math inline">\(j^{th}\)</span> sample belongs to class <span class="math inline">\(i\)</span>, then the probability of this outcome assigned by our model is <span class="math inline">\(p_{ji}\)</span>. Recall that we have captured the class membership of the samples in a <span class="math inline">\(k\times r\)</span> matrix <span class="math inline">\(Y\)</span> which is “one-hot” encoded. So we can represent the chance that sample <span class="math inline">\(j\)</span> belongs to class <span class="math inline">\(i\)</span> as <span class="math display">\[
+P(\hbox{ sample i in class j})=\prod_{i=1}^{r} p_{ji}^{y_{ji}}.
+\]</span> Taking the logarithm, we find <span class="math display">\[
+\log P = y_{ji}\sum_{i=1}^{r} \log p_{ji} = \sum_{i=1}^{r} y_{ji} \log \sigma(XM[j,:])[i].
+\]</span> Since each sample is independent, the total likelihood is the product of these probabilites, and the log-likelihood the corresponding sum. <span class="math display">\[
+\log L(M) = \sum_{j=1}^{N} \sum_{i=1}^{r}y_{ji}\log\sigma(XM[j,:])[i]
+\]</span> or, using matrix notation, <span class="math display">\[
+\log L(M) = \mathrm{trace}(Y^{\intercal}\log\sigma(XM))
+\]</span> where trace of the <span class="math inline">\(r\times r\)</span> matrix <span class="math inline">\(Y^{\intercal}\log\sigma(XM)\)</span> is the sum of its diagonal elements.</p>
+<p>This is the multiclass generalization of <a href="#eq-logisticregressionlikelihood">Equation&nbsp;<span>5.3</span></a>. To see the connection, notice that, in the case where we have only two classes, the two columns of <span class="math inline">\(Y\)</span> sum to one, as do the two probabilities in <span class="math inline">\(\sigma(XM)\)</span>.</p>
+</section>
+<section id="multiclass-logistic-regression---the-gradient." class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="multiclass-logistic-regression---the-gradient."><span class="header-section-number">5.5.2</span> Multiclass logistic regression - the gradient.</h3>
+
+
+</section>
+</section>
+<section id="bibliography" class="level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography" style="display: none">
+<div id="ref-KaggleFoodData" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline"><span class="smallcaps">Jack Daoud</span>. <span>Marketing Analytics</span>.Available at <a href="https://www.kaggle.com/datasets/jackdaoud/marketing-data">https://www.kaggle.com/datasets/jackdaoud/marketing-data</a>.</div>
+</div>
+<div id="ref-MNISTDatabase" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline"><span class="smallcaps">LeCun</span>, Y., <span class="smallcaps">Cortes</span>, C. and <span class="smallcaps">Burges</span>, C. <span>The MNIST Database</span>.Available at <a href="http://yann.lecun.com/exdb/mnist/">http://yann.lecun.com/exdb/mnist/</a>.</div>
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/04-naive-bayes.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/06-svm.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
