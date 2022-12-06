@@ -474,9 +474,9 @@ So let's  assume we have $N$ data points, each with $k$ features, and a one-hot 
 matrix of labels $Y$ encoding the data into $r$ classes.
 So our data matrix will be $N\times k$.   
 Our goal will be to find a $k\times r$ matrix of "weights" $M$ so that, for each sample, we compute
-$r$ values, given by the rows of the matrix $NM$.
+$r$ values, given by the rows of the matrix $XM$.
 These $r$ values are linear functions of the features, but we need probabilities.  In the one-dimensional
-case, we used the logistic functions $\sigma$ to convert our linear function to probabilities.  In
+case, we used the logistic function $\sigma$ to convert our linear function to probabilities.  In
 this higher dimensional case we use a generalization of $\sigma$ called the "softmax" function.
 
 **Definition:** Let $F:\mathbf{R}^r\to\mathbf{R}^{r}$ be the function
@@ -492,40 +492,50 @@ sum is one.
 
 Our multiclass logistic model will say that the probability vector that gives the probabilities
 that a particular sample belongs to a particular class is given by the rows of the matrix
-$\sigma(XM)$, where $\sigma(XM)$ means applying the function $\sigma$ to each row of the $N\times r$
-matrix $XM$.
+$\sigma(XM)$, where $\sigma(XM)$ means applying the function $\sigma$ to each row of the $N\times r$ matrix $XM$.  For later computation, if:
+
+-  $x=X[i,:]$ is the $k$-entry feature vector of a single sample -- a row of the data matrix $X$ 
+-  $m_{j}=M[:,j]$ is the $k$-entry column vector corresponding to the $j^{th}$ column of $M$, 
+
+then the probability vector
+$[p_{t}]_{t=1}^{r}$ has entries
+$$
+p_{t}(x;M) = \frac{e^{x\cdot m_{t}}}{\sum_{s=1}^{r} e^{x\cdot m_{s} }}.
+$$
 
 ### Multiclass logistic regression - the likelihood
 
-The rows of the matrix $\sigma(XM)$ are the vectors of probabilities summing to one which are supposed
-to be the chances that the corresponding sample belongs to each of the possible classes.  If the
-$j^{th}$ sample belongs to class $i$, then the probability of this outcome assigned by our model
-is $p_{ji}$.  Recall that we have captured the class membership of the samples in a $k\times r$ matrix $Y$
-which is "one-hot" encoded.  So we can represent the chance that sample $j$ belongs to class $i$
+The probability vector $[p_{t}(x;M)]$ encodes the probabilities that the $x$-value
+belongs to each of the possible classes.  That is,
+$$
+p_{j}(x;M)=\hbox{The chance that x is in class j}.
+$$
+
+We have captured the class membership of the samples in a $k\times r$ matrix $Y$
+which is "one-hot" encoded.  Each row of this matrix has is zero in each place, except in the "correct" class, where it is one.  Let $y=Y[i,:]$ be the $i^{th}$ row
+of this matrix, so it is an $r$-entry row vector which is $1$ in the position
+giving the "correct" class for our sample $x$. 
+
+So we can represent the chance that sample $j$ belongs to class $i$
 as
 $$
-P(\hbox{ sample i in class j})=\prod_{i=1}^{r} p_{ji}^{y_{ji}}.
+P(\hbox{ sample i in class j})=\prod_{s=1}^{r} p_{s}(x;M)^{y_{s}}.
 $$
 Taking the logarithm, we find
 $$
-\log P = y_{ji}\sum_{i=1}^{r} \log p_{ji} = \sum_{i=1}^{r} y_{ji} \log \sigma(XM[j,:])[i].
+\log P = \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
 $$
-Since each sample is independent, the total likelihood is the product of these probabilites, and
-the log-likelihood the corresponding sum.
+
+Since each sample is independent, the total likelihood is the product of these probabilites, and the log-likelihood the corresponding sum:
 $$
-\log L(M) = \sum_{j=1}^{N} \sum_{i=1}^{r}y_{ji}\log\sigma(XM[j,:])[i]
+\log L(M) = \sum_{X,Y} \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
 $$
-or, using matrix notation,
-$$
-\log L(M) = \mathrm{trace}(Y^{\intercal}\log\sigma(XM))
-$$
-where trace of the $r\times r$ matrix $Y^{\intercal}\log\sigma(XM)$ is the sum
-of its diagonal elements.
+where the sum is over the $N$ rows of $X$ and $Y$.
 
 This is the multiclass generalization of @eq-logisticregressionlikelihood.  To see the connection,
 notice that, in the case where we have only two
-classes, the two columns of $Y$ sum to one, as do the two probabilities in $\sigma(XM)$.
-
+classes, $y_1=1-y_0$ and
+$p_{1}(x;M)=1-p_{0}(x;M)$, so this sum is the same as in the two class situation.
 
 ### Multiclass logistic regression - the gradient.
 
