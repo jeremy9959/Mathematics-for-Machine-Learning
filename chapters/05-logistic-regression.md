@@ -539,6 +539,64 @@ $p_{1}(x;M)=1-p_{0}(x;M)$, so this sum is the same as in the two class situation
 
 ### Multiclass logistic regression - the gradient.
 
+To find the "best-fitting" multiclass logistic model by gradient descent, we need an expression for the gradient of the likelihood $L(M)$.  As with all of these calculations,
+this is an exercise in the chain rule.    We start with the formula
+$$
+p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
+$$
+The gradient of this is made up of the derivatives with respect to the $m_{bq}$
+where $b=1,\ldots, k$ and $q=1,\dots, r$ so its natural to think of this
+gradient as a $k\times r$ matrix, the same shape as $M$.  Remember that each $m_s$ is
+the $s^{th}$ column of $M$ so is made up of $m_{bs}$ for $b=1,\ldots, k$.
+
+Looking at 
+$$
+\frac{\partial p_{s}}{\partial m_{bq}}
+$$
+there are two cases to consider.  The first is when $q$ and $s$ are different,
+so the numerator of $p_{s}$ doesn't involve $m_{pq}$.  In this case the derivative
+is
+$$
+\frac{\partial p_{s}}{\partial m_{bq}}=-\frac{e^{x\cdot m_{s}}e^{x\cdot m_{q}}x_b}{(\sum_{t=1}^{r} e^{x\cdot m_{t}})^2}=-p_{s}p_{q}x_{b}
+$$
+In vector terms:
+$$
+[\frac{\partial p_{s}}{\partial m_{bq}}]_{b=1}^{k}=-p_{q}p_{s}[x_{b}]_{b=1}^{k}
+$$ 
+as an equality of $k$-entry row vectors. This can be written more simply as a vector equation:
+$$
+\frac{\partial p_{s}}{\partial m_{q}}=-p_{q}p_{s}x.\qquad (q\not=s).
+$$
+When $q=s$, we have
+$$
+\frac{\partial p_{s}}{\partial m_{bs}}
+=\frac{e^{x\cdot m_{bs}}x_b}{\sum_{t=1}^{r}e^{x\cdot m_{t}}}-\frac{e^{x\cdot m_{s}}e^{x\cdot m_{s}}x_b}{(\sum_{t=1}^{r} e^{x\cdot m_{t}})^2}=p_{s}(1-p_{s})x_b
+$$
+or in vector terms
+$$
+\frac{\partial p_{s}}{\partial m_{s}}=p_{s}(1-p_{s})x.
+$$
+
+Now we can use these formulae together with the expression for $\log L(M)$ to 
+obtain the gradient. Using the vector form, we have
+$$
+\frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y}\sum_{s=1}^{r} y_{s}\frac{\partial \log p_{s}}{m_{q}}.
+$$
+Using our computations above, the chain rule, and the derivative of the logarithm,
+this  is the sum
+$$
+\frac{\partial \log L(M)}{\partial m_{q}} =\sum_{X,Y}\sum_{s=1}^{r} y_{s}(I_{qs}-p_{q})x
+$$
+where $I_{qs}=1$ if $q=s$ and zero otherwise. 
+
+Now $y_{s}I_{qs}$ is zero unless $s=q$, and the sum $\sum_{s=1}^{r} y_{s}=1$,
+so this simplifies further to 
+$$
+\frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y} (y_{q}-p_{q})x.
+$$
+
+
+
 
 
 

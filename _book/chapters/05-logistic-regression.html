@@ -588,6 +588,31 @@ P(\hbox{ sample i in class j})=\prod_{s=1}^{r} p_{s}(x;M)^{y_{s}}.
 </section>
 <section id="multiclass-logistic-regression---the-gradient." class="level3" data-number="5.5.2">
 <h3 data-number="5.5.2" class="anchored" data-anchor-id="multiclass-logistic-regression---the-gradient."><span class="header-section-number">5.5.2</span> Multiclass logistic regression - the gradient.</h3>
+<p>To find the “best-fitting” multiclass logistic model by gradient descent, we need an expression for the gradient of the likelihood <span class="math inline">\(L(M)\)</span>. As with all of these calculations, this is an exercise in the chain rule. We start with the formula <span class="math display">\[
+p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
+\]</span> The gradient of this is made up of the derivatives with respect to the <span class="math inline">\(m_{bq}\)</span> where <span class="math inline">\(b=1,\ldots, k\)</span> and <span class="math inline">\(q=1,\dots, r\)</span> so its natural to think of this gradient as a <span class="math inline">\(k\times r\)</span> matrix, the same shape as <span class="math inline">\(M\)</span>. Remember that each <span class="math inline">\(m_s\)</span> is the <span class="math inline">\(s^{th}\)</span> column of <span class="math inline">\(M\)</span> so is made up of <span class="math inline">\(m_{bs}\)</span> for <span class="math inline">\(b=1,\ldots, k\)</span>.</p>
+<p>Looking at <span class="math display">\[
+\frac{\partial p_{s}}{\partial m_{bq}}
+\]</span> there are two cases to consider. The first is when <span class="math inline">\(q\)</span> and <span class="math inline">\(s\)</span> are different, so the numerator of <span class="math inline">\(p_{s}\)</span> doesn’t involve <span class="math inline">\(m_{pq}\)</span>. In this case the derivative is <span class="math display">\[
+\frac{\partial p_{s}}{\partial m_{bq}}=-\frac{e^{x\cdot m_{s}}e^{x\cdot m_{q}}x_b}{(\sum_{t=1}^{r} e^{x\cdot m_{t}})^2}=-p_{s}p_{q}x_{b}
+\]</span> In vector terms: <span class="math display">\[
+[\frac{\partial p_{s}}{\partial m_{bq}}]_{b=1}^{k}=-p_{q}p_{s}[x_{b}]_{b=1}^{k}
+\]</span> as an equality of <span class="math inline">\(k\)</span>-entry row vectors. This can be written more simply as a vector equation: <span class="math display">\[
+\frac{\partial p_{s}}{\partial m_{q}}=-p_{q}p_{s}x.\qquad (q\not=s).
+\]</span> When <span class="math inline">\(q=s\)</span>, we have <span class="math display">\[
+\frac{\partial p_{s}}{\partial m_{bs}}
+=\frac{e^{x\cdot m_{bs}}x_b}{\sum_{t=1}^{r}e^{x\cdot m_{t}}}-\frac{e^{x\cdot m_{s}}e^{x\cdot m_{s}}x_b}{(\sum_{t=1}^{r} e^{x\cdot m_{t}})^2}=p_{s}(1-p_{s})x_b
+\]</span> or in vector terms <span class="math display">\[
+\frac{\partial p_{s}}{\partial m_{s}}=p_{s}(1-p_{s})x.
+\]</span></p>
+<p>Now we can use these formulae together with the expression for <span class="math inline">\(\log L(M)\)</span> to obtain the gradient. Using the vector form, we have <span class="math display">\[
+\frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y}\sum_{s=1}^{r} y_{s}\frac{\partial \log p_{s}}{m_{q}}.
+\]</span> Using our computations above, the chain rule, and the derivative of the logarithm, this is the sum <span class="math display">\[
+\frac{\partial \log L(M)}{\partial m_{q}} =\sum_{X,Y}\sum_{s=1}^{r} y_{s}(I_{qs}-p_{q})x
+\]</span> where <span class="math inline">\(I_{qs}=1\)</span> if <span class="math inline">\(q=s\)</span> and zero otherwise.</p>
+<p>Now <span class="math inline">\(y_{s}I_{qs}\)</span> is zero unless <span class="math inline">\(s=q\)</span>, and the sum <span class="math inline">\(\sum_{s=1}^{r} y_{s}=1\)</span>, so this simplifies further to <span class="math display">\[
+\frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y} (y_{q}-p_{q})x.
+\]</span></p>
 
 
 </section>
