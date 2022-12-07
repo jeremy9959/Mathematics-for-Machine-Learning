@@ -185,6 +185,7 @@ div.csl-indent {
   <li><a href="#multiclass-logistic-regression---the-likelihood" id="toc-multiclass-logistic-regression---the-likelihood" class="nav-link" data-scroll-target="#multiclass-logistic-regression---the-likelihood"><span class="toc-section-number">5.5.1</span>  Multiclass logistic regression - the likelihood</a></li>
   <li><a href="#multiclass-logistic-regression---the-gradient." id="toc-multiclass-logistic-regression---the-gradient." class="nav-link" data-scroll-target="#multiclass-logistic-regression---the-gradient."><span class="toc-section-number">5.5.2</span>  Multiclass logistic regression - the gradient.</a></li>
   </ul></li>
+  <li><a href="#batch-descent" id="toc-batch-descent" class="nav-link" data-scroll-target="#batch-descent"><span class="toc-section-number">5.6</span>  Batch Descent</a></li>
   <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">References</a></li>
   </ul>
 </nav>
@@ -210,7 +211,7 @@ div.csl-indent {
 </header>
 
 <p>Suppose that we are trying to convince customers to buy our product by showing them advertising. Our experience teaches us that there is no deterministic relationship between how often a potential customer sees one of our ads and whether or not they purchase our product, nevertheless it is the case that as they see more ads they become more likely to make a purchase. Logistic regression is a statistical model that can capture the essence of this idea.</p>
-<p>To make this problem more abstract, let’s imagine that we are trying to model a random event that depends on a parameter. As in our introduction above, the random event might be a user deciding to make a purchase from a website, which, in our very simple model, depends on how many times the user saw an advertisement for the product in question. But we could imagine other situations where the chance of an event happening depends on a paramter. For example, we could imagine that a student’s score on a certain test depends on how much studying they do, with the likelihood of passing the test increasing with the amount of studying.</p>
+<p>To make this problem more abstract, let’s imagine that we are trying to model a random event that depends on a parameter. As in our introduction above, the random event might be a user deciding to make a purchase from a website, which, in our very simple model, depends on how many times the user saw an advertisement for the product in question. But we could imagine other situations where the chance of an event happening depends on a parameter. For example, we could imagine that a student’s score on a certain test depends on how much studying they do, with the likelihood of passing the test increasing with the amount of studying.</p>
 <p>To construct this model, we assume that the probability of a certain event <span class="math inline">\(p\)</span> is related to some parameter <span class="math inline">\(x\)</span> by the following relationship:</p>
 <p><span id="eq-logistic_1"><span class="math display">\[
 \log\frac{p}{1-p} = ax+b
@@ -443,7 +444,7 @@ c^{(n+1)} = c^{(n)}-12\nu((c^{(n)})^2-c^{(n)}).
 <section id="gradient-descent-and-logistic-regression" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="gradient-descent-and-logistic-regression"><span class="header-section-number">5.3</span> Gradient Descent and Logistic Regression</h2>
 <p>We can use gradient descent to find the maximum likelihood set of parameters for our logistic model. As we saw earlier, in <a href="#eq-logisticregressionlikelihood">Equation&nbsp;<span>5.3</span></a>, we have the log likelihood function <span class="math display">\[
-L(M) = Y\cdot \log\sigma(XM) + (1-Y)\cdot\log(1-\sigma(XM))
+\log L(M) = Y\cdot \log\sigma(XM) + (1-Y)\cdot\log(1-\sigma(XM))
 \]</span> where <span class="math inline">\(Y\)</span> are the target <span class="math inline">\(0/1\)</span> values, <span class="math inline">\(X\)</span> is our <span class="math inline">\(N\times (k+1)\)</span> data matrix whose last column is all ones, and <span class="math inline">\(M\)</span> is the <span class="math inline">\(k+1\times 1\)</span> column vector of unknown parameters. Since gradient descent is naturally a <em>minimizing</em> algorithm, we will minimize the function <span class="math inline">\(-L(M)\)</span>.</p>
 <p>The key piece of information that we need is the gradient <span class="math inline">\(-\nabla L\)</span>, where the variables are the entries of <span class="math inline">\(M\)</span>. The complicating features is the presence of the nonlinear function <span class="math inline">\(\sigma\)</span>, so let’s start with a simple observation about this function.</p>
 <p><strong>Lemma:</strong> The logistic function <span class="math inline">\(\sigma(x)\)</span> satisfies the differential equation <span class="math display">\[
@@ -453,14 +454,18 @@ L(M) = Y\cdot \log\sigma(XM) + (1-Y)\cdot\log(1-\sigma(XM))
 \sigma(x)= \frac{1}{1+e^{-x}},
 \]</span> <span class="math display">\[
 1-\sigma(x) = \frac{e^{-x}}{1+e^{-x}}.
-\]</span> Then we calculate <span class="math display">\[
-\frac{d\sigma}{dx}=\left(\frac{1}{(1+e^{-x})}\right)^2e^{-x} = \left(\frac{1}{1+e^{-x}}\right)
-                                                                  \left(\frac{e^{-x}}{1+e^{-x}}\right)=\sigma(x)(1-\sigma(x))
+\]</span> Then we calculate <span class="math display">\[\begin{aligned}
+\frac{d\sigma}{dx}&amp;=\left(\frac{1}{(1+e^{-x})}\right)^2e^{-x} \\
+                  &amp;= \left(\frac{1}{1+e^{-x}}\right)\left(\frac{e^{-x}}{1+e^{-x}}\right)\\
+                  &amp;=\sigma(x)(1-\sigma(x)) \\
+\end{aligned}
 \]</span> which is what we claimed.</p>
 <p>We apply this differential equation to compute the gradient of <span class="math inline">\(L\)</span>.</p>
-<p><strong>Proposition:</strong> The gradient <span class="math inline">\(-\nabla L(M)\)</span> is given by <span class="math display">\[
--\nabla L(M) = (\sigma(XM)-Y)^{\intercal} X.
-\]</span> Notice that the right side of this equation yields a <span class="math inline">\(1\times (k+1)\)</span> row vector. The entries of this vector are the partial derivatives with respect to the coefficients <span class="math inline">\(m_{i}\)</span> for <span class="math inline">\(i=0,\ldots, k\)</span>.</p>
+<div id="thm-logisticgradient" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 5.1 </strong></span><strong>Proposition:</strong> The gradient <span class="math inline">\(-\nabla L(M)\)</span> is given by <span class="math display">\[
+-\nabla \log L(M) = X^{\intercal}(\sigma(XM)-Y).
+\]</span> Notice that the right side of this equation yields a <span class="math inline">\((k+1)\times 1\)</span> column vector. The entries of this vector are the partial derivatives with respect to the coefficients <span class="math inline">\(m_{i}\)</span> for <span class="math inline">\(i=0,\ldots, k\)</span>.</p>
+</div>
 <p><strong>Proof:</strong> This is yet another exercise in the chain rule and keeping track of indices. Let’s first look at the term <span class="math inline">\(Y\cdot \log\sigma(XM)\)</span>. Writing it out, we have <span class="math display">\[
 Y\cdot \log\sigma(XM)=\sum_{i=0}^{N-1}y_{i}\log\sigma(\sum_{j=0}^{k}x_{ij}m_{j}).
 \]</span> Applying <span class="math inline">\(\partial/\partial m_{s}\)</span> to this yields <span class="math display">\[
@@ -470,9 +475,9 @@ Y\cdot \log\sigma(XM)=\sum_{i=0}^{N-1}y_{i}\log\sigma(\sum_{j=0}^{k}x_{ij}m_{j})
 \]</span> The term <span class="math inline">\(\sum_{i=0}^{N-1} y_{i}\sigma(\sum_{j=0}^{k}x_{ij}m_{j})x_{is}\)</span> cancels, yielding <span class="math display">\[
 \frac{\partial L(M)}{m_{s}} = -\sum_{i=0}^{N-1} (y_{i}-\sigma(\sum_{j=0}^{k}x_{ij}m_{j}))x_{is}.
 \]</span><br>
-Looked at properly this is our desired formula: <span class="math display">\[
--\nabla L(M) = (\sigma(XM)-Y)^{\intercal}X.
-\]</span></p>
+Since our weights <span class="math inline">\(M\)</span> are naturally a <span class="math inline">\((k+1)\times 1\)</span> column vector, looked at properly this is our desired formula: <span class="math display">\[
+-\nabla \log L(M) = X^{\intercal}(\sigma(XM)-Y).
+\]</span> Since the right side is an <span class="math inline">\((k+1)\times N\)</span> matrix times an <span class="math inline">\(N\times 1\)</span> column vector, the result is a <span class="math inline">\((k+1)\times 1\)</span> column vector whose entries are the partial derivatives of <span class="math inline">\(-\log L(M)\)</span> with respect to the weights <span class="math inline">\(m_{s}\)</span>.</p>
 <section id="gradient-descent-on-our-synthetic-data" class="level3" data-number="5.3.1">
 <h3 data-number="5.3.1" class="anchored" data-anchor-id="gradient-descent-on-our-synthetic-data"><span class="header-section-number">5.3.1</span> Gradient Descent on our synthetic data</h3>
 <p>Now we can apply gradient descent to find a maximum likelihood logistic model for the sample data that we generated from the logistic model and reported in <a href="#tbl-logistic_data">Table&nbsp;<span>5.1</span></a>. With the probability given as <span class="math display">\[
@@ -555,8 +560,8 @@ We have about 4500 of each digit, and we label the 3’s with zero and the 8’s
 \left[ \begin{matrix} p_0 &amp; p_1 &amp; p_2 &amp;\cdots &amp; p_8 &amp; p_9\\\end{matrix}\right]=\left[\begin{matrix} 0 &amp;0 &amp; 1 &amp; \cdots &amp; 0 &amp; 0\\\end{matrix}\right]
 \]</span></p>
 <p>where <span class="math inline">\(p_i\)</span> is the probability that our image is the digit <span class="math inline">\(i\)</span>. Notice also that the probabilities <span class="math inline">\(p_i\)</span> must sum to one. We encode the class membership of our samples by constructing an <span class="math inline">\(N\times r\)</span> matrix <span class="math inline">\(Y\)</span>, each row of which has a one in column <span class="math inline">\(j\)</span> if that sample belongs to class <span class="math inline">\(j\)</span>, and zeros elsewhere. This type of representation is sometimes called “one-hot” encoding.</p>
-<p>So let’s assume we have <span class="math inline">\(N\)</span> data points, each with <span class="math inline">\(k\)</span> features, and a one-hot encoded, <span class="math inline">\(N\times r\)</span> matrix of labels <span class="math inline">\(Y\)</span> encoding the data into <span class="math inline">\(r\)</span> classes. So our data matrix will be <span class="math inline">\(N\times k\)</span>.<br>
-Our goal will be to find a <span class="math inline">\(k\times r\)</span> matrix of “weights” <span class="math inline">\(M\)</span> so that, for each sample, we compute <span class="math inline">\(r\)</span> values, given by the rows of the matrix <span class="math inline">\(XM\)</span>. These <span class="math inline">\(r\)</span> values are linear functions of the features, but we need probabilities. In the one-dimensional case, we used the logistic function <span class="math inline">\(\sigma\)</span> to convert our linear function to probabilities. In this higher dimensional case we use a generalization of <span class="math inline">\(\sigma\)</span> called the “softmax” function.</p>
+<p>So let’s assume we have <span class="math inline">\(N\)</span> data points, each with <span class="math inline">\(k\)</span> features, and a one-hot encoded, <span class="math inline">\(N\times r\)</span> matrix of labels <span class="math inline">\(Y\)</span> encoding the data into <span class="math inline">\(r\)</span> classes. As usual, we add an “extra” feature, which is the constant <span class="math inline">\(1\)</span> for each sample, to account for the “intercept”. So our data matrix will be <span class="math inline">\(N\times (k+1)\)</span>.</p>
+<p>Our goal will be to find a <span class="math inline">\((k+1)\times r\)</span> matrix of “weights” <span class="math inline">\(M\)</span> so that, for each sample, we compute <span class="math inline">\(r\)</span> values, given by the rows of the matrix <span class="math inline">\(XM\)</span>. These <span class="math inline">\(r\)</span> values are linear functions of the features, but we need probabilities. In the one-dimensional case, we used the logistic function <span class="math inline">\(\sigma\)</span> to convert our linear function to probabilities. In this higher dimensional case we use a generalization of <span class="math inline">\(\sigma\)</span> called the “softmax” function.</p>
 <p><strong>Definition:</strong> Let <span class="math inline">\(F:\mathbf{R}^r\to\mathbf{R}^{r}\)</span> be the function <span class="math display">\[
 F(z_1,\ldots, z_r) = \sum_{j=1}^{r} e^{z_{i}}
 \]</span> and let <span class="math inline">\(\sigma:\mathbf{R}^{r}\to \mathbf{R}^{r}\)</span> be the function <span class="math display">\[
@@ -564,8 +569,8 @@ F(z_1,\ldots, z_r) = \sum_{j=1}^{r} e^{z_{i}}
 \]</span> Notice that the coordinates of the vector <span class="math inline">\(\sigma(z_1,\ldots,z_n)\)</span> are all between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, and their sum is one.</p>
 <p>Our multiclass logistic model will say that the probability vector that gives the probabilities that a particular sample belongs to a particular class is given by the rows of the matrix <span class="math inline">\(\sigma(XM)\)</span>, where <span class="math inline">\(\sigma(XM)\)</span> means applying the function <span class="math inline">\(\sigma\)</span> to each row of the <span class="math inline">\(N\times r\)</span> matrix <span class="math inline">\(XM\)</span>. For later computation, if:</p>
 <ul>
-<li><span class="math inline">\(x=X[i,:]\)</span> is the <span class="math inline">\(k\)</span>-entry feature vector of a single sample – a row of the data matrix <span class="math inline">\(X\)</span></li>
-<li><span class="math inline">\(m_{j}=M[:,j]\)</span> is the <span class="math inline">\(k\)</span>-entry column vector corresponding to the <span class="math inline">\(j^{th}\)</span> column of <span class="math inline">\(M\)</span>,</li>
+<li><span class="math inline">\(x=X[i,:]\)</span> is the <span class="math inline">\(k+1\)</span>-entry feature vector of a single sample – a row of the data matrix <span class="math inline">\(X\)</span></li>
+<li><span class="math inline">\(m_{j}=M[:,j]\)</span> is the <span class="math inline">\(k+1\)</span>-entry column vector corresponding to the <span class="math inline">\(j^{th}\)</span> column of <span class="math inline">\(M\)</span>,</li>
 </ul>
 <p>then the probability vector <span class="math inline">\([p_{t}]_{t=1}^{r}\)</span> has entries <span class="math display">\[
 p_{t}(x;M) = \frac{e^{x\cdot m_{t}}}{\sum_{s=1}^{r} e^{x\cdot m_{s} }}.
@@ -575,7 +580,7 @@ p_{t}(x;M) = \frac{e^{x\cdot m_{t}}}{\sum_{s=1}^{r} e^{x\cdot m_{s} }}.
 <p>The probability vector <span class="math inline">\([p_{t}(x;M)]\)</span> encodes the probabilities that the <span class="math inline">\(x\)</span>-value belongs to each of the possible classes. That is, <span class="math display">\[
 p_{j}(x;M)=\hbox{The chance that x is in class j}.
 \]</span></p>
-<p>We have captured the class membership of the samples in a <span class="math inline">\(k\times r\)</span> matrix <span class="math inline">\(Y\)</span> which is “one-hot” encoded. Each row of this matrix has is zero in each place, except in the “correct” class, where it is one. Let <span class="math inline">\(y=Y[i,:]\)</span> be the <span class="math inline">\(i^{th}\)</span> row of this matrix, so it is an <span class="math inline">\(r\)</span>-entry row vector which is <span class="math inline">\(1\)</span> in the position giving the “correct” class for our sample <span class="math inline">\(x\)</span>.</p>
+<p>We have captured the class membership of the samples in a <span class="math inline">\((k+1)\times r\)</span> matrix <span class="math inline">\(Y\)</span> which is “one-hot” encoded. Each row of this matrix has is zero in each place, except in the “correct” class, where it is one. Let <span class="math inline">\(y=Y[i,:]\)</span> be the <span class="math inline">\(i^{th}\)</span> row of this matrix, so it is an <span class="math inline">\(r\)</span>-entry row vector which is <span class="math inline">\(1\)</span> in the position giving the “correct” class for our sample <span class="math inline">\(x\)</span>.</p>
 <p>So we can represent the chance that sample <span class="math inline">\(j\)</span> belongs to class <span class="math inline">\(i\)</span> as <span class="math display">\[
 P(\hbox{ sample i in class j})=\prod_{s=1}^{r} p_{s}(x;M)^{y_{s}}.
 \]</span> Taking the logarithm, we find <span class="math display">\[
@@ -583,39 +588,53 @@ P(\hbox{ sample i in class j})=\prod_{s=1}^{r} p_{s}(x;M)^{y_{s}}.
 \]</span></p>
 <p>Since each sample is independent, the total likelihood is the product of these probabilites, and the log-likelihood the corresponding sum: <span class="math display">\[
 \log L(M) = \sum_{X,Y} \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
-\]</span> where the sum is over the <span class="math inline">\(N\)</span> rows of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>.</p>
+\]</span> where the sum is over the <span class="math inline">\(N\)</span> rows of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. This is equivalent to the matrix expression <span class="math display">\[
+\log L(M) = \mathrm{trace}(Y^{\intercal}P)=\mathrm{trace}(Y^{\intercal}\sigma(XM))
+\]</span></p>
 <p>This is the multiclass generalization of <a href="#eq-logisticregressionlikelihood">Equation&nbsp;<span>5.3</span></a>. To see the connection, notice that, in the case where we have only two classes, <span class="math inline">\(y_1=1-y_0\)</span> and <span class="math inline">\(p_{1}(x;M)=1-p_{0}(x;M)\)</span>, so this sum is the same as in the two class situation.</p>
 </section>
 <section id="multiclass-logistic-regression---the-gradient." class="level3" data-number="5.5.2">
 <h3 data-number="5.5.2" class="anchored" data-anchor-id="multiclass-logistic-regression---the-gradient."><span class="header-section-number">5.5.2</span> Multiclass logistic regression - the gradient.</h3>
 <p>To find the “best-fitting” multiclass logistic model by gradient descent, we need an expression for the gradient of the likelihood <span class="math inline">\(L(M)\)</span>. As with all of these calculations, this is an exercise in the chain rule. We start with the formula <span class="math display">\[
 p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
-\]</span> The gradient of this is made up of the derivatives with respect to the <span class="math inline">\(m_{bq}\)</span> where <span class="math inline">\(b=1,\ldots, k\)</span> and <span class="math inline">\(q=1,\dots, r\)</span> so its natural to think of this gradient as a <span class="math inline">\(k\times r\)</span> matrix, the same shape as <span class="math inline">\(M\)</span>. Remember that each <span class="math inline">\(m_s\)</span> is the <span class="math inline">\(s^{th}\)</span> column of <span class="math inline">\(M\)</span> so is made up of <span class="math inline">\(m_{bs}\)</span> for <span class="math inline">\(b=1,\ldots, k\)</span>.</p>
+\]</span> The gradient of this is made up of the derivatives with respect to the <span class="math inline">\(m_{bq}\)</span> where <span class="math inline">\(b=0,\ldots, k\)</span> and <span class="math inline">\(q=1,\dots, r\)</span> so its natural to think of this gradient as a <span class="math inline">\((k+1)\times r\)</span> matrix, the same shape as <span class="math inline">\(M\)</span>. Remember that each <span class="math inline">\(m_s\)</span> is the <span class="math inline">\(s^{th}\)</span> column of <span class="math inline">\(M\)</span> so is made up of <span class="math inline">\(m_{bs}\)</span> for <span class="math inline">\(b=0,\ldots, k\)</span>.</p>
 <p>Looking at <span class="math display">\[
 \frac{\partial p_{s}}{\partial m_{bq}}
 \]</span> there are two cases to consider. The first is when <span class="math inline">\(q\)</span> and <span class="math inline">\(s\)</span> are different, so the numerator of <span class="math inline">\(p_{s}\)</span> doesn’t involve <span class="math inline">\(m_{pq}\)</span>. In this case the derivative is <span class="math display">\[
 \frac{\partial p_{s}}{\partial m_{bq}}=-\frac{e^{x\cdot m_{s}}e^{x\cdot m_{q}}x_b}{(\sum_{t=1}^{r} e^{x\cdot m_{t}})^2}=-p_{s}p_{q}x_{b}
 \]</span> In vector terms: <span class="math display">\[
 [\frac{\partial p_{s}}{\partial m_{bq}}]_{b=1}^{k}=-p_{q}p_{s}[x_{b}]_{b=1}^{k}
-\]</span> as an equality of <span class="math inline">\(k\)</span>-entry row vectors. This can be written more simply as a vector equation: <span class="math display">\[
+\]</span> as an equality of <span class="math inline">\(k+1\)</span>-entry row vectors. This can be written more simply as a vector equation: <span class="math display">\[
 \frac{\partial p_{s}}{\partial m_{q}}=-p_{q}p_{s}x.\qquad (q\not=s).
 \]</span> When <span class="math inline">\(q=s\)</span>, we have <span class="math display">\[
 \frac{\partial p_{s}}{\partial m_{bs}}
 =\frac{e^{x\cdot m_{bs}}x_b}{\sum_{t=1}^{r}e^{x\cdot m_{t}}}-\frac{e^{x\cdot m_{s}}e^{x\cdot m_{s}}x_b}{(\sum_{t=1}^{r} e^{x\cdot m_{t}})^2}=p_{s}(1-p_{s})x_b
 \]</span> or in vector terms <span class="math display">\[
-\frac{\partial p_{s}}{\partial m_{s}}=p_{s}(1-p_{s})x.
+\frac{\partial p_{s}}{\partial m_{s}}=p_{s}(1-p_{s})x^{\intercal}.
 \]</span></p>
+<p><strong>Important:</strong> The gradient on the left is properly seen as a column vector (because <span class="math inline">\(m_{s}\)</span> is a column of the matrix <span class="math inline">\(M\)</span>, with <span class="math inline">\(k+1\)</span> entries), and since <span class="math inline">\(x\)</span> is a row of the data matrix, so to keep the indices straight, we need <span class="math inline">\(x^{\intercal}\)</span> on the right.</p>
 <p>Now we can use these formulae together with the expression for <span class="math inline">\(\log L(M)\)</span> to obtain the gradient. Using the vector form, we have <span class="math display">\[
 \frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y}\sum_{s=1}^{r} y_{s}\frac{\partial \log p_{s}}{m_{q}}.
 \]</span> Using our computations above, the chain rule, and the derivative of the logarithm, this is the sum <span class="math display">\[
-\frac{\partial \log L(M)}{\partial m_{q}} =\sum_{X,Y}\sum_{s=1}^{r} y_{s}(I_{qs}-p_{q})x
+\frac{\partial \log L(M)}{\partial m_{q}} =\sum_{X,Y}\sum_{s=1}^{r} y_{s}(I_{qs}-p_{q})x^{\intercal}
 \]</span> where <span class="math inline">\(I_{qs}=1\)</span> if <span class="math inline">\(q=s\)</span> and zero otherwise.</p>
 <p>Now <span class="math inline">\(y_{s}I_{qs}\)</span> is zero unless <span class="math inline">\(s=q\)</span>, and the sum <span class="math inline">\(\sum_{s=1}^{r} y_{s}=1\)</span>, so this simplifies further to <span class="math display">\[
-\frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y} (y_{q}-p_{q})x.
-\]</span></p>
-
-
+\frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y} (y_{q}-p_{q})x^{\intercal}.
+\]</span> This is equivalent to the matrix expression <span id="eq-multiclassgradient"><span class="math display">\[
+\nabla \log L(M) = X^{\intercal}(Y-P)=X^{\intercal}(Y-\sigma(XM)).
+\tag{5.4}\]</span></span></p>
+<p>Compare <a href="#eq-multiclassgradient">Equation&nbsp;<span>5.4</span></a> to <a href="#thm-logisticgradient">Theorem&nbsp;<span>5.1</span></a> and we see that the form is identical whether in the two-class or multi-class case if we set things up properly.</p>
+<p><strong>Algorithm:</strong> (Multiclass Gradient Descent) Given: - an <span class="math inline">\(N\times(k+1)\)</span> data matrix <span class="math inline">\(X\)</span> whose last column is all <span class="math inline">\(1\)</span>, - an <span class="math inline">\(N\times r\)</span> matrix <span class="math inline">\(Y\)</span> that “one-hot” encodes the labels of the classification problem; - a random <span class="math inline">\((k+1)\times r\)</span> matrix <span class="math inline">\(M\)</span> of initial guesses for the parameters - a “learning rate” <span class="math inline">\(\nu\)</span>,</p>
+<p>Iterate: <span class="math display">\[
+M=M+\nu X^{\intercal}(Y-\sigma(XM))
+\]</span> until <span class="math inline">\(M\)</span> changes by less than some tolerance.</p>
 </section>
+</section>
+<section id="batch-descent" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="batch-descent"><span class="header-section-number">5.6</span> Batch Descent</h2>
+<p>A look at the formulae for the gradient (see <a href="#eq-multiclassgradient">Equation&nbsp;<span>5.4</span></a>) tells us that each iteratio</p>
+
+
 </section>
 <section id="bibliography" class="level1 unnumbered">
 <h1 class="unnumbered">References</h1>

@@ -8,7 +8,7 @@ Logistic regression is a statistical model that can capture the essence of this 
 To make this problem more abstract, let's imagine that we are trying to model a random event that depends on a parameter.
 As in our introduction above, the random event might be a user deciding to make  a purchase from a website, which, in our very simple model,
 depends on how many times the user saw an advertisement for the product in question.  But we could imagine other situations where
-the chance of an event happening depends on a paramter.  For example, we could imagine that a student's score on a certain test depends on how much studying they
+the chance of an event happening depends on a parameter.  For example, we could imagine that a student's score on a certain test depends on how much studying they
 do, with the likelihood of passing the test increasing with the amount of studying.  
 
 To construct this model, we assume that the probability of a certain event $p$ is related to some parameter $x$ by the following relationship:
@@ -273,7 +273,7 @@ anything about whether we've reached a *global* minimum.
 We can use gradient descent to find the maximum likelihood set of parameters for our logistic model.
 As we saw earlier, in @eq-logisticregressionlikelihood, we have the log likelihood function
 $$
-L(M) = Y\cdot \log\sigma(XM) + (1-Y)\cdot\log(1-\sigma(XM))
+\log L(M) = Y\cdot \log\sigma(XM) + (1-Y)\cdot\log(1-\sigma(XM))
 $$
 where $Y$ are the target $0/1$ values, $X$ is our $N\times (k+1)$ data matrix whose last column
 is all ones, and $M$ is the $k+1\times 1$ column vector of unknown parameters.
@@ -296,20 +296,25 @@ $$
 1-\sigma(x) = \frac{e^{-x}}{1+e^{-x}}.
 $$
 Then we calculate
-$$
-\frac{d\sigma}{dx}=\left(\frac{1}{(1+e^{-x})}\right)^2e^{-x} = \left(\frac{1}{1+e^{-x}}\right)
-                                                                  \left(\frac{e^{-x}}{1+e^{-x}}\right)=\sigma(x)(1-\sigma(x))
+$$\begin{aligned}
+\frac{d\sigma}{dx}&=\left(\frac{1}{(1+e^{-x})}\right)^2e^{-x} \\
+                  &= \left(\frac{1}{1+e^{-x}}\right)\left(\frac{e^{-x}}{1+e^{-x}}\right)\\
+                  &=\sigma(x)(1-\sigma(x)) \\
+\end{aligned}
 $$
 which is what we claimed.
 
 We apply this differential equation to compute the gradient of $L$.
 
+::: {#thm-logisticgradient}
+
 **Proposition:** The gradient $-\nabla L(M)$ is given by 
 $$
--\nabla L(M) = (\sigma(XM)-Y)^{\intercal} X.
+-\nabla \log L(M) = X^{\intercal}(\sigma(XM)-Y).
 $$
-Notice that the right side of this equation yields a $1\times (k+1)$ row vector.  The entries of this
+Notice that the right side of this equation yields a $(k+1)\times 1$ column vector.  The entries of this
 vector are the partial derivatives with respect to the coefficients $m_{i}$ for $i=0,\ldots, k$.
+:::
 
 **Proof:** This is yet another exercise in the chain rule and keeping track of indices.
 Let's first look at the term $Y\cdot \log\sigma(XM)$.  Writing it out, we have
@@ -330,10 +335,14 @@ The term $\sum_{i=0}^{N-1} y_{i}\sigma(\sum_{j=0}^{k}x_{ij}m_{j})x_{is}$ cancels
 $$
 \frac{\partial L(M)}{m_{s}} = -\sum_{i=0}^{N-1} (y_{i}-\sigma(\sum_{j=0}^{k}x_{ij}m_{j}))x_{is}.
 $$  
-Looked at properly this is our desired formula:
+Since our weights $M$ are naturally a $(k+1)\times 1$ column vector, 
+looked at properly this is our desired formula:
 $$
--\nabla L(M) = (\sigma(XM)-Y)^{\intercal}X.
+-\nabla \log L(M) = X^{\intercal}(\sigma(XM)-Y).
 $$
+Since the right side is an $(k+1)\times N$ matrix times an $N\times 1$ column vector, the result
+is a $(k+1)\times 1$ column vector whose entries are the partial derivatives of $-\log L(M)$ with respect
+to the weights $m_{s}$. 
 
 ### Gradient Descent on our synthetic data
 
@@ -471,9 +480,12 @@ each row of which has a one in column $j$ if that sample belongs to class $j$, a
 This type of representation is sometimes called "one-hot" encoding. 
 
 So let's  assume we have $N$ data points, each with $k$ features, and a one-hot encoded, $N\times r$
-matrix of labels $Y$ encoding the data into $r$ classes.
-So our data matrix will be $N\times k$.   
-Our goal will be to find a $k\times r$ matrix of "weights" $M$ so that, for each sample, we compute
+matrix of labels $Y$ encoding the data into $r$ classes.  As usual, we add an "extra" feature, which
+is the constant $1$ for each sample, to account for the "intercept".
+So our data matrix will be $N\times (k+1)$.  
+
+
+Our goal will be to find a $(k+1)\times r$ matrix of "weights" $M$ so that, for each sample, we compute
 $r$ values, given by the rows of the matrix $XM$.
 These $r$ values are linear functions of the features, but we need probabilities.  In the one-dimensional
 case, we used the logistic function $\sigma$ to convert our linear function to probabilities.  In
@@ -494,8 +506,8 @@ Our multiclass logistic model will say that the probability vector that gives th
 that a particular sample belongs to a particular class is given by the rows of the matrix
 $\sigma(XM)$, where $\sigma(XM)$ means applying the function $\sigma$ to each row of the $N\times r$ matrix $XM$.  For later computation, if:
 
--  $x=X[i,:]$ is the $k$-entry feature vector of a single sample -- a row of the data matrix $X$ 
--  $m_{j}=M[:,j]$ is the $k$-entry column vector corresponding to the $j^{th}$ column of $M$, 
+-  $x=X[i,:]$ is the $k+1$-entry feature vector of a single sample -- a row of the data matrix $X$ 
+-  $m_{j}=M[:,j]$ is the $k+1$-entry column vector corresponding to the $j^{th}$ column of $M$, 
 
 then the probability vector
 $[p_{t}]_{t=1}^{r}$ has entries
@@ -511,7 +523,7 @@ $$
 p_{j}(x;M)=\hbox{The chance that x is in class j}.
 $$
 
-We have captured the class membership of the samples in a $k\times r$ matrix $Y$
+We have captured the class membership of the samples in a $(k+1)\times r$ matrix $Y$
 which is "one-hot" encoded.  Each row of this matrix has is zero in each place, except in the "correct" class, where it is one.  Let $y=Y[i,:]$ be the $i^{th}$ row
 of this matrix, so it is an $r$-entry row vector which is $1$ in the position
 giving the "correct" class for our sample $x$. 
@@ -530,7 +542,10 @@ Since each sample is independent, the total likelihood is the product of these p
 $$
 \log L(M) = \sum_{X,Y} \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
 $$
-where the sum is over the $N$ rows of $X$ and $Y$.
+where the sum is over the $N$ rows of $X$ and $Y$.  This is equivalent to the matrix expression
+$$
+\log L(M) = \mathrm{trace}(Y^{\intercal}P)=\mathrm{trace}(Y^{\intercal}\sigma(XM))
+$$
 
 This is the multiclass generalization of @eq-logisticregressionlikelihood.  To see the connection,
 notice that, in the case where we have only two
@@ -545,9 +560,9 @@ $$
 p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
 $$
 The gradient of this is made up of the derivatives with respect to the $m_{bq}$
-where $b=1,\ldots, k$ and $q=1,\dots, r$ so its natural to think of this
-gradient as a $k\times r$ matrix, the same shape as $M$.  Remember that each $m_s$ is
-the $s^{th}$ column of $M$ so is made up of $m_{bs}$ for $b=1,\ldots, k$.
+where $b=0,\ldots, k$ and $q=1,\dots, r$ so its natural to think of this
+gradient as a $(k+1)\times r$ matrix, the same shape as $M$.  Remember that each $m_s$ is
+the $s^{th}$ column of $M$ so is made up of $m_{bs}$ for $b=0,\ldots, k$.
 
 Looking at 
 $$
@@ -563,7 +578,7 @@ In vector terms:
 $$
 [\frac{\partial p_{s}}{\partial m_{bq}}]_{b=1}^{k}=-p_{q}p_{s}[x_{b}]_{b=1}^{k}
 $$ 
-as an equality of $k$-entry row vectors. This can be written more simply as a vector equation:
+as an equality of $k+1$-entry row vectors. This can be written more simply as a vector equation:
 $$
 \frac{\partial p_{s}}{\partial m_{q}}=-p_{q}p_{s}x.\qquad (q\not=s).
 $$
@@ -574,8 +589,11 @@ $$
 $$
 or in vector terms
 $$
-\frac{\partial p_{s}}{\partial m_{s}}=p_{s}(1-p_{s})x.
+\frac{\partial p_{s}}{\partial m_{s}}=p_{s}(1-p_{s})x^{\intercal}.
 $$
+
+**Important:** The gradient on the left is properly seen as a column vector (because $m_{s}$ is a column of the matrix $M$, with $k+1$ entries), and since $x$ is a row of the data matrix, so to keep the indices
+straight, we  need $x^{\intercal}$ on the right.
 
 Now we can use these formulae together with the expression for $\log L(M)$ to 
 obtain the gradient. Using the vector form, we have
@@ -585,19 +603,38 @@ $$
 Using our computations above, the chain rule, and the derivative of the logarithm,
 this  is the sum
 $$
-\frac{\partial \log L(M)}{\partial m_{q}} =\sum_{X,Y}\sum_{s=1}^{r} y_{s}(I_{qs}-p_{q})x
+\frac{\partial \log L(M)}{\partial m_{q}} =\sum_{X,Y}\sum_{s=1}^{r} y_{s}(I_{qs}-p_{q})x^{\intercal}
 $$
 where $I_{qs}=1$ if $q=s$ and zero otherwise. 
 
 Now $y_{s}I_{qs}$ is zero unless $s=q$, and the sum $\sum_{s=1}^{r} y_{s}=1$,
 so this simplifies further to 
 $$
-\frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y} (y_{q}-p_{q})x.
+\frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y} (y_{q}-p_{q})x^{\intercal}.
 $$
+This is equivalent to the matrix expression
+$$
+\nabla \log L(M) = X^{\intercal}(Y-P)=X^{\intercal}(Y-\sigma(XM)).
+$${#eq-multiclassgradient}
+
+Compare @eq-multiclassgradient to @thm-logisticgradient and we see that the form is identical whether in the two-class or multi-class case if we set things up properly.
+
+**Algorithm:** (Multiclass Gradient Descent)  Given:
+-  an $N\times(k+1)$ data matrix $X$ whose last column is all $1$, 
+-  an $N\times r$ matrix $Y$ that "one-hot" encodes the labels of the classification problem;
+- a random $(k+1)\times r$ matrix $M$ of initial guesses for the parameters
+- a "learning rate" $\nu$, 
+
+Iterate:
+$$
+M=M+\nu X^{\intercal}(Y-\sigma(XM))
+$$
+until $M$ changes by less than some tolerance.
 
 
+## Batch Descent
 
-
+A look at the formulae for the gradient (see @eq-multiclassgradient) tells us that each iteratio
 
 
 
