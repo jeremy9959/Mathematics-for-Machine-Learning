@@ -589,7 +589,7 @@ P(\hbox{ sample i in class j})=\prod_{s=1}^{r} p_{s}(x;M)^{y_{s}}.
 <p>Since each sample is independent, the total likelihood is the product of these probabilites, and the log-likelihood the corresponding sum: <span class="math display">\[
 \log L(M) = \sum_{X,Y} \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
 \]</span> where the sum is over the <span class="math inline">\(N\)</span> rows of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. This is equivalent to the matrix expression <span class="math display">\[
-\log L(M) = \mathrm{trace}(Y^{\intercal}P)=\mathrm{trace}(Y^{\intercal}\sigma(XM))
+\log L(M) = \mathrm{trace}(Y^{\intercal}P)=\mathrm{trace}(Y^{\intercal}\log\sigma(XM))
 \]</span></p>
 <p>This is the multiclass generalization of <a href="#eq-logisticregressionlikelihood">Equation&nbsp;<span>5.3</span></a>. To see the connection, notice that, in the case where we have only two classes, <span class="math inline">\(y_1=1-y_0\)</span> and <span class="math inline">\(p_{1}(x;M)=1-p_{0}(x;M)\)</span>, so this sum is the same as in the two class situation.</p>
 </section>
@@ -624,15 +624,24 @@ p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
 \nabla \log L(M) = X^{\intercal}(Y-P)=X^{\intercal}(Y-\sigma(XM)).
 \tag{5.4}\]</span></span></p>
 <p>Compare <a href="#eq-multiclassgradient">Equation&nbsp;<span>5.4</span></a> to <a href="#thm-logisticgradient">Theorem&nbsp;<span>5.1</span></a> and we see that the form is identical whether in the two-class or multi-class case if we set things up properly.</p>
-<p><strong>Algorithm:</strong> (Multiclass Gradient Descent) Given: - an <span class="math inline">\(N\times(k+1)\)</span> data matrix <span class="math inline">\(X\)</span> whose last column is all <span class="math inline">\(1\)</span>, - an <span class="math inline">\(N\times r\)</span> matrix <span class="math inline">\(Y\)</span> that “one-hot” encodes the labels of the classification problem; - a random <span class="math inline">\((k+1)\times r\)</span> matrix <span class="math inline">\(M\)</span> of initial guesses for the parameters - a “learning rate” <span class="math inline">\(\nu\)</span>,</p>
+<p>:::</p>
+<p><strong>Algorithm:</strong> (Multiclass Gradient Descent) Given:</p>
+<ul>
+<li>an <span class="math inline">\(N\times(k+1)\)</span> data matrix <span class="math inline">\(X\)</span> whose last column is all <span class="math inline">\(1\)</span>,</li>
+<li>an <span class="math inline">\(N\times r\)</span> matrix <span class="math inline">\(Y\)</span> that “one-hot” encodes the labels of the classification problem;</li>
+<li>a random <span class="math inline">\((k+1)\times r\)</span> matrix <span class="math inline">\(M\)</span> of initial guesses for the parameters</li>
+<li>a “learning rate” <span class="math inline">\(\nu\)</span>,</li>
+</ul>
 <p>Iterate: <span class="math display">\[
 M=M+\nu X^{\intercal}(Y-\sigma(XM))
 \]</span> until <span class="math inline">\(M\)</span> changes by less than some tolerance.</p>
+<p>:::</p>
 </section>
 </section>
 <section id="batch-descent" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="batch-descent"><span class="header-section-number">5.6</span> Batch Descent</h2>
-<p>A look at the formulae for the gradient (see <a href="#eq-multiclassgradient">Equation&nbsp;<span>5.4</span></a>) tells us that each iteratio</p>
+<p>A look at the formulae for the gradient (see <a href="#eq-multiclassgradient">Equation&nbsp;<span>5.4</span></a>) tells us that each iteration of the algorithm requires us to multiply the entire data matrix times the weights (to compute <span class="math inline">\(XM\)</span>) and then again to multiply by <span class="math inline">\(X^{\intercal}\)</span>. In practice, <span class="math inline">\(X\)</span> may have a very large number of rows, and working with the entire matrix may be impractical.</p>
+<p>One simple solution to this is to work with the data in batches. Each main iteration of gradient descent is made up of smaller steps, each of which works with a subset of the data matrix.</p>
 
 
 </section>
