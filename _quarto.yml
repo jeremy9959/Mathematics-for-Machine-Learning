@@ -5,6 +5,7 @@ book:
   title: "Lectures on Machine Learning"
   author: "Jeremy Teitelbaum"
   date: "12/1/2022"
+  license: "CC BY_SA"
   chapters:
     - index.qmd
     - chapters/01-linear-regression.md
@@ -16,11 +17,8 @@ book:
     - chapters/20-references.md
 
 bibliography: references/references.bib
-
 reference-section-title: References
 csl: references/stat.csl
-
-
 
 format:
   html:
@@ -31,6 +29,7 @@ format:
       - text: |
           \usepackage{listings}
       - file: chapters/macros.tex
+
       
 
 

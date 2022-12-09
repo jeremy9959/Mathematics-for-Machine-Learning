@@ -544,7 +544,7 @@ $$
 $$
 where the sum is over the $N$ rows of $X$ and $Y$.  This is equivalent to the matrix expression
 $$
-\log L(M) = \mathrm{trace}(Y^{\intercal}P)=\mathrm{trace}(Y^{\intercal}\log\sigma(XM))
+\log L(M) = \mathrm{trace}(Y^{\intercal}\log P)=\mathrm{trace}(Y^{\intercal}\log\sigma(XM))
 $$
 
 This is the multiclass generalization of @eq-logisticregressionlikelihood.  To see the connection,
@@ -645,7 +645,8 @@ then again to multiply by $X^{\intercal}$.  In practice, $X$ may have a very lar
 and working with the entire matrix may be impractical.
 
 One simple solution to this is to work with the data in batches.  Each main iteration of gradient
-descent is made up of smaller steps, each of which works with a subset of the data matrix.
+descent is made up of smaller steps, each of which works with a subset of the data matrix.  These
+smaller steps could be single rows of the data matrix, or submatrices.  
 
 
 
