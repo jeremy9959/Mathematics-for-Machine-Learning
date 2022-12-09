@@ -183,12 +183,16 @@ div.csl-indent {
   <li><a href="#simpsons-effect" id="toc-simpsons-effect" class="nav-link" data-scroll-target="#simpsons-effect"><span class="toc-section-number">1.7.2</span>  Simpson’s Effect</a></li>
   <li><a href="#exercises-1" id="toc-exercises-1" class="nav-link" data-scroll-target="#exercises-1"><span class="toc-section-number">1.7.3</span>  Exercises</a></li>
   </ul></li>
-  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">References</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
+::: {.hidden} 
+$$
+    \newcommand{\df}[1]{\frac{\partial}{\partial #1}}
+$$
+:::
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -365,7 +369,7 @@ m_{k+1}\end{matrix}\right].
 <p>The Calculus approach to minimizing the <span class="math inline">\(MSE\)</span> is to take its partial derivatives with respect to the <span class="math inline">\(m_{i}\)</span> and set them to zero. Let’s first work out the derivatives in a nice form for later.</p>
 <p><strong>Proposition:</strong> The gradient of <span class="math inline">\(MSE(M)=E\)</span> is given by</p>
 <p><span id="eq-gradient"><span class="math display">\[
-nabla E = \left[\begin{matrix} \df{M_1}E \\ \df{M_2}E \\ \vdots \\
+\nabla E = \left[\begin{matrix} \df{M_1}E \\ \df{M_2}E \\ \vdots \\
 \df{m_{M+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
 X^{\intercal}XM
 \tag{1.5}\]</span></span></p>
@@ -482,15 +486,12 @@ Y_{0} = Y - \mu_{Y}\left[\begin{matrix} 1 \\ 1 \\ \vdots \\
 </ol>
 
 
-</section>
-</section>
-<section id="bibliography" class="level1 unnumbered">
-<h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body" role="doc-bibliography" style="display: none">
 <div id="ref-irvine" class="csl-entry" role="doc-biblioentry">
 <div class="csl-left-margin">[1] </div><div class="csl-right-inline"><span class="smallcaps">U.C. Irvine ML Repository</span>. <span>Auto MPG Dataset</span>.Available at <a href="http://https://archive.ics.uci.edu/ml/datasets/Auto+MPG">http://https://archive.ics.uci.edu/ml/datasets/Auto+MPG</a>.</div>
 </div>
 </div>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -640,6 +641,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+      <div class="nav-footer-center">© 2021. This work is licensed by Jeremy Teitelbaum under the <a href="http://creativecommons.org/licenses/by-sa/4.0">Creative Commons Attribution-ShareAlike License</a>.</div>
+  </div>
+</footer>
 
 
 

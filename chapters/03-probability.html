@@ -194,12 +194,16 @@ div.csl-indent {
   <li><a href="#bayesian-coin-flipping" id="toc-bayesian-coin-flipping" class="nav-link" data-scroll-target="#bayesian-coin-flipping"><span class="toc-section-number">3.7.2</span>  Bayesian coin flipping</a></li>
   <li><a href="#bayesian-regression-or-ridge-regression" id="toc-bayesian-regression-or-ridge-regression" class="nav-link" data-scroll-target="#bayesian-regression-or-ridge-regression"><span class="toc-section-number">3.7.3</span>  Bayesian Regression (or Ridge Regression)</a></li>
   </ul></li>
-  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">References</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
+::: {.hidden} 
+$$
+    \newcommand{\df}[1]{\frac{\partial}{\partial #1}}
+$$
+:::
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -807,16 +811,13 @@ P^{\intercal}(P\tilde{\Lambda}^2P^{\intercal}+s)^{-1}P=P^{-1}(P(\Lambda+s)P^{-1}
 <p>In other words, the predicted value computed by ridge regression is obtained by projecting <span class="math inline">\(Y\)</span> into the space spanned by the feature vectors, but weighting the different principal components by <span class="math inline">\(N\lambda_{i}/(N\lambda_{i}+s)\)</span>. With this weighting, the principal components with smaller variances are weighted less than those with larger variances. For this reason, ridge regression is sometimes called a <em>shrinkage</em> method.</p>
 
 
-</section>
-</section>
-</section>
-<section id="bibliography" class="level1 unnumbered">
-<h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body" role="doc-bibliography" style="display: none">
 <div id="ref-Bertsekas" class="csl-entry" role="doc-biblioentry">
 <div class="csl-left-margin">[1] </div><div class="csl-right-inline"><span class="smallcaps">Bertsekas</span>, D. P. and <span class="smallcaps">Tsitsiklis</span>, J. N. (2008). <em>Introduction to probability</em>. Athena Scientific.</div>
 </div>
 </div>
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -966,6 +967,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+      <div class="nav-footer-center">© 2021. This work is licensed by Jeremy Teitelbaum under the <a href="http://creativecommons.org/licenses/by-sa/4.0">Creative Commons Attribution-ShareAlike License</a>.</div>
+  </div>
+</footer>
 
 
 

@@ -169,12 +169,16 @@ div.csl-indent {
   <li><a href="#likelihood" id="toc-likelihood" class="nav-link" data-scroll-target="#likelihood"><span class="toc-section-number">4.5</span>  Likelihood</a></li>
   <li><a href="#the-bag-of-words" id="toc-the-bag-of-words" class="nav-link" data-scroll-target="#the-bag-of-words"><span class="toc-section-number">4.6</span>  The Bag of Words</a></li>
   <li><a href="#other-applications" id="toc-other-applications" class="nav-link" data-scroll-target="#other-applications"><span class="toc-section-number">4.7</span>  Other applications</a></li>
-  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">References</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
+::: {.hidden} 
+$$
+    \newcommand{\df}[1]{\frac{\partial}{\partial #1}}
+$$
+:::
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -421,9 +425,6 @@ P(\pm|\mathbf{f}) = \frac{P(\mathbf{f}|\pm)P(\pm)}{P(\mathbf{f})}
 </div>
 
 
-</section>
-<section id="bibliography" class="level1 unnumbered">
-<h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body" role="doc-bibliography" style="display: none">
 <div id="ref-sentences" class="csl-entry" role="doc-biblioentry">
 <div class="csl-left-margin">[1] </div><div class="csl-right-inline"><span class="smallcaps">U.C. Irvine ML Repository</span>. <span>Sentiment Labelled Sentences Data Set</span>.Available at <a href="https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences">https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences</a>.</div>
@@ -578,6 +579,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+      <div class="nav-footer-center">© 2021. This work is licensed by Jeremy Teitelbaum under the <a href="http://creativecommons.org/licenses/by-sa/4.0">Creative Commons Attribution-ShareAlike License</a>.</div>
+  </div>
+</footer>
 
 
 

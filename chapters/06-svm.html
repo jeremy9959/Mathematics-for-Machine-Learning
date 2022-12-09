@@ -181,12 +181,16 @@ div.csl-indent {
   <li><a href="#nonlinear-kernels" id="toc-nonlinear-kernels" class="nav-link" data-scroll-target="#nonlinear-kernels"><span class="toc-section-number">6.6.2</span>  Nonlinear kernels</a></li>
   </ul></li>
   <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="toc-section-number">6.7</span>  Exercises</a></li>
-  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">References</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
+::: {.hidden} 
+$$
+    \newcommand{\df}[1]{\frac{\partial}{\partial #1}}
+$$
+:::
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -606,9 +610,6 @@ In practice, this means we allow a few points to lie on the “wrong side” of 
 </ol>
 
 
-</section>
-<section id="bibliography" class="level1 unnumbered">
-<h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body" role="doc-bibliography" style="display: none">
 <div id="ref-vapnik92" class="csl-entry" role="doc-biblioentry">
 <div class="csl-left-margin">[1] </div><div class="csl-right-inline"><span class="smallcaps">Boser</span>, B., <span class="smallcaps">Guyon</span>, I. and <span class="smallcaps">Vapnik</span>, V. <a href="https://dl.acm.org/doi/pdf/10.1145/130385.130401"><span class="nocase">A training algorithm for optimal margin classifiers</span></a>. In <em>Colt ’92: Proceedings of the fifth annual workshop on computational learning theory</em> (D. Haussler, ed) pp 144–52. ACM.</div>
@@ -778,6 +779,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+      <div class="nav-footer-center">© 2021. This work is licensed by Jeremy Teitelbaum under the <a href="http://creativecommons.org/licenses/by-sa/4.0">Creative Commons Attribution-ShareAlike License</a>.</div>
+  </div>
+</footer>
 
 
 
