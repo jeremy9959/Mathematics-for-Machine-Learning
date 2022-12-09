@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Lectures on Machine Learning",
     "section": "",
-    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books."
+    "text": "Preface\nThese notes are being developed for the UConn Math Department’s undergraduate course on the Mathematics of Machine Learning, Math 3180."
   },
   {
     "objectID": "chapters/01-linear-regression.html",
