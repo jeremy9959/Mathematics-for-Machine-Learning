@@ -14,6 +14,16 @@ book:
     - chapters/05-logistic-regression.md
     - chapters/06-svm.md
     - chapters/20-references.md
+  appendices:
+    - notebooks/RegressionLab.ipynb
+    - notebooks/PCALab.ipynb
+    - notebooks/Puzzle.ipynb
+    - notebooks/BayesTheoremLab.ipynb
+    - notebooks/NBSKlearn.ipynb
+    - notebooks/multivariate-gaussian.ipynb
+    - notebooks/MultiClassLogisticDigits.ipynb
+    - notebooks/SVMLab.ipynb
+    - notebooks/neural-networks.ipynb
 
 bibliography: references/references.bib
 
