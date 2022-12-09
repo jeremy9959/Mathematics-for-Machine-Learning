@@ -544,7 +544,7 @@ $$
 $$
 where the sum is over the $N$ rows of $X$ and $Y$.  This is equivalent to the matrix expression
 $$
-\log L(M) = \mathrm{trace}(Y^{\intercal}P)=\mathrm{trace}(Y^{\intercal}\sigma(XM))
+\log L(M) = \mathrm{trace}(Y^{\intercal}\log P)=\mathrm{trace}(Y^{\intercal}\log\sigma(XM))
 $$
 
 This is the multiclass generalization of @eq-logisticregressionlikelihood.  To see the connection,
@@ -619,7 +619,10 @@ $${#eq-multiclassgradient}
 
 Compare @eq-multiclassgradient to @thm-logisticgradient and we see that the form is identical whether in the two-class or multi-class case if we set things up properly.
 
+::: 
+
 **Algorithm:** (Multiclass Gradient Descent)  Given:
+
 -  an $N\times(k+1)$ data matrix $X$ whose last column is all $1$, 
 -  an $N\times r$ matrix $Y$ that "one-hot" encodes the labels of the classification problem;
 - a random $(k+1)\times r$ matrix $M$ of initial guesses for the parameters
@@ -631,10 +634,21 @@ M=M+\nu X^{\intercal}(Y-\sigma(XM))
 $$
 until $M$ changes by less than some tolerance.
 
+::: 
+
+
 
 ## Batch Descent
 
-A look at the formulae for the gradient (see @eq-multiclassgradient) tells us that each iteratio
+A look at the formulae for the gradient (see @eq-multiclassgradient) tells us that each iteration of the algorithm requires us to multiply the entire data matrix times the weights (to compute $XM$) and
+then again to multiply by $X^{\intercal}$.  In practice, $X$ may have a very large number of rows,
+and working with the entire matrix may be impractical.
+
+One simple solution to this is to work with the data in batches.  Each main iteration of gradient
+descent is made up of smaller steps, each of which works with a subset of the data matrix.  These
+smaller steps could be single rows of the data matrix, or submatrices.  
+
+
 
 
 

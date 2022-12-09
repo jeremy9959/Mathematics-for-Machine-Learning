@@ -307,7 +307,7 @@ first work out the derivatives in a nice form for later.
 **Proposition:** The gradient of $MSE(M)=E$ is given by
 
 $$ 
-nabla E = \left[\begin{matrix} \df{M_1}E \\ \df{M_2}E \\ \vdots \\
+\nabla E = \left[\begin{matrix} \df{M_1}E \\ \df{M_2}E \\ \vdots \\
 \df{m_{M+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
 X^{\intercal}XM 
 $${#eq-gradient}

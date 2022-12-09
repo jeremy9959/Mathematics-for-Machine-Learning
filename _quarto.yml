@@ -5,6 +5,10 @@ book:
   title: "Lectures on Machine Learning"
   author: "Jeremy Teitelbaum"
   date: "12/1/2022"
+  license: "CC BY-SA"
+  page-footer:
+    center: |
+      &copy; 2021. This work is licensed by Jeremy Teitelbaum under the [Creative Commons Attribution-ShareAlike License](http://creativecommons.org/licenses/by-sa/4.0).
   chapters:
     - index.qmd
     - chapters/01-linear-regression.md
@@ -26,21 +30,20 @@ book:
     - notebooks/neural-networks.ipynb
 
 bibliography: references/references.bib
-
-reference-section-title: References
 csl: references/stat.csl
-
-
 
 format:
   html:
-    theme: cosmo
+    theme: cosmo 
+    include-before-body: 
+      - file: chapters/macros.html      
   pdf:
-    documentclass: scrreprt
+    documentclass: scrbook
     include-in-header: 
       - text: |
           \usepackage{listings}
       - file: chapters/macros.tex
+
       
 
 
