@@ -24,12 +24,9 @@ csl: references/stat.csl
 
 format:
   html:
-    theme: cosmo
+    theme: cosmo 
     include-before-body: 
-      - file: chapters/macros.tex
-          
-        
-
+      - file: chapters/macros.html      
   pdf:
     documentclass: scrbook
     include-in-header: 
