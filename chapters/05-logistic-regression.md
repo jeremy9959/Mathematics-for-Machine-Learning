@@ -3,10 +3,10 @@
 Suppose that we are trying to convince customers to buy our product by showing them advertising.  Our experience teaches
 us that there is no deterministic relationship between how often a potential customer sees one of our ads and whether or not
 they purchase our product, nevertheless it is the case that as they see more ads they become more likely to make a purchase.
-Logistic regression is a statistical model that can capture the essence of this idea.
+Logistic regression is a statistical model that  captures this idea.
 
-To make this problem more abstract, let's imagine that we are trying to model a random event that depends on a parameter.
-As in our introduction above, the random event might be a user deciding to make  a purchase from a website, which, in our very simple model,
+To formulate this situation mathematically, let's imagine that we are trying to model a random event that depends on a parameter.
+The random event might be a user deciding to make  a purchase from a website, which, in our very simple model,
 depends on how many times the user saw an advertisement for the product in question.  But we could imagine other situations where
 the chance of an event happening depends on a parameter.  For example, we could imagine that a student's score on a certain test depends on how much studying they
 do, with the likelihood of passing the test increasing with the amount of studying.  
@@ -20,6 +20,7 @@ $${#eq-logistic_1}
 where $a$ and $b$ are constants.  The quantity $\frac{p}{1-p}$ is the "odds" of the event occurring.  We often use this quantity colloquially; if
 the chance of our team winning a football game is $1$ in $3$, then we would say the odds of a win are $1$-to-$2$, which we can interpret as meaning they 
 are twice as likely to lose as to win.  The quantity $\log\frac{p}{1-p}$ is, for obvious reasons, called the log-odds of the event.
+The logistic model in @eq-logistic_1 means that an increase by $1$ in the parameter $x$ increases the log-odds of the event happening by $a$.  
 
 The assumption in @eq-logistic_1 can be written
 $$
@@ -41,7 +42,7 @@ is called the *logistic function* and yields an S-shaped curve.
 
 ![Logistic Curve](img/logistic_curve.png){#fig-logistic_curve width=50%}
 
-To fully put the logistic model in perspective, let's choose some explicit parameters and look at what data arising from such a model
+To put the logistic model in perspective, let's choose some explicit parameters and look at what data arising from such a model
 would look like.  Imagine therefore that $a=\log 2$ and $b=0$, so that the probability of the event we are interested occurring is given by the
 formula
 $$
@@ -49,7 +50,7 @@ p(x) = \frac{1}{1+e^{-(\log 2)x}} = \frac{1}{1+(.5)^x}.
 $$
 Our data consists of counts of how often our event happened for a range of values of $x$.  To generate this data, we can pick $x$ values from the
 set $\{-3,-2,-1,0,1,2,3\}$ yielding probabilities $\{.11,.2,.33,.4,.56,.67,.8\}$.  Now our data consists of,  for each value of $x$, the result of $100$ independent
-Bernoulli trials with probability $p(x)$.  For example, we might find that our event occurred $\{10, 18, 38, 50, 69, 78, 86\}$ times respectively for each of the $x$ values.
+Bernoulli trials with probability $p(x)$.  For example, we might find that our event occurred $\{10, 18, 38, 50, 69, 78, 86\}$ times respectively for each of the $x$ values.  As you can see, the event occurs more frequently when $x$ is large, although the number of occurrences is still random.
 
 
 ## Likelihood and Logistic Regression
