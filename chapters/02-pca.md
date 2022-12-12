@@ -25,33 +25,33 @@ a great deal.
 
 ### Variance
 
-Suppose that we have a collection of measurements $(x_1,\ldots, x_n)$ of a particular feature $X$.
+Suppose that we have a collection of measurements $(x_1,\ldots, x_N)$ of a particular feature $X$.
 For example,  $x_i$ might be the initial weight of the $ith$ participant in our weight loss study.
-The mean of the values $(x_1,\ldots, x_n)$ is
+The mean of the values $(x_1,\ldots, x_N)$ is
 
 $$
-\mu_{X} = \frac{1}{n}\sum_{i=1}^{n} x_{i}.
+\mu_{X} = \frac{1}{N}\sum_{i=1}^{N} x_{i}.
 $$
 
 The simplest measure of the variability of the data is called its *variance.*
 
-**Definition:** The (sample) variance of the data $x_1,\ldots, x_n$ is
+**Definition:** The (sample) variance of the data $x_1,\ldots, x_N$ is
 
 $$
-\sigma_{X}^2 = \frac{1}{n}\sum_{i=1}^{n} \left(x_{i}-\mu_{X}\right)^2 = \frac{1}{n}\left(\sum_{i=1}^{n} x_{i}^2\right)- \mu_{X}^2
+\sigma_{X}^2 = \frac{1}{N}\sum_{i=1}^{N} \left(x_{i}-\mu_{X}\right)^2 = \frac{1}{N}\left(\sum_{i=1}^{N} x_{i}^2\right)- \mu_{X}^2
 $${#eq-variance}
 
 The square root of the variance is called the *standard deviation.*
 
 As we see from the formula, the variance is a measure of how 'spread out' the data is from the mean.
 
-Recall that in our discussion of linear regression we thought of our set of measurements $x_1,\ldots, x_n$
+Recall that in our discussion of linear regression we thought of our set of measurements $x_1,\ldots, x_N$
 as a vector -- it's one of the columns of our data matrix.  From that point of view, the variance
 has a geometric interpretation -- it is $\frac{1}{N}$ times the square of the
-distance from the point $X=(x_1,\ldots, x_n)$ to the point $\mu_{X}(1,1,\ldots,1)=\mu_{X}E$:
+distance from the point $X=(x_1,\ldots, x_N)$ to the point $\mu_{X}(1,1,\ldots,1)=\mu_{X}E$:
 
 $$
-\sigma_{X}^2 = \frac{1}{n}(X-\mu_{X}E)\cdot(X-\mu_{X}E)  = \frac{1}{n}\|X-\mu_{X}E\|^2.
+\sigma_{X}^2 = \frac{1}{N}(X-\mu_{X}E)\cdot(X-\mu_{X}E)  = \frac{1}{N}\|X-\mu_{X}E\|^2.
 $${#eq-variancedot}
 
 ### Covariance
@@ -62,7 +62,7 @@ of multiple features and we might want to know something about how two features 
 increases, the other one increases; or when one increases, the other one decreases.  
 
 **Definition:**
-Given measurements $(x_1,\ldots, x_n)$ and $(y_1,\ldots, y_n)$ of two features $X$ and $Y$, the covariance
+Given measurements $(x_1,\ldots, x_N)$ and $(y_1,\ldots, y_N)$ of two features $X$ and $Y$, the covariance
 of $X$ and $Y$ is
 
 $$
@@ -70,7 +70,7 @@ $$
 $${#eq-covariancedot}
 
 There is a nice geometric interpretation of this, as well, in terms of the dot product.  If
-$X=(x_1,\ldots, x_n)$ and $Y=(y_1\ldots,y_n)$ then
+$X=(x_1,\ldots, x_N)$ and $Y=(y_1\ldots,y_N)$ then
 
 $$
 \sigma_{XY} = \frac{1}{N} ((X-\mu_{X}E)\cdot (Y-\mu_{Y}E)).
@@ -114,7 +114,7 @@ measures the cosine of the angle between the vectors $X-\mu_{X}E$ and $Y-\mu_{Y}
 
 **Definition:** The quantity $r_{XY}$ defined in  @eq-rxy is called the (sample)
 *correlation coefficient* between $X$ and $Y$.  We have $0\le |r_{XY}|\le 1$ with $r_{XY}=\pm 1$
-if and only if the two vectors $X-\mu_{X}$ and $Y-\mu_{Y}$ are collinear in $\mathbf{R}^{n}$.
+if and only if the two vectors $X-\mu_{X}$ and $Y-\mu_{Y}$ are collinear in $\mathbf{R}^{N}$.
 
 *@fig-corrfig illustrates data with different values of the correlation coefficient.
 
@@ -201,6 +201,9 @@ As another example, suppose we are interested in the impact of the nutritional c
 weight gain in a study.  We know that both calorie content and the level
 dietary fiber contribute to the weight gain of participants eating this particular food; maybe there is some
 kind of combined "calorie/fiber" score we could introduce that captures the impact of that food better.
+
+Finally, when we assign grades in a course, we typically compute a weighted combination of the scores of each student on a series
+of assignments.  Such a combination is another example of a "score" and may help explain the origin of the term.
 
 **Definition:** Let $X_{0}$ be a (centered) $N\times k$ data matrix  giving information about $k$ features for
 each of $N$ samples.  A linear synthetic feature, or a linear score, is a linear combination of the $k$ features.
@@ -988,7 +991,9 @@ $\lambda_{i}$.
 5. Let $\Lambda$ be the diagonal matrix with entries $\lambda_{1},\ldots, \lambda_{N}$ and let $P$ be the matrix
 whose columns are made up of the eigenvectors $u_{i}$.  Then $D=P\Lambda P^{\intercal}$.
 
-**Proof:** Start with $1$.
+**Proof:** First of all, we use the fact that any matrix has at least one eigenvector with associated eigenvalue.
+This is a theorem from linear algebra that relies on the fundamental theorem of algebra.  With this result available,
+we start by proving part 1. 
 Suppose that $\lambda$ is an eigenvalue of
 $D$.  Let $u$ be a corresponding nonzero eigenvector.  Then
 $Du=\lambda u$ and $D\overline{u}=\overline{\lambda}\overline{u}$, where $\overline{u}$ is the
@@ -1012,7 +1017,8 @@ Property $2$ is in some ways the most critical fact. We know from the
 general theory of the characteristic polynomial, and the fundamental
 theorem of algebra, that $D$ has $N$ complex eigenvalues, although
 some may be repeated.  However, it may not be the case that $D$ has $N$ linearly
-independent eigenvectors -- it may not be *diagonalizable*.  So we will establish that now.
+independent eigenvectors -- it may not be *diagonalizable*.  So we will establish that any *symmetric* matrix over the real
+numbers is diagonalizable. 
 
 A one-by-one matrix is automatically symmetric and diagonalizable.  In the $N$-dimensional case,
 we know, at least, that $D$ has at least one eigenvector, and real one at that by part $1$,
