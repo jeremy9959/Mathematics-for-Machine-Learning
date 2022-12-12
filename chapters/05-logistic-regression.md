@@ -619,9 +619,11 @@ $${#eq-multiclassgradient}
 
 Compare @eq-multiclassgradient to @thm-logisticgradient and we see that the form is identical whether in the two-class or multi-class case if we set things up properly.
 
-::: 
+::: {#alg-graddescent}
 
-**Algorithm:** (Multiclass Gradient Descent)  Given:
+### Multiclass Gradient Descent
+
+Given:
 
 -  an $N\times(k+1)$ data matrix $X$ whose last column is all $1$, 
 -  an $N\times r$ matrix $Y$ that "one-hot" encodes the labels of the classification problem;
