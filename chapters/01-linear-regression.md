@@ -48,7 +48,12 @@ that minimizes the "mean squared error":
 
 $$ MSE(m,b) = \frac{1}{N}\sum_{i=1}^{n} (y_i-mx_i-b)^2 $$
 
-It's worth emphasizing that the $MSE$ is a function of two variables
+Practically speaking, minimizing the $MSE$ is a good strategy because it captures
+the difference between our predictions and the true values in a reasonable way
+and it is easy to work with analytically.  There are underlying statistical hypotheses
+that also argue in favor of the $MSE$, and we will discuss those later in the course.
+
+Remember that the $MSE$ is a function of two variables
 -- the slope $m$ and the intercept $b$ -- and that the data points
 $\{(x_i,y_i)\}$ are constants for these purposes.  Furthermore, it's a
 quadratic function in those two variables.  Since our goal is to find
@@ -248,7 +253,7 @@ m_k\end{matrix}\right]+\left[\begin{matrix} 1 \\ 1 \\ \cdots \\
 1\end{matrix}\right]b 
 $$
 
-and our goal is to choose these parameters $m_i$ and $b$ to make the
+and our goal is to choose these parameters $m_i$ and $b$ to minimize the
 mean squared error:
 
 $$ MSE(m_1,\ldots, m_k,b) = \|Y-\hat{Y}\|^2 = \sum_{i=1}^{N} (y_i -
@@ -257,12 +262,11 @@ $$
 
 Here we are summing over the $N$ different car models, and for each
 model taking the squared difference between the true mileage $y_i$ and
-the "predicted" mileage $\sum_{j=1}^{k} x_{ij}m_j +b$. We wish to
-minimize this MSE.
+the "predicted" mileage $\sum_{j=1}^{k} x_{ij}m_j +b$ and we want this to be as small as possible.
 
 Let's make one more simplification.  The intercept variable $b$ is
 annoying because it requires separate treatment from the $m_i$.  But
-we can use a trick to eliminate the need for special treatment.  Let's
+we can use a trick to eliminate the need for this special treatment.  Let's
 add a new feature to our data matrix (a new column) that has the
 constant value $1$.
 
@@ -292,7 +296,7 @@ $$ M=\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
 m_{k+1}\end{matrix}\right].
 $$
 
-**Remark:** Later on (see {@sec-centered}) we will see that if we
+**Remark:** Later on (see @sec-centered ) we will see that if we
 "center" our features about their mean, by subtracting the average
 value of each column of $X$ from that column; and we also subtract the
 average value of $Y$ from the entries of $Y$, then the $b$ that
@@ -389,7 +393,7 @@ spanned by the columns of $X$. It has the following properties:
 
 - $PY$ belongs to the subspace $H$ for any $Y\in\mathbf{R}^{N}$.
 - $(Y-PY)$ is orthogonal to $H$.
-- $P*P = P$.
+- $P^2 = P$.
 
 **Proof:** First of all, $PY=XD^{-1}X^{\intercal}Y$ so $PY$ is a
 linear combination of the columns of $X$ and is therefore an element

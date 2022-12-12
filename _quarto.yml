@@ -39,6 +39,10 @@ format:
       - file: chapters/macros.html      
   pdf:
     documentclass: scrbook
+    geometry:
+      - top=1in
+      - left=1in
+    fontsize: 11pt
     include-in-header: 
       - text: |
           \usepackage{listings}
