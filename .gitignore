@@ -3,3 +3,5 @@
 /_site/
 
 /.luarc.json
+index.fdb_latexmk
+
