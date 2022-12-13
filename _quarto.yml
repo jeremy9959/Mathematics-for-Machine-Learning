@@ -15,6 +15,7 @@ book:
     - chapters/02-pca.md
     - chapters/03-probability.md
     - chapters/04-naive-bayes.md
+    - chapters/05-1-gradient-descent.md
     - chapters/05-logistic-regression.md
     - chapters/06-svm.md
     - chapters/20-references.md

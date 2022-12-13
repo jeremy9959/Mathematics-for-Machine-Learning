@@ -1,10 +1,3 @@
----
-format:
-   pdf:
-      include-in-header:
-         - macros.tex
----
-
 # Linear Regression
 
 ## Introduction {#sec-Intro}
@@ -46,14 +39,9 @@ the line $y=mx+b$ that "best fits" the data $\{(x_i,y_i)_{i=1}^{N}\}$.
 The classic approach is to determine the equation of a line $y=mx+b$
 that minimizes the "mean squared error":
 
-$$ MSE(m,b) = \frac{1}{N}\sum_{i=1}^{n} (y_i-mx_i-b)^2 $$
+$$ MSE(m,b) = \frac{1}{N}\sum_{i=1}^{N} (y_i-mx_i-b)^2 $$
 
-Practically speaking, minimizing the $MSE$ is a good strategy because it captures
-the difference between our predictions and the true values in a reasonable way
-and it is easy to work with analytically.  There are underlying statistical hypotheses
-that also argue in favor of the $MSE$, and we will discuss those later in the course.
-
-Remember that the $MSE$ is a function of two variables
+It's worth emphasizing that the $MSE$ is a function of two variables
 -- the slope $m$ and the intercept $b$ -- and that the data points
 $\{(x_i,y_i)\}$ are constants for these purposes.  Furthermore, it's a
 quadratic function in those two variables.  Since our goal is to find
@@ -108,10 +96,10 @@ of best fit" fails in this case?
 ## Least Squares (via Geometry) {#sec-LinAlg}
 
 In our discussion above, we thought about our data as consisting of
-$N$ pairs $(x_i,y_i)$ corresponding to $n$ points in the $xy$-plane
+$N$ pairs $(x_i,y_i)$ corresponding to $N$ points in the $xy$-plane
 $\mathbf{R}^2$.  Now let's turn that picture "on its side", and
 instead think of our data as consisting of *two* points in
-$\mathbf{R}^{n}$:
+$\mathbf{R}^{N}$:
 
 $$ X=\left[\begin{matrix} x_1\cr x_2\cr \vdots\cr
 x_n\end{matrix}\right] \mathrm{\ and\ } Y = \left[\begin{matrix}
@@ -127,7 +115,7 @@ $$
 First, let's assume that $E$ and $X$ are linearly independent.  If
 not, then $X$ is a constant vector (why?) which we already know is a
 problem from @sec-Calculus, Exercise 2.  Therefore $E$ and $X$ span a
-plane in $\mathbf{R}^{n}$.
+plane in $\mathbf{R}^{N}$.
 
 ![Distance to A Plane](img/distance-to-plane.png){#fig-perp
 width=50%}
@@ -142,12 +130,12 @@ instead we look for an approximate solution.  One way to phrase that
 is to ask:
 
 *What is the point $\hat{Y}$ in the plane $H$ spanned by $X$ and $E$
-in $\mathbf{R}^{n}$ which is closest to $Y$?*
+in $\mathbf{R}^{N}$ which is closest to $Y$?*
 
 If we knew this point $\hat{Y}$, then since it lies in $H$ we would
 have $\hat{Y}=mX+bE$ and the coefficients $m$ and $b$ would be a
 candidate for defining a line of best fit $y=mx+b$.  Finding the point
-in a plane closest to another point in $\mathbf{R}^{n}$ is a geometry
+in a plane closest to another point in $\mathbf{R}^{N}$ is a geometry
 problem that we can solve.
 
 **Proposition:** The point $\hat{Y}$ in the plane spanned by $X$ and
@@ -253,7 +241,7 @@ m_k\end{matrix}\right]+\left[\begin{matrix} 1 \\ 1 \\ \cdots \\
 1\end{matrix}\right]b 
 $$
 
-and our goal is to choose these parameters $m_i$ and $b$ to minimize the
+and our goal is to choose these parameters $m_i$ and $b$ to make the
 mean squared error:
 
 $$ MSE(m_1,\ldots, m_k,b) = \|Y-\hat{Y}\|^2 = \sum_{i=1}^{N} (y_i -
@@ -262,11 +250,12 @@ $$
 
 Here we are summing over the $N$ different car models, and for each
 model taking the squared difference between the true mileage $y_i$ and
-the "predicted" mileage $\sum_{j=1}^{k} x_{ij}m_j +b$ and we want this to be as small as possible.
+the "predicted" mileage $\sum_{j=1}^{k} x_{ij}m_j +b$. We wish to
+minimize this MSE.
 
 Let's make one more simplification.  The intercept variable $b$ is
 annoying because it requires separate treatment from the $m_i$.  But
-we can use a trick to eliminate the need for this special treatment.  Let's
+we can use a trick to eliminate the need for special treatment.  Let's
 add a new feature to our data matrix (a new column) that has the
 constant value $1$.
 
@@ -296,7 +285,7 @@ $$ M=\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
 m_{k+1}\end{matrix}\right].
 $$
 
-**Remark:** Later on (see @sec-centered ) we will see that if we
+**Remark:** Later on (see {@sec-centered}) we will see that if we
 "center" our features about their mean, by subtracting the average
 value of each column of $X$ from that column; and we also subtract the
 average value of $Y$ from the entries of $Y$, then the $b$ that
@@ -393,7 +382,7 @@ spanned by the columns of $X$. It has the following properties:
 
 - $PY$ belongs to the subspace $H$ for any $Y\in\mathbf{R}^{N}$.
 - $(Y-PY)$ is orthogonal to $H$.
-- $P^2 = P$.
+- $P*P = P$.
 
 **Proof:** First of all, $PY=XD^{-1}X^{\intercal}Y$ so $PY$ is a
 linear combination of the columns of $X$ and is therefore an element
