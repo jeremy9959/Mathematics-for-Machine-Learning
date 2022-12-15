@@ -128,5 +128,4 @@ As we hope, the red dots quickly descend to the bottom of the "valley" at the po
 this valley is only a *local minimum* of the function; the true minimum is at $x=-2$.  Gradient descent can't see that far away point and so we don't find the true minimum of the function.  One way to 
 handle this is to *run gradient descent multiple times with random starting coordinates* and then look for the minimum value it finds among all of these tries.
 
-
-
+Gradient descent can fail more spectacularly if we choose an unfortunate combination of learning rate and starting point.  
