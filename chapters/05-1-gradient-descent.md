@@ -98,48 +98,35 @@ This function has two "pits" or "wells" indicated by the darker, "cooler" colore
 shows the path that the gradient descent algorithm takes, from a higher, "hotter" region to a lower
 cooler one. 
 
-To get a little more perspective on gradient descent, consider the one-dimensional case, with $f(x)=4x^3-6x^2$.  This is a cubic polynomial whose graph has a local maximum and a local minimum, depicted in @fig-graddescentcubic.
 
-![A cubic polynomial](img/GradDescentCubic.png){#fig-graddescentcubic width=50%}
-
-In this case the gradient is just the derivative $f'(x)=12x^2-12x$ and the iteration is
+To get a little more perspective on gradient descent, consider the one-dimensional case, with 
 $$
-c^{(n+1)} = c^{(n)}-12\nu((c^{(n)})^2-c^{(n)}).
+f(x)=3x^4+4x^3-12x^2+5.
+$$ 
+This is a quartic polynomial whose graph has two local minima and a local maximum, depicted in @fig-graddescentquartic.
+
+![A quartic polynomial](img/GradDescentQuartic.png){#fig-graddescentquartic width=50%}
+
+In this case the gradient is just the derivative 
+$$
+f'(x)=12x^3+12x^2-24x
+$$
+ and the iteration is
+$$
+c^{(n+1)} = c^{(n)}-12\nu((c^{(n)})^3+(c^{(n)})^2-2c^{(n)}).
 $$
 
-Even from this simple example we can see the power and also the pitfalls of this method.  Suppose we choose
-$x_0=2$, $\nu=.01$, and $\epsilon=.001$.  Then the iteration yields:
 
-| Step | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 
-|---|---|---|---|---|---|---|---|
-|x|2.0| 0.8       | 0.896     | 0.952 | 0.979|  0.991| 0.997|
-
-: Gradient Descent Iterations {#tbl-graddescentiters}
-
-As you can see, the points move quickly to the (local) minimum at $x=1$.    
-
-There are two ways (at least) that things can go wrong, however.  First suppose we use $x_0=-1$, instead
-of $x_0=2$, as our first guess.  Then we are on the downslope on the left side of the graph, and following
-the gradient quickly takes us off to $-\infty$.
+From this simple example we can see the power and also the pitfalls of this method.  Suppose we choose
+$x_0=.5$, $\nu=.01$, and do $30$ iterations of the main loop in our algorithm.  The result is shown in 
+@fig-grad_descent_local_minimum .
 
 
-| Step | 0 | 1 | 2 | 3 | 4 | 5 |
-|---|---|---|---|---|---|---|
-|x| -1.00 |-2.20| -6.42| -35.04| -792.70| -378296.27 |
+![Gradient descent to a local minimum](img/grad_descent_local_minimum.png){#fig-grad_descent_local_minimum}
 
-: Gradient Descent Iterations (first failure mode) {#tbl-graddescentfailone}
+As we hope, the red dots quickly descend to the bottom of the "valley" at the point $x=1$.  However,
+this valley is only a *local minimum* of the function; the true minimum is at $x=-2$.  Gradient descent can't see that far away point and so we don't find the true minimum of the function.  One way to 
+handle this is to *run gradient descent multiple times with random starting coordinates* and then look for the minimum value it finds among all of these tries.
 
-Second, suppose we choose $x_0=2$, but choose a somewhat larger learning rate -- say, $\nu=.1$.
-In this case, initially things look good, but the addition of the gradient causes an overshoot
-which once again takes us over the hump at $x=0$ and off to $-\infty$ heading to the left.
 
-| Step | 0 | 1 | 2 | 3 | 4 | 5 |6|
-|---|---|---|---|---|---|---|---|
-|x|2.00|-0.11|-0.24|-0.56|-1.49|-5.42|-42.23|
 
-: Gradient Descent Iterations (second failure mode) {#tbl-graddescentfailetwo}
-
-Based on these considerations, we see that, for general functions, 
- *if gradient descent converges,* then it will converge
-to a local minimum of the function.  But *it may not converge,* and even if it does, we can't conclude
-anything about whether we've reached a *global* minimum.  
