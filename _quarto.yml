@@ -35,7 +35,7 @@ csl: references/stat.csl
 format:
   html:
     theme: cosmo 
-    include-before-body: 
+    include-in-header: 
       - file: chapters/macros.html      
   pdf:
     documentclass: scrbook

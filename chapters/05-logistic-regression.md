@@ -1,3 +1,10 @@
+---
+format:
+   pdf:
+      include-in-header:
+         - macros.tex
+---
+
 # Logistic Regression
 
 Suppose that we are trying to convince customers to buy our product by showing them advertising.  Our experience teaches

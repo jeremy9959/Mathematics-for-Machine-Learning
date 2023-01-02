@@ -3,6 +3,9 @@ format:
    pdf:
       include-in-header:
          - macros.tex
+   html:
+      include-in-header:
+         - macros.html
 ---
 
 # Linear Regression
