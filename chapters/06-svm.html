@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lectures on Machine Learning - 6&nbsp; Support Vector Machines</title>
+<title>Lectures on Machine Learning - 7&nbsp; Support Vector Machines</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -79,18 +79,24 @@ div.csl-indent {
     "search-submit-button-title": "Submit"
   }
 }</script>
+</head><body class="nav-sidebar floating">$$
+    \newcommand{\df}[1]{\frac{\partial}{\partial #1}}
+    \newcommand{\R}{\mathbf{R}}
+$$
+
+
 
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-</head>
 
-<body class="nav-sidebar floating">
+
+
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -140,12 +146,17 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/05-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Logistic Regression</span></a>
+  <a href="../chapters/05-1-gradient-descent.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Gradient Descent</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/06-svm.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  <a href="../chapters/05-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logistic Regression</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-svm.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -162,39 +173,34 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">6.1</span>  Introduction</a></li>
-  <li><a href="#a-simple-example" id="toc-a-simple-example" class="nav-link" data-scroll-target="#a-simple-example"><span class="toc-section-number">6.2</span>  A simple example</a></li>
-  <li><a href="#the-general-case" id="toc-the-general-case" class="nav-link" data-scroll-target="#the-general-case"><span class="toc-section-number">6.3</span>  The general case</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">7.1</span>  Introduction</a></li>
+  <li><a href="#a-simple-example" id="toc-a-simple-example" class="nav-link" data-scroll-target="#a-simple-example"><span class="toc-section-number">7.2</span>  A simple example</a></li>
+  <li><a href="#the-general-case" id="toc-the-general-case" class="nav-link" data-scroll-target="#the-general-case"><span class="toc-section-number">7.3</span>  The general case</a>
   <ul class="collapse">
-  <li><a href="#hyperplanes" id="toc-hyperplanes" class="nav-link" data-scroll-target="#hyperplanes"><span class="toc-section-number">6.3.1</span>  Hyperplanes</a></li>
-  <li><a href="#sec-linearseparable" id="toc-sec-linearseparable" class="nav-link" data-scroll-target="#sec-linearseparable"><span class="toc-section-number">6.3.2</span>  Linear separability and Margins</a></li>
+  <li><a href="#hyperplanes" id="toc-hyperplanes" class="nav-link" data-scroll-target="#hyperplanes"><span class="toc-section-number">7.3.1</span>  Hyperplanes</a></li>
+  <li><a href="#sec-linearseparable" id="toc-sec-linearseparable" class="nav-link" data-scroll-target="#sec-linearseparable"><span class="toc-section-number">7.3.2</span>  Linear separability and Margins</a></li>
   </ul></li>
-  <li><a href="#convexity-convex-hulls-and-margins" id="toc-convexity-convex-hulls-and-margins" class="nav-link" data-scroll-target="#convexity-convex-hulls-and-margins"><span class="toc-section-number">6.4</span>  Convexity, Convex Hulls, and Margins</a></li>
-  <li><a href="#finding-the-optimal-margin-classifier" id="toc-finding-the-optimal-margin-classifier" class="nav-link" data-scroll-target="#finding-the-optimal-margin-classifier"><span class="toc-section-number">6.5</span>  Finding the Optimal Margin Classifier</a>
+  <li><a href="#convexity-convex-hulls-and-margins" id="toc-convexity-convex-hulls-and-margins" class="nav-link" data-scroll-target="#convexity-convex-hulls-and-margins"><span class="toc-section-number">7.4</span>  Convexity, Convex Hulls, and Margins</a></li>
+  <li><a href="#finding-the-optimal-margin-classifier" id="toc-finding-the-optimal-margin-classifier" class="nav-link" data-scroll-target="#finding-the-optimal-margin-classifier"><span class="toc-section-number">7.5</span>  Finding the Optimal Margin Classifier</a>
   <ul class="collapse">
-  <li><a href="#relaxing-the-constraints" id="toc-relaxing-the-constraints" class="nav-link" data-scroll-target="#relaxing-the-constraints"><span class="toc-section-number">6.5.1</span>  Relaxing the constraints</a></li>
-  <li><a href="#sequential-minimal-optimization" id="toc-sequential-minimal-optimization" class="nav-link" data-scroll-target="#sequential-minimal-optimization"><span class="toc-section-number">6.5.2</span>  Sequential Minimal Optimization</a></li>
+  <li><a href="#relaxing-the-constraints" id="toc-relaxing-the-constraints" class="nav-link" data-scroll-target="#relaxing-the-constraints"><span class="toc-section-number">7.5.1</span>  Relaxing the constraints</a></li>
+  <li><a href="#sequential-minimal-optimization" id="toc-sequential-minimal-optimization" class="nav-link" data-scroll-target="#sequential-minimal-optimization"><span class="toc-section-number">7.5.2</span>  Sequential Minimal Optimization</a></li>
   </ul></li>
-  <li><a href="#inseparable-sets" id="toc-inseparable-sets" class="nav-link" data-scroll-target="#inseparable-sets"><span class="toc-section-number">6.6</span>  Inseparable Sets</a>
+  <li><a href="#inseparable-sets" id="toc-inseparable-sets" class="nav-link" data-scroll-target="#inseparable-sets"><span class="toc-section-number">7.6</span>  Inseparable Sets</a>
   <ul class="collapse">
-  <li><a href="#best-separating-hyperplanes" id="toc-best-separating-hyperplanes" class="nav-link" data-scroll-target="#best-separating-hyperplanes"><span class="toc-section-number">6.6.1</span>  Best Separating Hyperplanes</a></li>
-  <li><a href="#nonlinear-kernels" id="toc-nonlinear-kernels" class="nav-link" data-scroll-target="#nonlinear-kernels"><span class="toc-section-number">6.6.2</span>  Nonlinear kernels</a></li>
+  <li><a href="#best-separating-hyperplanes" id="toc-best-separating-hyperplanes" class="nav-link" data-scroll-target="#best-separating-hyperplanes"><span class="toc-section-number">7.6.1</span>  Best Separating Hyperplanes</a></li>
+  <li><a href="#nonlinear-kernels" id="toc-nonlinear-kernels" class="nav-link" data-scroll-target="#nonlinear-kernels"><span class="toc-section-number">7.6.2</span>  Nonlinear kernels</a></li>
   </ul></li>
-  <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="toc-section-number">6.7</span>  Exercises</a></li>
+  <li><a href="#sec-exercises" id="toc-sec-exercises" class="nav-link" data-scroll-target="#sec-exercises"><span class="toc-section-number">7.7</span>  Exercises</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
-::: {.hidden} 
-$$
-    \newcommand{\df}[1]{\frac{\partial}{\partial #1}}
-$$
-:::
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></h1>
 </div>
 
 
@@ -209,32 +215,32 @@ $$
 
 </header>
 
-<section id="introduction" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">6.1</span> Introduction</h2>
+<section id="introduction" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">7.1</span> Introduction</h2>
 <p>Suppose that we are given a collection of data made up of samples from two different classes, and we would like to develop an algorithm that can distinguish between the two classes. For example, given a picture that is either a dog or a cat, we’d like to be able to say which of the pictures are dogs, and which are cats. For another example, we might want to be able to distinguish “real” emails from “spam.” This type of problem is called a <em>classification</em> problem.</p>
 <p>Typically, one approaches a classification problem by beginning with a large set of data for which you know the classes, and you use that data to <em>train</em> an algorithm to correctly distinguish the classes for the test cases where you already know the answer. For example, you start with a few thousand pictures labelled “dog” and “cat” and you build your algorithm so that it does a good job distinguishing the dogs from the cats in this initial set of <em>training data</em>. Then you apply your algorithm to pictures that aren’t labelled and rely on the predictions you get, hoping that whatever let your algorithm distinguish between the particular examples will generalize to allow it to correctly classify images that aren’t pre-labelled.</p>
 <p>Because classification is such a central problem, there are many approaches to it. We will see several of them through the course of these lectures. We will begin with a particular classification algorithm called “Support Vector Machines” (SVM) that is based on linear algebra. The SVM algorithm is widely used in practice and has a beautiful geometric interpretation, so it will serve as a good beginning for later discussion of more complicated classification algorithms.</p>
 <p>Incidentally, I’m not sure why this algorithm is called a “machine”; the algorithm was introduced in the paper <span class="citation" data-cites="vapnik92">[<a href="20-references.html#ref-vapnik92" role="doc-biblioref">1</a>]</span> where it is called the “Optimal Margin Classifier” and as we shall see that is a much better name for it.</p>
 <p>My presentation of this material was heavily influenced by the beautiful paper <span class="citation" data-cites="bennettDuality">[<a href="20-references.html#ref-bennettDuality" role="doc-biblioref">2</a>]</span>.</p>
 </section>
-<section id="a-simple-example" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="a-simple-example"><span class="header-section-number">6.2</span> A simple example</h2>
+<section id="a-simple-example" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="a-simple-example"><span class="header-section-number">7.2</span> A simple example</h2>
 <p>Let us begin our discussion with a very simple dataset (see <span class="citation" data-cites="penguins">[<a href="20-references.html#ref-penguins" role="doc-biblioref">3</a>]</span> and <span class="citation" data-cites="penguindata">[<a href="20-references.html#ref-penguindata" role="doc-biblioref">4</a>]</span>). This data consists of various measurements of physical characteristics of 344 penguins of 3 different species: Gentoo, Adelie, and Chinstrap. If we focus our attention for the moment on the Adelie and Gentoo species, and plot their body mass against their culmen depth, we obtain the following scatterplot.</p>
 <div id="fig-penguins" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/penguins.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.1: Penguin Scatterplot</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.1: Penguin Scatterplot</figcaption><p></p>
 </figure>
 </div>
 <p>Incidentally, a bird’s <em>culmen</em> is the upper ridge of their beak, and the <em>culmen depth</em> is a measure of the thickness of the beak. There’s a nice picture at <span class="citation" data-cites="penguindata">[<a href="20-references.html#ref-penguindata" role="doc-biblioref">4</a>]</span> for the penguin enthusiasts.</p>
 <p>A striking feature of this scatter plot is that there is a clear separation between the clusters of Adelie and Gentoo penguins. Adelie penguins have deeper culmens and less body mass than Gentoo penguins. These characteristics seem like they should provide a way to classify a penguin between these two species based on these two measurements.</p>
-<p>One way to express the separation between these two clusters is to observe that one can draw a line on the graph with the property that all of the Adelie penguins lie on one side of that line and all of the Gentoo penguins lie on the other. In <a href="#fig-penguinsline">Figure&nbsp;<span>6.2</span></a> I’ve drawn in such a line (which I found by eyeballing the picture in <a href="#fig-penguins">Figure&nbsp;<span>6.1</span></a>). The line has the equation <span class="math display">\[
+<p>One way to express the separation between these two clusters is to observe that one can draw a line on the graph with the property that all of the Adelie penguins lie on one side of that line and all of the Gentoo penguins lie on the other. In <a href="#fig-penguinsline">Figure&nbsp;<span>7.2</span></a> I’ve drawn in such a line (which I found by eyeballing the picture in <a href="#fig-penguins">Figure&nbsp;<span>7.1</span></a>). The line has the equation <span class="math display">\[
 Y = 1.25X+2.
 \]</span></p>
 <div id="fig-penguinsline" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/penguins_with_line.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.2: Penguins with Separating Line</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.2: Penguins with Separating Line</figcaption><p></p>
 </figure>
 </div>
 <p>The fact that all of the Gentoo penguins lie above this line means that, for the Gentoo penguins, their body mass in grams is at least <span class="math inline">\(400\)</span> more than <span class="math inline">\(250\)</span> times their culmen depth in mm. (Note that the <span class="math inline">\(y\)</span> axis of the graph is scaled by <span class="math inline">\(200\)</span> grams).</p>
@@ -247,16 +253,16 @@ Y = 1.25X+2.
 \]</span></p>
 <p>Now, if we measure a penguin caught in the wild, we can compute <span class="math inline">\(250(\mathrm{culmen\ depth})+400\)</span> for that penguin and if this number is greater than the penguin’s mass, we say it’s an Adelie; otherwise, a Gentoo. Based on the experimental data we’ve collected – the <em>training</em> data – this seems likely to work pretty well.</p>
 </section>
-<section id="the-general-case" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="the-general-case"><span class="header-section-number">6.3</span> The general case</h2>
+<section id="the-general-case" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="the-general-case"><span class="header-section-number">7.3</span> The general case</h2>
 <p>To generalize this approach, let’s imagine now that we have <span class="math inline">\(n\)</span> samples and <span class="math inline">\(k\)</span> features (or measurements) for each sample. As before, we can represent this data as an <span class="math inline">\(n\times k\)</span> data matrix <span class="math inline">\(X\)</span>. In the penguin example, our data matrix would be <span class="math inline">\(344\times 2\)</span>, with one row for each penguin and the columns representing the mass and the culmen depth. In addition to this numerical data, we have a classification that assigns each row to one of two classes. Let’s represent the classes by a <span class="math inline">\(n\times 1\)</span> vector <span class="math inline">\(Y\)</span>, where <span class="math inline">\(y_{i}=+1\)</span> if the <span class="math inline">\(i^{th}\)</span> sample is in one class, and <span class="math inline">\(y_{i}=-1\)</span> if that <span class="math inline">\(i^{th}\)</span> sample is in the other. Our goal is to predict <span class="math inline">\(Y\)</span> based on <span class="math inline">\(X\)</span> – but unlike in linear regression, <span class="math inline">\(Y\)</span> takes on the values of <span class="math inline">\(\pm 1\)</span>.</p>
 <p>In the penguin case, we were able to find a line that separated the two classes and then classify points by which side of the line the point was on. We can generalize this notion to higher dimensions. Before attacking that generalization, let’s recall a few facts about the generalization to <span class="math inline">\(\mathbf{R}^{k}\)</span> of the idea of a line.</p>
-<section id="hyperplanes" class="level3" data-number="6.3.1">
-<h3 data-number="6.3.1" class="anchored" data-anchor-id="hyperplanes"><span class="header-section-number">6.3.1</span> Hyperplanes</h3>
+<section id="hyperplanes" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="hyperplanes"><span class="header-section-number">7.3.1</span> Hyperplanes</h3>
 <p>The correct generalization of a line given by an equation <span class="math inline">\(w_1 x_1+ w_2 w_2+b=0\)</span> in <span class="math inline">\(\mathbf{R}^{2}\)</span> is an equation <span class="math inline">\(f(x)=0\)</span> where <span class="math inline">\(f(x)\)</span> is a degree one polynomial <span id="eq-degreeone"><span class="math display">\[
 f(x) = f(x_1,\ldots, x_k) = w_1 x_1 + w_2 x_2 +\cdots + w_k x_k + b
-\tag{6.1}\]</span></span></p>
-<p>It’s easier to understand the geometry of an equation like <span class="math inline">\(f(x)=0\)</span> in <a href="#eq-degreeone">Equation&nbsp;<span>6.1</span></a> if we think of the coefficients <span class="math inline">\(w_i\)</span> as forming a <em>nonzero</em> vector <span class="math inline">\(w = (w_1,\ldots, w_k)\)</span> in <span class="math inline">\(\mathbf{R}^{k}\)</span> and writing the formula for <span class="math inline">\(f(x)\)</span> as <span class="math display">\[
+\tag{7.1}\]</span></span></p>
+<p>It’s easier to understand the geometry of an equation like <span class="math inline">\(f(x)=0\)</span> in <a href="#eq-degreeone">Equation&nbsp;<span>7.1</span></a> if we think of the coefficients <span class="math inline">\(w_i\)</span> as forming a <em>nonzero</em> vector <span class="math inline">\(w = (w_1,\ldots, w_k)\)</span> in <span class="math inline">\(\mathbf{R}^{k}\)</span> and writing the formula for <span class="math inline">\(f(x)\)</span> as <span class="math display">\[
 f(x) = w\cdot x +b
 \]</span>.</p>
 <p><strong>Lemma:</strong> Let <span class="math inline">\(f(x)=w\cdot x+b\)</span> with <span class="math inline">\(w\in\mathbf{R}^{k}\)</span> a nonzero vector and <span class="math inline">\(b\)</span> a constant in <span class="math inline">\(\mathbf{R}\)</span>.</p>
@@ -268,18 +274,18 @@ D = \frac{f(p)}{\|w\|}
 \]</span></li>
 </ul>
 <p><strong>Proof:</strong> The first part is clear since the inequalities are mutually exclusive. For the secon part, suppose that <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> satisfy <span class="math inline">\(f(x)=0\)</span>. Then <span class="math inline">\(w\cdot p+b = w\cdot q+b=0\)</span>. Subtracting these two equations gives <span class="math inline">\(w\cdot (p-q)=0\)</span>, so <span class="math inline">\(p-q\)</span> is orthogonal to <span class="math inline">\(w\)</span>.</p>
-<p>For the third part, consider <a href="#fig-triangle">Figure&nbsp;<span>6.3</span></a>. The point <span class="math inline">\(q\)</span> is an arbitrary point on the hyperplane defined by the equation <span class="math inline">\(w\cdot x+b=0\)</span>. The distance from the hyperplane to <span class="math inline">\(p\)</span> is measured along the dotted line perpendicular to the hyperplane. The dot product <span class="math inline">\(w\cdot (p-q) = \|w\|\|p-q\|\cos(\theta)\)</span> where <span class="math inline">\(\theta\)</span> is the angle between <span class="math inline">\(p-q\)</span> and <span class="math inline">\(w\)</span> – which is complementary to the angle between <span class="math inline">\(p-q\)</span> and the hyperplane. The distance <span class="math inline">\(D\)</span> is therefore <span class="math display">\[
+<p>For the third part, consider <a href="#fig-triangle">Figure&nbsp;<span>7.3</span></a>. The point <span class="math inline">\(q\)</span> is an arbitrary point on the hyperplane defined by the equation <span class="math inline">\(w\cdot x+b=0\)</span>. The distance from the hyperplane to <span class="math inline">\(p\)</span> is measured along the dotted line perpendicular to the hyperplane. The dot product <span class="math inline">\(w\cdot (p-q) = \|w\|\|p-q\|\cos(\theta)\)</span> where <span class="math inline">\(\theta\)</span> is the angle between <span class="math inline">\(p-q\)</span> and <span class="math inline">\(w\)</span> – which is complementary to the angle between <span class="math inline">\(p-q\)</span> and the hyperplane. The distance <span class="math inline">\(D\)</span> is therefore <span class="math display">\[
 D=\frac{w\cdot(p-q)}{\|w\|}.
 \]</span> However, since <span class="math inline">\(q\)</span> lies on the hyperplane, we know that <span class="math inline">\(w\cdot q+b=0\)</span> so <span class="math inline">\(w\cdot q = -b\)</span>. Therefore <span class="math inline">\(w\cdot(p-q)=w\cdot p+b=f(p)\)</span>, which is the formula we seek.</p>
 <div id="fig-triangle" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/triangle.png" class="img-fluid figure-img" style="width:30.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.3: Distance to a Hyperplane</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.3: Distance to a Hyperplane</figcaption><p></p>
 </figure>
 </div>
 </section>
-<section id="sec-linearseparable" class="level3" data-number="6.3.2">
-<h3 data-number="6.3.2" class="anchored" data-anchor-id="sec-linearseparable"><span class="header-section-number">6.3.2</span> Linear separability and Margins</h3>
+<section id="sec-linearseparable" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="sec-linearseparable"><span class="header-section-number">7.3.2</span> Linear separability and Margins</h3>
 <p>Now we can return to our classification scheme. The following definition generalizes our two dimensional picture from the penguin data.</p>
 <p><strong>Definition:</strong> Suppose that we have an <span class="math inline">\(n\times k\)</span> data matrix <span class="math inline">\(X\)</span> and a set of labels <span class="math inline">\(Y\)</span> that assign the <span class="math inline">\(n\)</span> samples to one of two classes. Then the labelled data is said to be <em>linearly separable</em> if there is a vector <span class="math inline">\(w\)</span> and a constant <span class="math inline">\(b\)</span> so that, if <span class="math inline">\(f(x)=w\cdot x+b\)</span>, then <span class="math inline">\(f(x)&gt;0\)</span> whenever <span class="math inline">\(x=(x_1,\ldots, x_k)\)</span> is a row of <span class="math inline">\(X\)</span> – a sample – belonging to the <span class="math inline">\(+1\)</span> class, and <span class="math inline">\(f(x)&lt;0\)</span> whenever <span class="math inline">\(x\)</span> belongs to the <span class="math inline">\(-1\)</span> class. The solutions to the equation <span class="math inline">\(f(x)=0\)</span> in this situation form a hyperplane that is called a <em>separating hyperplane</em> for the data.</p>
 <p>In the situation where our data falls into two classes that are linearly separable, our classification strategy is to find a separating hyperplane <span class="math inline">\(f\)</span> for our training data. Then, given a point <span class="math inline">\(x\)</span> whose class we don’t know, we can evaluate <span class="math inline">\(f(x)\)</span> and assign <span class="math inline">\(x\)</span> to a class depending on whether <span class="math inline">\(f(x)&gt;0\)</span> or <span class="math inline">\(f(x)&lt;0\)</span>.</p>
@@ -299,12 +305,12 @@ w\cdot x+b&lt;0\hbox{ for all $x$ in B}.
 <p><strong>Proposition:</strong> The sets <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are linearly separable if there is a <span class="math inline">\(w\)</span> so that <span class="math display">\[
 \max_{x\in B}w\cdot x &lt; \min_{x\in A} w\cdot x
 \]</span> If this inequality holds for some <span class="math inline">\(w\)</span>, and <span class="math inline">\(-b\)</span> within this open interval, then <span class="math inline">\(f(x)=w\cdot x+b\)</span> is a separating hyperplane for <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>.</p>
-<p>*<a href="#fig-penguinhwy2">Figure&nbsp;<span>6.4</span></a> is an illustration of this argument for a subset of the penguin data. Here, we have fixed <span class="math inline">\(w=(1.25,-1)\)</span> coming from the line <span class="math inline">\(y=1.25x+2\)</span> that we eyeballed earlier. For each Gentoo (green) point <span class="math inline">\(x_{i}\)</span>, we computed <span class="math inline">\(-b=w\cdot x_{i}\)</span> and drew the line <span class="math inline">\(f(x) = w\cdot x - w\cdot x_{i}\)</span> giving a family of parallel lines through each of the green points. Similarly for each Adelie (blue) point we drew the corresponding line. The maximum value of <span class="math inline">\(w\cdot x\)</span> for the blue points turned out to be <span class="math inline">\(1.998\)</span> and the minimum value of <span class="math inline">\(w\cdot x\)</span> for the green points turned out to be <span class="math inline">\(2.003\)</span>. Thus we have two lines with a gap between them, and any parallel line in that gap will separate the two sets.</p>
+<p>*<a href="#fig-penguinhwy2">Figure&nbsp;<span>7.4</span></a> is an illustration of this argument for a subset of the penguin data. Here, we have fixed <span class="math inline">\(w=(1.25,-1)\)</span> coming from the line <span class="math inline">\(y=1.25x+2\)</span> that we eyeballed earlier. For each Gentoo (green) point <span class="math inline">\(x_{i}\)</span>, we computed <span class="math inline">\(-b=w\cdot x_{i}\)</span> and drew the line <span class="math inline">\(f(x) = w\cdot x - w\cdot x_{i}\)</span> giving a family of parallel lines through each of the green points. Similarly for each Adelie (blue) point we drew the corresponding line. The maximum value of <span class="math inline">\(w\cdot x\)</span> for the blue points turned out to be <span class="math inline">\(1.998\)</span> and the minimum value of <span class="math inline">\(w\cdot x\)</span> for the green points turned out to be <span class="math inline">\(2.003\)</span>. Thus we have two lines with a gap between them, and any parallel line in that gap will separate the two sets.</p>
 <p>Finally, among all the lines <em>with this particular <span class="math inline">\(w\)</span></em>, it seems that the <strong>best</strong> separating line is the one running right down the middle of the gap between the boundary lines. Any other line in the gap will be closer to either the blue or green set that the midpoint line is.</p>
 <div id="fig-penguinhwy2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/penguinhwy2.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.4: Lines in Penguin Data for <span class="math inline">\(w=(1.25,-1)\)</span></figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.4: Lines in Penguin Data for <span class="math inline">\(w=(1.25,-1)\)</span></figcaption><p></p>
 </figure>
 </div>
 <p>Let’s put all of this together and see if we can make sense of it in general.</p>
@@ -326,7 +332,7 @@ f^{-}(x)\le 0\hbox{ for }x\in A^{-}\hbox{ and }f^{-}(x)&gt;0\hbox{ for }x\in A^{
 \tau(A^{+},A^{-}) = \max_{w} \tau_{w}(A^{+},A^{-}).
 \]</span> If <span class="math inline">\(w\)</span> is such that <span class="math inline">\(\tau_{w}=\tau\)</span>, then the hyperplane <span class="math inline">\(f(x)=w\cdot x - \frac{(B^{+}+B^{-})}{2}\)</span> is the <em>optimal margin classifying hyperplane</em>.</p>
 <p>The optimal classifying hyperplane runs “down the middle” of the gap between the two supporting hyperplanes <span class="math inline">\(f^{+}\)</span> and <span class="math inline">\(f^{-}\)</span> that give the sides of the optimal margin.</p>
-<p>We can make one more observation about the maximal margin. If we find a vector <span class="math inline">\(w\)</span> so that <span class="math inline">\(f^{+}(x) = w\cdot x -B^{+}\)</span> and <span class="math inline">\(f^{-}(x) = w\cdot x-B^{-}\)</span> are the two supporting hyperplanes such that the gap between them is the optimal margin, then this gap gives us an estimate on how close together the points in <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span> can be. This is visible in <a href="#fig-penguinhwy2">Figure&nbsp;<span>6.4</span></a>, where it’s clear that to get from a blue point to a green one, you have to cross the gap between the two supporting hyperplanes.</p>
+<p>We can make one more observation about the maximal margin. If we find a vector <span class="math inline">\(w\)</span> so that <span class="math inline">\(f^{+}(x) = w\cdot x -B^{+}\)</span> and <span class="math inline">\(f^{-}(x) = w\cdot x-B^{-}\)</span> are the two supporting hyperplanes such that the gap between them is the optimal margin, then this gap gives us an estimate on how close together the points in <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span> can be. This is visible in <a href="#fig-penguinhwy2">Figure&nbsp;<span>7.4</span></a>, where it’s clear that to get from a blue point to a green one, you have to cross the gap between the two supporting hyperplanes.</p>
 <p><strong>Proposition:</strong> The closest distance between points in <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span> is greater than or equal to the optimal margin: <span class="math display">\[
 \min_{p\in A^{+},q\in A^{-}} \|p-q\|\ge \tau(A^{+},A^{-})
 \]</span>.</p>
@@ -338,25 +344,25 @@ w\cdot (p-q)\ge B^{+}-B^{-}&gt;0.
 \|p-q\| \ge \frac{B^{+}-B^{-}}{\|w\|} = \tau(A^{+},A^{-})
 \]</span></p>
 <p>If this inequality were always <em>strict</em> – that is, if the optimal margin equalled the minimum distance between points in the two clusters – then this would give us an approach to finding this optimal margin.</p>
-<p>Unfortunately, that isn’t the case. In <a href="#fig-nonstrict">Figure&nbsp;<span>6.5</span></a>, we show a very simple case involving only six points in total in which the distance between the closest points in <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span> is larger than the optimal margin.</p>
+<p>Unfortunately, that isn’t the case. In <a href="#fig-nonstrict">Figure&nbsp;<span>7.5</span></a>, we show a very simple case involving only six points in total in which the distance between the closest points in <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span> is larger than the optimal margin.</p>
 <div id="fig-nonstrict" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/margindistance2.png" style="height:3in" class="figure-img"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.5: Shortest distance between + and - points can be greater than the optimal margin</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.5: Shortest distance between + and - points can be greater than the optimal margin</figcaption><p></p>
 </figure>
 </div>
 <p>At least now our problem is clear. Given our two point sets <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span>, find <span class="math inline">\(w\)</span> so that <span class="math inline">\(\tau_{w}(A^{+},A^{-})\)</span> is maximal among all <span class="math inline">\(w\)</span> where <span class="math inline">\(B^{-}(w)&lt;B^{+}(w)\)</span>. This is an optimization problem, but unlike the optimization problems that arose in our discussions of linear regression and principal component analysis, it does not have a closed form solution. We will need to find an algorithm to determine <span class="math inline">\(w\)</span> by successive approximations. Developing that algorithm will require thinking about a new concept known as <em>convexity.</em></p>
 </section>
 </section>
-<section id="convexity-convex-hulls-and-margins" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="convexity-convex-hulls-and-margins"><span class="header-section-number">6.4</span> Convexity, Convex Hulls, and Margins</h2>
+<section id="convexity-convex-hulls-and-margins" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="convexity-convex-hulls-and-margins"><span class="header-section-number">7.4</span> Convexity, Convex Hulls, and Margins</h2>
 <p>In this section we introduce the notion of a <em>convex set</em> and the particular case of the <em>convex hull</em> of a finite set of points. As we will see, these ideas will give us a different interpretation of the margin between two sets and will eventually lead to an algorithm for finding the optimal margin classifier.</p>
 <p><strong>Definition:</strong> A subset <span class="math inline">\(U\)</span> of <span class="math inline">\(\mathbf{R}^{k}\)</span> is <em>convex</em> if, for any pair of points <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> in <span class="math inline">\(U\)</span>, every point <span class="math inline">\(t\)</span> on the line segment joining <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> also belongs to <span class="math inline">\(U\)</span>. In vector form, for every <span class="math inline">\(0\le s\le 1\)</span>, the point <span class="math inline">\(t(s) = (1-s)p+sq\)</span> belongs to <span class="math inline">\(U\)</span>. (Note that <span class="math inline">\(t(0)=p\)</span>, <span class="math inline">\(t(1)=q\)</span>, and so <span class="math inline">\(t(s)\)</span> traces out the segment joining <span class="math inline">\(p\)</span> to <span class="math inline">\(q\)</span>.)</p>
-<p>*<a href="#fig-convexnotconvex">Figure&nbsp;<span>6.6</span></a> illustrates the difference between convex sets and non-convex ones.</p>
+<p>*<a href="#fig-convexnotconvex">Figure&nbsp;<span>7.6</span></a> illustrates the difference between convex sets and non-convex ones.</p>
 <div id="fig-convexnotconvex" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/ConvexNotConvex.png" style="height:3in" class="figure-img"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.6: Convex vs Non-Convex Sets</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.6: Convex vs Non-Convex Sets</figcaption><p></p>
 </figure>
 </div>
 <p>The key idea from convexity that we will need to solve our optimization problem and find the optimal margin is the idea of the <em>convex hull</em> of a finite set of points in <span class="math inline">\(\mathbf{R}^{k}\)</span>.</p>
@@ -378,24 +384,24 @@ q' = \sum_{i=1}^{m-1}\frac{\lambda_{i}}{T}q_{i}.
 \]</span> This point <span class="math inline">\(q'\)</span> belongs to <span class="math inline">\(U\)</span> by the inductive hypothesis. Also, <span class="math inline">\((1-T)=\lambda_{m}\)</span>. Therefore by convexity of <span class="math inline">\(U\)</span>, <span class="math display">\[
 q = (1-T)q_{m}+Tq'
 \]</span> also belongs to <span class="math inline">\(U\)</span>. It follows that all of <span class="math inline">\(C(S)\)</span> belongs to <span class="math inline">\(U\)</span>.</p>
-<p>In <a href="#fig-convexhull">Figure&nbsp;<span>6.7</span></a> we show our penguin data together with the convex hull of points corresponding to the two types of penguins. Notice that the boundary of each convex hull is a finite collection of line segments that join the “outermost” points in the point set.</p>
+<p>In <a href="#fig-convexhull">Figure&nbsp;<span>7.7</span></a> we show our penguin data together with the convex hull of points corresponding to the two types of penguins. Notice that the boundary of each convex hull is a finite collection of line segments that join the “outermost” points in the point set.</p>
 <div id="fig-convexhull" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/penguinswithhulls.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.7: The Convex Hull</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.7: The Convex Hull</figcaption><p></p>
 </figure>
 </div>
-<p>One very simple example of a convex set is a half-plane. More specifically, if <span class="math inline">\(f(x)=w\cdot x+b=0\)</span> is a hyperplane, then the two “sides” of the hyperplane, meaning the subsets <span class="math inline">\(\{x: f(x)\ge 0\}\)</span> and <span class="math inline">\(\{x: f(x)\le 0\}\)</span>, are both convex. (This is exercise 1 in <a href="#sec-exercises"><span>Section&nbsp;6.7</span></a> ).</p>
+<p>One very simple example of a convex set is a half-plane. More specifically, if <span class="math inline">\(f(x)=w\cdot x+b=0\)</span> is a hyperplane, then the two “sides” of the hyperplane, meaning the subsets <span class="math inline">\(\{x: f(x)\ge 0\}\)</span> and <span class="math inline">\(\{x: f(x)\le 0\}\)</span>, are both convex. (This is exercise 1 in <a href="#sec-exercises"><span>Section&nbsp;7.7</span></a> ).</p>
 <p>As a result of this observation, and the Lemma above, we can conclude that if <span class="math inline">\(f(x)=w\cdot x+b=0\)</span> is a supporting hyperplane for the set <span class="math inline">\(S\)</span> – meaning that either <span class="math inline">\(f(x)\ge 0\)</span> for all <span class="math inline">\(x\in S\)</span>, or <span class="math inline">\(f(x)\le 0\)</span> for all <span class="math inline">\(x\in S\)</span>, with at least one point <span class="math inline">\(x\in S\)</span> such that <span class="math inline">\(f(x)=0\)</span> – then <span class="math inline">\(f(x)=0\)</span> is a supporting hyperplane for the entire convex hull. After all, if <span class="math inline">\(f(x)\ge 0\)</span> for all points <span class="math inline">\(x\in S\)</span>, then <span class="math inline">\(S\)</span> is contained in the convex set of points where <span class="math inline">\(f(x)\ge 0\)</span>, and therefore <span class="math inline">\(C(S)\)</span> is contained in that set as well.</p>
 <p>Interestingly, however, the converse is true as well – the supporting hyperplanes of <span class="math inline">\(C(S)\)</span> are exactly the same as those for <span class="math inline">\(S\)</span>.</p>
 <p><strong>Lemma:</strong> Let <span class="math inline">\(S\)</span> be a finite set of points in <span class="math inline">\(\mathbf{R}^{k}\)</span> and let <span class="math inline">\(f(x)=w\cdot x +b=0\)</span> be a supporting hyperplane for <span class="math inline">\(C(S)\)</span>. Then <span class="math inline">\(f(x)\)</span> is a supporting hyperplane for <span class="math inline">\(S\)</span>.</p>
 <p><strong>Proof:</strong> Suppose <span class="math inline">\(f(x)=0\)</span> is a supporting hyperplane for <span class="math inline">\(C(S)\)</span>. Let’s assume that <span class="math inline">\(f(x)\ge 0\)</span> for all <span class="math inline">\(x\in C(S)\)</span> and <span class="math inline">\(f(x^{*})=0\)</span> for a point <span class="math inline">\(x^{*}\in C(S)\)</span>, since the case where <span class="math inline">\(f(x)\le 0\)</span> is identical. Since <span class="math inline">\(S\subset C(S)\)</span>, we have <span class="math inline">\(f(x)\ge 0\)</span> for all <span class="math inline">\(x\in S\)</span>. To show that <span class="math inline">\(f(x)=0\)</span> is a supporting hyperplane, we need to know that <span class="math inline">\(f(x)=0\)</span> for at least one point <span class="math inline">\(x\in S\)</span>.<br>
 Let <span class="math inline">\(x'\)</span> be the point in <span class="math inline">\(S\)</span> where <span class="math inline">\(f(x')\)</span> is minimal among all <span class="math inline">\(x\in S\)</span>. Note that <span class="math inline">\(f(x')\ge 0\)</span>. Then the hyperplane <span class="math inline">\(g(x) = f(x)-f(x')\)</span> has the property that <span class="math inline">\(g(x)\ge 0\)</span> on all of <span class="math inline">\(S\)</span>, and <span class="math inline">\(g(x')=0\)</span>. Since the halfplane <span class="math inline">\(g(x)\ge 0\)</span> is convex and contains all of <span class="math inline">\(S\)</span>, we have <span class="math inline">\(C(S)\)</span> contained in that halfplane. So, on the one hand we have <span class="math inline">\(g(x^{*})=f(x^{*})-f(x')\ge 0\)</span>. On the other hand <span class="math inline">\(f(x^{*})=0\)</span>, so <span class="math inline">\(-f(x')\ge 0\)</span>, so <span class="math inline">\(f(x')\le 0\)</span>. Since <span class="math inline">\(f(x')\)</span> is also greater or equal to zero, we have <span class="math inline">\(f(x')=0\)</span>, and so we have found a point of <span class="math inline">\(S\)</span> on the hyperplane <span class="math inline">\(f(x)=0\)</span>. Therefore <span class="math inline">\(f(x)=0\)</span> is also a supporting hyperplane for <span class="math inline">\(S\)</span>.</p>
-<p>This argument can be used to give an alternative description of <span class="math inline">\(C(S)\)</span> as the intersection of all halfplanes containing <span class="math inline">\(S\)</span> arising from supporting hyperplanes for <span class="math inline">\(S\)</span>. This is exercise 2 in <a href="#sec-exercises"><span>Section&nbsp;6.7</span></a>. It also has as a corollary that <span class="math inline">\(C(S)\)</span> is a closed set.</p>
+<p>This argument can be used to give an alternative description of <span class="math inline">\(C(S)\)</span> as the intersection of all halfplanes containing <span class="math inline">\(S\)</span> arising from supporting hyperplanes for <span class="math inline">\(S\)</span>. This is exercise 2 in <a href="#sec-exercises"><span>Section&nbsp;7.7</span></a>. It also has as a corollary that <span class="math inline">\(C(S)\)</span> is a closed set.</p>
 <p><strong>Lemma:</strong> <span class="math inline">\(C(S)\)</span> is compact.</p>
-<p><strong>Proof:</strong> Exercise 2 in <a href="#sec-exercises"><span>Section&nbsp;6.7</span></a> shows that it is the intersection of closed sets in <span class="math inline">\(\mathbf{R}^{k}\)</span>, so it is closed. Exercise 3 shows that <span class="math inline">\(C(S)\)</span> is bounded. Thus it is compact.</p>
-<p>Now let’s go back to our optimal margin problem, so that we have linearly separable sets of points <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span>. Recall that we showed that the optimal margin was at most the minimal distance between points in <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span>, but that there could be a gap between the minimal distance and the optimal margin – see <a href="#fig-nonstrict">Figure&nbsp;<span>6.5</span></a> for a reminder.</p>
-<p>It turns out that by considering the minimal distance between <span class="math inline">\(C(A^{+})\)</span> and <span class="math inline">\(C(A^{-})\)</span>, we can “close this gap.” The following proposition shows that we can change the problem of finding the optimal margin into the problem of finding the closest distance between the convex hulls of <span class="math inline">\(C(A^{+})\)</span> and <span class="math inline">\(C(A^{-})\)</span>. The following proposition generalizes the Proposition at the end of <a href="#sec-linearseparable"><span>Section&nbsp;6.3.2</span></a>.</p>
+<p><strong>Proof:</strong> Exercise 2 in <a href="#sec-exercises"><span>Section&nbsp;7.7</span></a> shows that it is the intersection of closed sets in <span class="math inline">\(\mathbf{R}^{k}\)</span>, so it is closed. Exercise 3 shows that <span class="math inline">\(C(S)\)</span> is bounded. Thus it is compact.</p>
+<p>Now let’s go back to our optimal margin problem, so that we have linearly separable sets of points <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span>. Recall that we showed that the optimal margin was at most the minimal distance between points in <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span>, but that there could be a gap between the minimal distance and the optimal margin – see <a href="#fig-nonstrict">Figure&nbsp;<span>7.5</span></a> for a reminder.</p>
+<p>It turns out that by considering the minimal distance between <span class="math inline">\(C(A^{+})\)</span> and <span class="math inline">\(C(A^{-})\)</span>, we can “close this gap.” The following proposition shows that we can change the problem of finding the optimal margin into the problem of finding the closest distance between the convex hulls of <span class="math inline">\(C(A^{+})\)</span> and <span class="math inline">\(C(A^{-})\)</span>. The following proposition generalizes the Proposition at the end of <a href="#sec-linearseparable"><span>Section&nbsp;7.3.2</span></a>.</p>
 <p><strong>Proposition:</strong> Let <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span> be linearly separable sets in <span class="math inline">\(\mathbf{R}^{k}\)</span>. Let <span class="math inline">\(p\in C(A^{+})\)</span> and <span class="math inline">\(q\in C(A^{-})\)</span> be any two points. Then <span class="math display">\[
 \|p-q\|\ge \tau(A^{+},A^{-}).
 \]</span></p>
@@ -426,11 +432,11 @@ t(s) = (1-s)v_1+sv_2\hbox{ where }0\le s\le 1
 Now <span class="math display">\[
 t(s) = ((1-s)p_1^*+sp_2^*)-((1-s)q_1^*+sq_2^*).
 \]</span> Both terms in this difference belong to <span class="math inline">\(C(A^{+})\)</span> and <span class="math inline">\(C(A^{-})\)</span> respectively, regardless of <span class="math inline">\(s\)</span>, by convexity, and therefore <span class="math inline">\(t(s)\)</span> belongs to <span class="math inline">\(V\)</span> for all <span class="math inline">\(0\le s\le 1\)</span>.</p>
-<p>This little argument shows that <span class="math inline">\(V\)</span> is convex. In geometric terms, <span class="math inline">\(v_1\)</span> and <span class="math inline">\(v_2\)</span> are two points in the set <span class="math inline">\(V\)</span> equidistant from the origin and the segment joining them is a chord of a circle; as <a href="#fig-chord">Figure&nbsp;<span>6.8</span></a> shows, in that situation there must be a point on the line segment joining them that’s closer to the origin than they are. Since all the points on that segment are in <span class="math inline">\(V\)</span> by convexity, this would contradict the assumption that <span class="math inline">\(v_1\)</span> is the closet point in <span class="math inline">\(V\)</span> to the origin.</p>
+<p>This little argument shows that <span class="math inline">\(V\)</span> is convex. In geometric terms, <span class="math inline">\(v_1\)</span> and <span class="math inline">\(v_2\)</span> are two points in the set <span class="math inline">\(V\)</span> equidistant from the origin and the segment joining them is a chord of a circle; as <a href="#fig-chord">Figure&nbsp;<span>7.8</span></a> shows, in that situation there must be a point on the line segment joining them that’s closer to the origin than they are. Since all the points on that segment are in <span class="math inline">\(V\)</span> by convexity, this would contradict the assumption that <span class="math inline">\(v_1\)</span> is the closet point in <span class="math inline">\(V\)</span> to the origin.</p>
 <div id="fig-chord" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/chord2.png" class="img-fluid figure-img" style="width:3in"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.8: Chord of a circle</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.8: Chord of a circle</figcaption><p></p>
 </figure>
 </div>
 <p>In algebraic terms, since <span class="math inline">\(D\)</span> is the minimal value of <span class="math inline">\(\|v\|\)</span> for all <span class="math inline">\(v\in V\)</span>, we must have <span class="math inline">\(t(s)\ge D\)</span>.<br>
@@ -456,16 +462,16 @@ D(s)=\|t(s)-q\|^2.
 <p>Now the margin for this <span class="math inline">\(w\)</span> is <span class="math display">\[
 \tau_{w}(A^{+},A^{-}) = \frac{w\cdot (p-q)}{\|w\|} = \|p-q\|=D
 \]</span> and as <span class="math inline">\(w\)</span> varies we know this is the largest possible <span class="math inline">\(\tau\)</span> that can occur. Thus this is the maximal margin.</p>
-<p>*<a href="#fig-strict">Figure&nbsp;<span>6.9</span></a> shows how considering the closest point in the convex hulls “fixes” the problem that we saw in <a href="#fig-nonstrict">Figure&nbsp;<span>6.5</span></a>. The closest point occurs at a point on the boundary of the convex hull that is not one of the points in <span class="math inline">\(A^{+}\)</span> or <span class="math inline">\(A^{-}\)</span>.</p>
+<p>*<a href="#fig-strict">Figure&nbsp;<span>7.9</span></a> shows how considering the closest point in the convex hulls “fixes” the problem that we saw in <a href="#fig-nonstrict">Figure&nbsp;<span>7.5</span></a>. The closest point occurs at a point on the boundary of the convex hull that is not one of the points in <span class="math inline">\(A^{+}\)</span> or <span class="math inline">\(A^{-}\)</span>.</p>
 <div id="fig-strict" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/ConvexHullWithMargin.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.9: Closest distance between convex hulls gives optimal margin</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.9: Closest distance between convex hulls gives optimal margin</figcaption><p></p>
 </figure>
 </div>
 </section>
-<section id="finding-the-optimal-margin-classifier" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="finding-the-optimal-margin-classifier"><span class="header-section-number">6.5</span> Finding the Optimal Margin Classifier</h2>
+<section id="finding-the-optimal-margin-classifier" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="finding-the-optimal-margin-classifier"><span class="header-section-number">7.5</span> Finding the Optimal Margin Classifier</h2>
 <p>Now that we have translated our problem into geometry, we can attempt to develop an algorithm for solving it. To recap, we have two sets of points <span class="math display">\[
 A^{+}=\{x^+_1,\ldots, x^+_{n_{+}}\}
 \]</span> and <span class="math display">\[
@@ -494,10 +500,10 @@ R &amp;=&amp; \sum_{i=1}^{n_{+}}\sum_{j=1}^{n_{+}}\lambda^{+}_{i}\lambda^{+}_{j}
 S &amp;=&amp; \sum_{i=1}^{n_{+}}\sum_{j=1}^{n_{-}}\lambda^{+}_{i}\lambda^{-}_{j}(x^{+}_{i}\cdot x^{-}_{j}) \\
 T &amp;=&amp; \sum_{i=1}^{n_{-}}\sum_{j=1}^{n_{-}}\lambda^{-}_{i}\lambda^{-}_{j}(x^{-}_{i}\cdot x^{-}_{j}) \\
 \end{aligned}
-\tag{6.2}\]</span></span> Thus the function we are trying to minimize is relatively simple.</p>
+\tag{7.2}\]</span></span> Thus the function we are trying to minimize is relatively simple.</p>
 <p>On the other hand, unlike optimization problems we have seen earlier in these lectures, in which we can apply Lagrange multipliers, in this case some of the constraints are inequalities – namely the requirement that all of the <span class="math inline">\(\lambda^{\pm}\ge 0\)</span> – rather than equalities. There is an extensive theory of such problems that derives from the idea of Lagrange multipliers. However, in these notes, we will not dive into that theory but will instead construct an algorithm for solving the problem directly.</p>
-<section id="relaxing-the-constraints" class="level3" data-number="6.5.1">
-<h3 data-number="6.5.1" class="anchored" data-anchor-id="relaxing-the-constraints"><span class="header-section-number">6.5.1</span> Relaxing the constraints</h3>
+<section id="relaxing-the-constraints" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="relaxing-the-constraints"><span class="header-section-number">7.5.1</span> Relaxing the constraints</h3>
 <p>Our first step in attacking this problem is to adjust our constraints and our objective function slightly so that the problem becomes easier to attack.</p>
 <p><strong>Optimization Problem 2:</strong> This is a slight revision of problem 1 above. We minimize: <span class="math display">\[
 Q(\lambda^{+},\lambda^{-}) = \|w(\lambda^{+},\lambda^{-})\|^2-\sum_{i=1}^{n_{+}}\lambda^{+}_{i}-\sum_{i=1}^{n_{-}}\lambda^{-}_{i}
@@ -519,8 +525,8 @@ Q(\lambda^{+},\lambda^{-}) = \|w(\lambda^{+},\lambda^{-})\|^2-2\alpha\le \|w(\ta
 \alpha^{2}\|w(\sigma^{+},\sigma^{-})\|^2 = \alpha^{2}\|w(\tau^{+},\tau^{-})\|^2
 \]</span> so that indeed <span class="math inline">\(w(\tau^{+},\tau^{-})\)</span> gives a solution to Problem 1.</p>
 </section>
-<section id="sequential-minimal-optimization" class="level3" data-number="6.5.2">
-<h3 data-number="6.5.2" class="anchored" data-anchor-id="sequential-minimal-optimization"><span class="header-section-number">6.5.2</span> Sequential Minimal Optimization</h3>
+<section id="sequential-minimal-optimization" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="sequential-minimal-optimization"><span class="header-section-number">7.5.2</span> Sequential Minimal Optimization</h3>
 <p>Now we outline an algorithm for solving Problem 2 that is called Sequential Minimal Optimization that was introduced by John Platt in 1998 (See <span class="citation" data-cites="plattSMO">[<a href="20-references.html#ref-plattSMO" role="doc-biblioref">5</a>]</span> and Chapter 12 of <span class="citation" data-cites="KernelMethodAdvances">[<a href="20-references.html#ref-KernelMethodAdvances" role="doc-biblioref">6</a>]</span>). The algorithm is based on the principle of “gradient ascent”, where we exploit the fact that the negative gradient of a function points in the direction of its most rapid decrease and we take small steps in the direction of the negative gradient until we reach the minimum.</p>
 <p>However, in this case simplify this idea a little. Recall that the objective function <span class="math inline">\(Q(\lambda^{+},\lambda^{-})\)</span> is a quadratic function in the <span class="math inline">\(\lambda\)</span>’s and that we need to preserve the condition that <span class="math inline">\(\sum \lambda^{+}_{i}=\sum\lambda^{-}_{i}\)</span>. So our approach is going to be to take, one at a time, a pair <span class="math inline">\(\lambda^{+}_{i}\)</span> and <span class="math inline">\(\lambda^{-}_{j}\)</span> and change them <em>together</em> so that the equality of the sums is preserved and the change reduces the value of the objective function. Iterating this will take us to a minimum.</p>
 <p>So, for example, let’s look at <span class="math inline">\(\lambda^{+}_i\)</span> and <span class="math inline">\(\lambda^{-}_{j}\)</span> and, for the moment, think of all of the other <span class="math inline">\(\lambda\)</span>’s as constants. Then our objective function reduces to a quadratic function of these two variables that looks something like: <span class="math display">\[
@@ -528,12 +534,12 @@ Q(\lambda_{i}^{+},\lambda_{j}^{-}) = a(\lambda^{+}_i)^2+b\lambda^{+}_i\lambda^{-
 \]</span> The constraints that remain are <span class="math inline">\(\lambda^{\pm}\ge 0\)</span>, and we are going to try to minimize <span class="math inline">\(Q\)</span> by changing <span class="math inline">\(\lambda_{i}^{+}\)</span> and <span class="math inline">\(\lambda_{j}^{-}\)</span> <em>by the same amount</em> <span class="math inline">\(\delta\)</span>. Furthermore, since we still must have <span class="math inline">\(\lambda_{i}^{+}+\delta\ge 0\)</span> and <span class="math inline">\(\lambda_{j}^{-}+\delta\ge 0\)</span>, we have</p>
 <p><span id="eq-delta"><span class="math display">\[
 \delta\ge M=\max\{-\lambda_{i}^{+},-\lambda_{j}^{-}\}
-\tag{6.3}\]</span></span></p>
-<p>In terms of this single variable <span class="math inline">\(\delta\)</span>, our optimization problem becomes the job of finding the minimum of a quadratic polynomial in one variable subject to the constraint in <a href="#eq-delta">Equation&nbsp;<span>6.3</span></a>. This is easy! There are two cases: the critical point of the quadratic is to the left of <span class="math inline">\(M\)</span>, in which case the minimum value occurs at <span class="math inline">\(M\)</span>; or the critical point of the quadratic is to the right of <span class="math inline">\(M\)</span>, in which case the critical point occurs there. This is illustrated in <a href="#fig-quadratics">Figure&nbsp;<span>6.10</span></a>.</p>
+\tag{7.3}\]</span></span></p>
+<p>In terms of this single variable <span class="math inline">\(\delta\)</span>, our optimization problem becomes the job of finding the minimum of a quadratic polynomial in one variable subject to the constraint in <a href="#eq-delta">Equation&nbsp;<span>7.3</span></a>. This is easy! There are two cases: the critical point of the quadratic is to the left of <span class="math inline">\(M\)</span>, in which case the minimum value occurs at <span class="math inline">\(M\)</span>; or the critical point of the quadratic is to the right of <span class="math inline">\(M\)</span>, in which case the critical point occurs there. This is illustrated in <a href="#fig-quadratics">Figure&nbsp;<span>7.10</span></a>.</p>
 <div id="fig-quadratics" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/quadratic.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.10: Minimizing the 1-variable quadratic objective function</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.10: Minimizing the 1-variable quadratic objective function</figcaption><p></p>
 </figure>
 </div>
 <p>Computationally, let’s write <span class="math display">\[
@@ -576,32 +582,32 @@ f(x)=w\cdot x - \frac{B^{+}+B^{-}}{2}=0
 <p><span class="math display">\[
 f(x)=(p-q)\cdot x -\frac{\|p\|^2-\|q\|^2}{2}=0.
 \]</span></p>
-<p>In <a href="#fig-penguinsolution">Figure&nbsp;<span>6.11</span></a>, we show the result of applying this algorithm to the penguin data and illustrate the closest points as found by an implementation of the SMO algorithm, together with the optimal classifying line.</p>
+<p>In <a href="#fig-penguinsolution">Figure&nbsp;<span>7.11</span></a>, we show the result of applying this algorithm to the penguin data and illustrate the closest points as found by an implementation of the SMO algorithm, together with the optimal classifying line.</p>
 <p>Bearing in mind that the y-axis is scaled by a factor of 200, we obtain the following rule for distinguishing between Adelie and Gentoo penguins – if the culmen depth and body mass put you above the red line, you are a Gentoo penguin, otherwise you are an Adelie.</p>
 <div id="fig-penguinsolution" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/solution.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6.11: Closest points in convex hulls of penguin data</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.11: Closest points in convex hulls of penguin data</figcaption><p></p>
 </figure>
 </div>
 </section>
 </section>
-<section id="inseparable-sets" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="inseparable-sets"><span class="header-section-number">6.6</span> Inseparable Sets</h2>
+<section id="inseparable-sets" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="inseparable-sets"><span class="header-section-number">7.6</span> Inseparable Sets</h2>
 <p>Not surprisingly, real life is often more complicated than the penguin example we’ve discussed at length in these notes. In particular, sometimes we have to work with sets that are not linearly separable. Instead, we might have two point clouds, the bulk of which are separable, but because of some outliers there is no hyperplane we can draw that separates the two sets into two halfplanes.</p>
 <p>Fortunately, all is not lost. There are two common ways to address this problem, and while we won’t take the time to develop the theory behind them, we can at least outline how they work.</p>
-<section id="best-separating-hyperplanes" class="level3" data-number="6.6.1">
-<h3 data-number="6.6.1" class="anchored" data-anchor-id="best-separating-hyperplanes"><span class="header-section-number">6.6.1</span> Best Separating Hyperplanes</h3>
+<section id="best-separating-hyperplanes" class="level3" data-number="7.6.1">
+<h3 data-number="7.6.1" class="anchored" data-anchor-id="best-separating-hyperplanes"><span class="header-section-number">7.6.1</span> Best Separating Hyperplanes</h3>
 <p>If our sets are not linearly separable, then their convex hulls overlap and so our technique for finding the closest points of the convex hulls won’t work. In this case, we can “shrink” the convex hull by considering combinations of points <span class="math inline">\(\sum_{i}\lambda_{i}x_{i}\)</span> where <span class="math inline">\(\sum\lambda_{i}=1\)</span> and <span class="math inline">\(C\ge\lambda_{i}\ge 0\)</span> for some <span class="math inline">\(C\le 1\)</span>. For <span class="math inline">\(C\)</span> small enough, reduced convex hulls will be linearly separable – although some outlier points from each class will lie outside of them – and we can find hyperplane that separates the reduced hulls.<br>
 In practice, this means we allow a few points to lie on the “wrong side” of the hyperplane. Our tolerance for these mistakes depends on <span class="math inline">\(C\)</span>, but we can include <span class="math inline">\(C\)</span> in the optimization problem to try to find the smallest <span class="math inline">\(C\)</span> that “works”.</p>
 </section>
-<section id="nonlinear-kernels" class="level3" data-number="6.6.2">
-<h3 data-number="6.6.2" class="anchored" data-anchor-id="nonlinear-kernels"><span class="header-section-number">6.6.2</span> Nonlinear kernels</h3>
-<p>The second option is to look not for separating hyperplanes but instead for separating curves – perhaps polynomials or even more exotic curves. This can be achieved by taking advantage of the form of <a href="#eq-kernel">Equation&nbsp;<span>6.2</span></a>. As you see there, the only way the points <span class="math inline">\(x_{i}^{\pm}\)</span> enter in to the function being minimized is through the inner products <span class="math inline">\(x_{i}^{\pm}\cdot x_{j}^{\pm}\)</span>. We can adopt a different inner product than the usual Euclidean one, and reconsider the problem using this different inner product. This amounts to embedding our points in a higher dimensional space where they are more likely to be linearly separable. Again, we will not pursue the mathematics of this further in these notes.</p>
+<section id="nonlinear-kernels" class="level3" data-number="7.6.2">
+<h3 data-number="7.6.2" class="anchored" data-anchor-id="nonlinear-kernels"><span class="header-section-number">7.6.2</span> Nonlinear kernels</h3>
+<p>The second option is to look not for separating hyperplanes but instead for separating curves – perhaps polynomials or even more exotic curves. This can be achieved by taking advantage of the form of <a href="#eq-kernel">Equation&nbsp;<span>7.2</span></a>. As you see there, the only way the points <span class="math inline">\(x_{i}^{\pm}\)</span> enter in to the function being minimized is through the inner products <span class="math inline">\(x_{i}^{\pm}\cdot x_{j}^{\pm}\)</span>. We can adopt a different inner product than the usual Euclidean one, and reconsider the problem using this different inner product. This amounts to embedding our points in a higher dimensional space where they are more likely to be linearly separable. Again, we will not pursue the mathematics of this further in these notes.</p>
 </section>
 </section>
-<section id="sec-exercises" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="sec-exercises"><span class="header-section-number">6.7</span> Exercises</h2>
+<section id="sec-exercises" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="sec-exercises"><span class="header-section-number">7.7</span> Exercises</h2>
 <ol type="1">
 <li><p>Prove that, if <span class="math inline">\(f(x)=w\cdot x+b=0\)</span> is a hyperplane in <span class="math inline">\(\mathbf{R}^{k}\)</span>, then the two “sides” of this hyperplane, consisting of the points where <span class="math inline">\(f(x)\ge 0\)</span> and <span class="math inline">\(f(x)\le 0\)</span>, are both convex sets.</p></li>
 <li><p>Prove that <span class="math inline">\(C(S)\)</span> is the intersection of all the halfplanes <span class="math inline">\(f(x)\ge 0\)</span> as <span class="math inline">\(f(x)=w\cdot x+b\)</span> runs through all supporting hyperplanes for <span class="math inline">\(S\)</span> where <span class="math inline">\(f(x)\ge 0\)</span> for all <span class="math inline">\(p\in S\)</span>.</p></li>
@@ -769,7 +775,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../chapters/05-logistic-regression.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Logistic Regression</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logistic Regression</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
