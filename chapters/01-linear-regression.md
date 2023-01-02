@@ -1,16 +1,3 @@
-<<<<<<< HEAD
----
-format:
-   pdf:
-      include-in-header:
-         - macros.tex
-   html:
-      include-in-header:
-         - macros.html
----
-
-=======
->>>>>>> sep_gradient
 # Linear Regression
 
 ## Introduction {#sec-Intro}
