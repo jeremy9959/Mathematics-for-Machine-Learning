@@ -1,3 +1,5 @@
 # Preface {.unnumbered}
 
 These notes are being developed for the UConn Math Department's undergraduate course on the Mathematics of Machine Learning, Math 3180.
+
+This is a (very) *rough draft*.  Please let the author know if you have questions or find mistakes.

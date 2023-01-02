@@ -5,7 +5,7 @@
 
 Suppose that, as usual,  we begin with a
 collection of measurements of different features for a group of samples.  Some of these measurements
-will tell us quite a bit about the difference among our samples, while others may contain relatively little
+will tell us quite a bit about the dif mergefference among our samples, while others may contain relatively little
 information.  For example, if we are analyzing the effect of a certain weight loss regimen on a group of people,
 the age and weight of the subjects may have a great deal of influence on how successful the regimen is, while
 their blood pressure might not.  One way to help identify which features are more significant is
