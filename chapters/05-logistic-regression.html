@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.269">
+<meta name="generator" content="quarto-99.9.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -214,13 +214,13 @@ $$
 
 </header>
 
-<p>Suppose that we are trying to convince customers to buy our product by showing them advertising. Our experience teaches us that there is no deterministic relationship between how often a potential customer sees one of our ads and whether or not they purchase our product, nevertheless it is the case that as they see more ads they become more likely to make a purchase. Logistic regression is a statistical model that can capture the essence of this idea.</p>
-<p>To make this problem more abstract, let’s imagine that we are trying to model a random event that depends on a parameter. As in our introduction above, the random event might be a user deciding to make a purchase from a website, which, in our very simple model, depends on how many times the user saw an advertisement for the product in question. But we could imagine other situations where the chance of an event happening depends on a parameter. For example, we could imagine that a student’s score on a certain test depends on how much studying they do, with the likelihood of passing the test increasing with the amount of studying.</p>
+<p>Suppose that we are trying to convince customers to buy our product by showing them advertising. Our experience teaches us that there is no deterministic relationship between how often a potential customer sees one of our ads and whether or not they purchase our product, nevertheless it is the case that as they see more ads they become more likely to make a purchase. Logistic regression is a statistical model that captures this idea.</p>
+<p>To formulate this situation mathematically, let’s imagine that we are trying to model a random event that depends on a parameter. The random event might be a user deciding to make a purchase from a website, which, in our very simple model, depends on how many times the user saw an advertisement for the product in question. But we could imagine other situations where the chance of an event happening depends on a parameter. For example, we could imagine that a student’s score on a certain test depends on how much studying they do, with the likelihood of passing the test increasing with the amount of studying.</p>
 <p>To construct this model, we assume that the probability of a certain event <span class="math inline">\(p\)</span> is related to some parameter <span class="math inline">\(x\)</span> by the following relationship:</p>
 <p><span id="eq-logistic_1"><span class="math display">\[
 \log\frac{p}{1-p} = ax+b
 \tag{5.1}\]</span></span></p>
-<p>where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are constants. The quantity <span class="math inline">\(\frac{p}{1-p}\)</span> is the “odds” of the event occurring. We often use this quantity colloquially; if the chance of our team winning a football game is <span class="math inline">\(1\)</span> in <span class="math inline">\(3\)</span>, then we would say the odds of a win are <span class="math inline">\(1\)</span>-to-<span class="math inline">\(2\)</span>, which we can interpret as meaning they are twice as likely to lose as to win. The quantity <span class="math inline">\(\log\frac{p}{1-p}\)</span> is, for obvious reasons, called the log-odds of the event.</p>
+<p>where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are constants. The quantity <span class="math inline">\(\frac{p}{1-p}\)</span> is the “odds” of the event occurring. We often use this quantity colloquially; if the chance of our team winning a football game is <span class="math inline">\(1\)</span> in <span class="math inline">\(3\)</span>, then we would say the odds of a win are <span class="math inline">\(1\)</span>-to-<span class="math inline">\(2\)</span>, which we can interpret as meaning they are twice as likely to lose as to win. The quantity <span class="math inline">\(\log\frac{p}{1-p}\)</span> is, for obvious reasons, called the log-odds of the event. The logistic model in <a href="#eq-logistic_1">Equation&nbsp;<span>5.1</span></a> means that an increase by <span class="math inline">\(1\)</span> in the parameter <span class="math inline">\(x\)</span> increases the log-odds of the event happening by <span class="math inline">\(a\)</span>.</p>
 <p>The assumption in <a href="#eq-logistic_1">Equation&nbsp;<span>5.1</span></a> can be written <span class="math display">\[
 \frac{p}{1-p} = e^{ax+b}
 \]</span> and we interpret this as telling us that if the parameter <span class="math inline">\(x\)</span> increases by <span class="math inline">\(1\)</span>, the odds of our event happening go up by a factor of <span class="math inline">\(e^{a}\)</span>. So, to be even more concrete, if <span class="math inline">\(a=\log 2\)</span>, then our logistic model would say that an increase of <span class="math inline">\(1\)</span> in our parameter <span class="math inline">\(x\)</span> doubles the odds of our event taking place.</p>
@@ -235,9 +235,9 @@ p = \frac{1}{1+e^{-ax-b}}
 <p></p><figcaption class="figure-caption">Figure&nbsp;5.1: Logistic Curve</figcaption><p></p>
 </figure>
 </div>
-<p>To fully put the logistic model in perspective, let’s choose some explicit parameters and look at what data arising from such a model would look like. Imagine therefore that <span class="math inline">\(a=\log 2\)</span> and <span class="math inline">\(b=0\)</span>, so that the probability of the event we are interested occurring is given by the formula <span class="math display">\[
+<p>To put the logistic model in perspective, let’s choose some explicit parameters and look at what data arising from such a model would look like. Imagine therefore that <span class="math inline">\(a=\log 2\)</span> and <span class="math inline">\(b=0\)</span>, so that the probability of the event we are interested occurring is given by the formula <span class="math display">\[
 p(x) = \frac{1}{1+e^{-(\log 2)x}} = \frac{1}{1+(.5)^x}.
-\]</span> Our data consists of counts of how often our event happened for a range of values of <span class="math inline">\(x\)</span>. To generate this data, we can pick <span class="math inline">\(x\)</span> values from the set <span class="math inline">\(\{-3,-2,-1,0,1,2,3\}\)</span> yielding probabilities <span class="math inline">\(\{.11,.2,.33,.4,.56,.67,.8\}\)</span>. Now our data consists of, for each value of <span class="math inline">\(x\)</span>, the result of <span class="math inline">\(100\)</span> independent Bernoulli trials with probability <span class="math inline">\(p(x)\)</span>. For example, we might find that our event occurred <span class="math inline">\(\{10, 18, 38, 50, 69, 78, 86\}\)</span> times respectively for each of the <span class="math inline">\(x\)</span> values.</p>
+\]</span> Our data consists of counts of how often our event happened for a range of values of <span class="math inline">\(x\)</span>. To generate this data, we can pick <span class="math inline">\(x\)</span> values from the set <span class="math inline">\(\{-3,-2,-1,0,1,2,3\}\)</span> yielding probabilities <span class="math inline">\(\{.11,.2,.33,.4,.56,.67,.8\}\)</span>. Now our data consists of, for each value of <span class="math inline">\(x\)</span>, the result of <span class="math inline">\(100\)</span> independent Bernoulli trials with probability <span class="math inline">\(p(x)\)</span>. For example, we might find that our event occurred <span class="math inline">\(\{10, 18, 38, 50, 69, 78, 86\}\)</span> times respectively for each of the <span class="math inline">\(x\)</span> values. As you can see, the event occurs more frequently when <span class="math inline">\(x\)</span> is large, although the number of occurrences is still random.</p>
 <section id="likelihood-and-logistic-regression" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="likelihood-and-logistic-regression"><span class="header-section-number">5.1</span> Likelihood and Logistic Regression</h2>
 <p>In applications, our goal is to choose the parameters of a logistic model to accurately predict the likelihood of the event under study occurring as a function of the measured parameter. Let’s imagine that we collected the data that we generated above, without knowing that it’s source was a logistic model. So <a href="#tbl-logistic_data">Table&nbsp;<span>5.1</span></a> shows the number of times the event occurred, for each of the measured values of the <span class="math inline">\(x\)</span> parameter.</p>
@@ -628,8 +628,8 @@ p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
 \nabla \log L(M) = X^{\intercal}(Y-P)=X^{\intercal}(Y-\sigma(XM)).
 \tag{5.4}\]</span></span></p>
 <p>Compare <a href="#eq-multiclassgradient">Equation&nbsp;<span>5.4</span></a> to <a href="#thm-logisticgradient">Theorem&nbsp;<span>5.1</span></a> and we see that the form is identical whether in the two-class or multi-class case if we set things up properly.</p>
-<p>:::</p>
-<p><strong>Algorithm:</strong> (Multiclass Gradient Descent) Given:</p>
+<div id="alg-graddescent" class="theorem algorithm">
+<p><span class="theorem-title"><strong>Algorithm 5.1 (Multiclass Gradient Descent) </strong></span>Given:</p>
 <ul>
 <li>an <span class="math inline">\(N\times(k+1)\)</span> data matrix <span class="math inline">\(X\)</span> whose last column is all <span class="math inline">\(1\)</span>,</li>
 <li>an <span class="math inline">\(N\times r\)</span> matrix <span class="math inline">\(Y\)</span> that “one-hot” encodes the labels of the classification problem;</li>
@@ -639,7 +639,7 @@ p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
 <p>Iterate: <span class="math display">\[
 M=M+\nu X^{\intercal}(Y-\sigma(XM))
 \]</span> until <span class="math inline">\(M\)</span> changes by less than some tolerance.</p>
-<p>:::</p>
+</div>
 </section>
 </section>
 <section id="batch-descent" class="level2" data-number="5.6">

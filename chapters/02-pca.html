@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.269">
+<meta name="generator" content="quarto-99.9.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -210,30 +210,30 @@ $$
 <h2 data-number="2.2" class="anchored" data-anchor-id="variance-and-covariance"><span class="header-section-number">2.2</span> Variance and Covariance</h2>
 <section id="variance" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="variance"><span class="header-section-number">2.2.1</span> Variance</h3>
-<p>Suppose that we have a collection of measurements <span class="math inline">\((x_1,\ldots, x_n)\)</span> of a particular feature <span class="math inline">\(X\)</span>. For example, <span class="math inline">\(x_i\)</span> might be the initial weight of the <span class="math inline">\(ith\)</span> participant in our weight loss study. The mean of the values <span class="math inline">\((x_1,\ldots, x_n)\)</span> is</p>
+<p>Suppose that we have a collection of measurements <span class="math inline">\((x_1,\ldots, x_N)\)</span> of a particular feature <span class="math inline">\(X\)</span>. For example, <span class="math inline">\(x_i\)</span> might be the initial weight of the <span class="math inline">\(ith\)</span> participant in our weight loss study. The mean of the values <span class="math inline">\((x_1,\ldots, x_N)\)</span> is</p>
 <p><span class="math display">\[
-\mu_{X} = \frac{1}{n}\sum_{i=1}^{n} x_{i}.
+\mu_{X} = \frac{1}{N}\sum_{i=1}^{N} x_{i}.
 \]</span></p>
 <p>The simplest measure of the variability of the data is called its <em>variance.</em></p>
-<p><strong>Definition:</strong> The (sample) variance of the data <span class="math inline">\(x_1,\ldots, x_n\)</span> is</p>
+<p><strong>Definition:</strong> The (sample) variance of the data <span class="math inline">\(x_1,\ldots, x_N\)</span> is</p>
 <p><span id="eq-variance"><span class="math display">\[
-\sigma_{X}^2 = \frac{1}{n}\sum_{i=1}^{n} \left(x_{i}-\mu_{X}\right)^2 = \frac{1}{n}\left(\sum_{i=1}^{n} x_{i}^2\right)- \mu_{X}^2
+\sigma_{X}^2 = \frac{1}{N}\sum_{i=1}^{N} \left(x_{i}-\mu_{X}\right)^2 = \frac{1}{N}\left(\sum_{i=1}^{N} x_{i}^2\right)- \mu_{X}^2
 \tag{2.1}\]</span></span></p>
 <p>The square root of the variance is called the <em>standard deviation.</em></p>
 <p>As we see from the formula, the variance is a measure of how ‘spread out’ the data is from the mean.</p>
-<p>Recall that in our discussion of linear regression we thought of our set of measurements <span class="math inline">\(x_1,\ldots, x_n\)</span> as a vector – it’s one of the columns of our data matrix. From that point of view, the variance has a geometric interpretation – it is <span class="math inline">\(\frac{1}{N}\)</span> times the square of the distance from the point <span class="math inline">\(X=(x_1,\ldots, x_n)\)</span> to the point <span class="math inline">\(\mu_{X}(1,1,\ldots,1)=\mu_{X}E\)</span>:</p>
+<p>Recall that in our discussion of linear regression we thought of our set of measurements <span class="math inline">\(x_1,\ldots, x_N\)</span> as a vector – it’s one of the columns of our data matrix. From that point of view, the variance has a geometric interpretation – it is <span class="math inline">\(\frac{1}{N}\)</span> times the square of the distance from the point <span class="math inline">\(X=(x_1,\ldots, x_N)\)</span> to the point <span class="math inline">\(\mu_{X}(1,1,\ldots,1)=\mu_{X}E\)</span>:</p>
 <p><span id="eq-variancedot"><span class="math display">\[
-\sigma_{X}^2 = \frac{1}{n}(X-\mu_{X}E)\cdot(X-\mu_{X}E)  = \frac{1}{n}\|X-\mu_{X}E\|^2.
+\sigma_{X}^2 = \frac{1}{N}(X-\mu_{X}E)\cdot(X-\mu_{X}E)  = \frac{1}{N}\|X-\mu_{X}E\|^2.
 \tag{2.2}\]</span></span></p>
 </section>
 <section id="covariance" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="covariance"><span class="header-section-number">2.2.2</span> Covariance</h3>
 <p>The variance measures the dispersion of measures of a single feature. Often, we have measurements of multiple features and we might want to know something about how two features are related. The <em>covariance</em> is a measure of whether two features tend to be related, in the sense that when one increases, the other one increases; or when one increases, the other one decreases.</p>
-<p><strong>Definition:</strong> Given measurements <span class="math inline">\((x_1,\ldots, x_n)\)</span> and <span class="math inline">\((y_1,\ldots, y_n)\)</span> of two features <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, the covariance of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> is</p>
+<p><strong>Definition:</strong> Given measurements <span class="math inline">\((x_1,\ldots, x_N)\)</span> and <span class="math inline">\((y_1,\ldots, y_N)\)</span> of two features <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, the covariance of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> is</p>
 <p><span id="eq-covariancedot"><span class="math display">\[
 \sigma_{XY} = \frac{1}{N}\sum_{i=1}^{N} (x_i-\mu_{X})(y_i-\mu_{Y})
 \tag{2.3}\]</span></span></p>
-<p>There is a nice geometric interpretation of this, as well, in terms of the dot product. If <span class="math inline">\(X=(x_1,\ldots, x_n)\)</span> and <span class="math inline">\(Y=(y_1\ldots,y_n)\)</span> then</p>
+<p>There is a nice geometric interpretation of this, as well, in terms of the dot product. If <span class="math inline">\(X=(x_1,\ldots, x_N)\)</span> and <span class="math inline">\(Y=(y_1\ldots,y_N)\)</span> then</p>
 <p><span class="math display">\[
 \sigma_{XY} = \frac{1}{N} ((X-\mu_{X}E)\cdot (Y-\mu_{Y}E)).
 \]</span></p>
@@ -258,7 +258,7 @@ a \cdot b = \|a\|\|b\|\cos(\theta)
 r_{XY} = \frac{\sigma_{XY}}{\sigma_{X}\sigma_{Y}}
 \tag{2.4}\]</span></span></p>
 <p>measures the cosine of the angle between the vectors <span class="math inline">\(X-\mu_{X}E\)</span> and <span class="math inline">\(Y-\mu_{Y}E\)</span>.</p>
-<p><strong>Definition:</strong> The quantity <span class="math inline">\(r_{XY}\)</span> defined in <a href="#eq-rxy">Equation&nbsp;<span>2.4</span></a> is called the (sample) <em>correlation coefficient</em> between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. We have <span class="math inline">\(0\le |r_{XY}|\le 1\)</span> with <span class="math inline">\(r_{XY}=\pm 1\)</span> if and only if the two vectors <span class="math inline">\(X-\mu_{X}\)</span> and <span class="math inline">\(Y-\mu_{Y}\)</span> are collinear in <span class="math inline">\(\mathbf{R}^{n}\)</span>.</p>
+<p><strong>Definition:</strong> The quantity <span class="math inline">\(r_{XY}\)</span> defined in <a href="#eq-rxy">Equation&nbsp;<span>2.4</span></a> is called the (sample) <em>correlation coefficient</em> between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. We have <span class="math inline">\(0\le |r_{XY}|\le 1\)</span> with <span class="math inline">\(r_{XY}=\pm 1\)</span> if and only if the two vectors <span class="math inline">\(X-\mu_{X}\)</span> and <span class="math inline">\(Y-\mu_{Y}\)</span> are collinear in <span class="math inline">\(\mathbf{R}^{N}\)</span>.</p>
 <p>*<a href="#fig-corrfig">Figure&nbsp;<span>2.1</span></a> illustrates data with different values of the correlation coefficient.</p>
 <div id="fig-corrfig" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -346,6 +346,7 @@ d_{ij} = \sigma_{ij} = \frac{1}{N}\sum_{s=1}^{N}(x_{si}-\mu_{i})(x_{sj}-\mu_{j})
 S = aw + be
 \]</span> for some constants <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> – maybe by choosing a good combination we could find a better predictor of gas mileage than using one or the other of the features individually.</p>
 <p>As another example, suppose we are interested in the impact of the nutritional content of food on weight gain in a study. We know that both calorie content and the level dietary fiber contribute to the weight gain of participants eating this particular food; maybe there is some kind of combined “calorie/fiber” score we could introduce that captures the impact of that food better.</p>
+<p>Finally, when we assign grades in a course, we typically compute a weighted combination of the scores of each student on a series of assignments. Such a combination is another example of a “score” and may help explain the origin of the term.</p>
 <p><strong>Definition:</strong> Let <span class="math inline">\(X_{0}\)</span> be a (centered) <span class="math inline">\(N\times k\)</span> data matrix giving information about <span class="math inline">\(k\)</span> features for each of <span class="math inline">\(N\)</span> samples. A linear synthetic feature, or a linear score, is a linear combination of the <span class="math inline">\(k\)</span> features. The linear score is defined by constants <span class="math inline">\(a_{1},\ldots, a_{k}\)</span> so that If <span class="math inline">\(y_{1},\ldots, y_{k}\)</span> are the values of the features for a particular sample, then the linear score for that sample is</p>
 <p><span class="math display">\[
 S = a_{1}y_{1}+a_{2}y_{2}+\cdots+a_{k}y_{k}
@@ -856,13 +857,13 @@ u_{i} = w_{i} - \sum_{j=1}^{i-1} \frac{w_{i}\cdot u_{j}}{u_{j}\cdot u_{j}}u_{j}
 <li>There is an orthonormal basis <span class="math inline">\(u_{1},\ldots, u_{N}\)</span> of <span class="math inline">\(\mathbf{R}^{N}\)</span> made up of eigenvectors for the eigenvalues <span class="math inline">\(\lambda_{i}\)</span>.</li>
 <li>Let <span class="math inline">\(\Lambda\)</span> be the diagonal matrix with entries <span class="math inline">\(\lambda_{1},\ldots, \lambda_{N}\)</span> and let <span class="math inline">\(P\)</span> be the matrix whose columns are made up of the eigenvectors <span class="math inline">\(u_{i}\)</span>. Then <span class="math inline">\(D=P\Lambda P^{\intercal}\)</span>.</li>
 </ol>
-<p><strong>Proof:</strong> Start with <span class="math inline">\(1\)</span>. Suppose that <span class="math inline">\(\lambda\)</span> is an eigenvalue of <span class="math inline">\(D\)</span>. Let <span class="math inline">\(u\)</span> be a corresponding nonzero eigenvector. Then <span class="math inline">\(Du=\lambda u\)</span> and <span class="math inline">\(D\overline{u}=\overline{\lambda}\overline{u}\)</span>, where <span class="math inline">\(\overline{u}\)</span> is the vector whose entries are the conjugates of the entries of <span class="math inline">\(u\)</span> (and <span class="math inline">\(\overline{D}=D\)</span> since <span class="math inline">\(D\)</span> is real). Now we have <span class="math display">\[
+<p><strong>Proof:</strong> First of all, we use the fact that any matrix has at least one eigenvector with associated eigenvalue. This is a theorem from linear algebra that relies on the fundamental theorem of algebra. With this result available, we start by proving part 1. Suppose that <span class="math inline">\(\lambda\)</span> is an eigenvalue of <span class="math inline">\(D\)</span>. Let <span class="math inline">\(u\)</span> be a corresponding nonzero eigenvector. Then <span class="math inline">\(Du=\lambda u\)</span> and <span class="math inline">\(D\overline{u}=\overline{\lambda}\overline{u}\)</span>, where <span class="math inline">\(\overline{u}\)</span> is the vector whose entries are the conjugates of the entries of <span class="math inline">\(u\)</span> (and <span class="math inline">\(\overline{D}=D\)</span> since <span class="math inline">\(D\)</span> is real). Now we have <span class="math display">\[
 \overline{u}^{\intercal}Du = \lambda \overline{u}\cdot u = \lambda\|u\|^2
 \]</span> and <span class="math display">\[
 u^{\intercal}D\overline{u} = \overline{\lambda}u\cdot \overline{u} = \overline{\lambda}\|u\|^2.
 \]</span> But the left hand side of both of these equations are the same (take the transpose and use the symmetry of <span class="math inline">\(D\)</span>) so we must have <span class="math inline">\(\lambda\|u\|^2 = \overline{\lambda}\|u\|^2\)</span> so <span class="math inline">\(\lambda=\overline{\lambda}\)</span>, meaning <span class="math inline">\(\lambda\)</span> is real.</p>
 <p>If we have the additional property that <span class="math inline">\(u^{\intercal}Du\ge 0\)</span> for all <span class="math inline">\(u\)</span>, then in particular <span class="math inline">\(u_{i}^{\intercal}Du_{i} = \lambda\|u\|^2\ge 0\)</span>, and since <span class="math inline">\(\|u\|^2&gt; 0\)</span> we must have <span class="math inline">\(\lambda\ge 0\)</span>.</p>
-<p>Property <span class="math inline">\(2\)</span> is in some ways the most critical fact. We know from the general theory of the characteristic polynomial, and the fundamental theorem of algebra, that <span class="math inline">\(D\)</span> has <span class="math inline">\(N\)</span> complex eigenvalues, although some may be repeated. However, it may not be the case that <span class="math inline">\(D\)</span> has <span class="math inline">\(N\)</span> linearly independent eigenvectors – it may not be <em>diagonalizable</em>. So we will establish that now.</p>
+<p>Property <span class="math inline">\(2\)</span> is in some ways the most critical fact. We know from the general theory of the characteristic polynomial, and the fundamental theorem of algebra, that <span class="math inline">\(D\)</span> has <span class="math inline">\(N\)</span> complex eigenvalues, although some may be repeated. However, it may not be the case that <span class="math inline">\(D\)</span> has <span class="math inline">\(N\)</span> linearly independent eigenvectors – it may not be <em>diagonalizable</em>. So we will establish that any <em>symmetric</em> matrix over the real numbers is diagonalizable.</p>
 <p>A one-by-one matrix is automatically symmetric and diagonalizable. In the <span class="math inline">\(N\)</span>-dimensional case, we know, at least, that <span class="math inline">\(D\)</span> has at least one eigenvector, and real one at that by part <span class="math inline">\(1\)</span>, and this gives us a place to begin an inductive argument.</p>
 <p>Let <span class="math inline">\(v_{N}\not=0\)</span> be an eigenvector with eigenvalue <span class="math inline">\(\lambda\)</span> and normalized so that <span class="math inline">\(\|v_{N}\|^2=1\)</span>,<br>
 and extend this to a basis <span class="math inline">\(v_{1},\ldots v_{N}\)</span> of <span class="math inline">\(\mathbf{R}^{N}\)</span>. Apply the Gram-Schmidt process to construct an orthonormal basis of <span class="math inline">\(\mathbf{R}^{N}\)</span> <span class="math inline">\(u_{1},\ldots, u_{N}\)</span> so that <span class="math inline">\(u_{N}=v_{N}\)</span>.</p>

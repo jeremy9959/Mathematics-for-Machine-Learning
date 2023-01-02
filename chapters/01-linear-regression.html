@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.269">
+<meta name="generator" content="quarto-99.9.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -233,7 +233,8 @@ $$
 <h2 data-number="1.2" class="anchored" data-anchor-id="sec-Calculus"><span class="header-section-number">1.2</span> Least Squares (via Calculus)</h2>
 <p>In either of the two cases above, the question we face is to determine the line <span class="math inline">\(y=mx+b\)</span> that “best fits” the data <span class="math inline">\(\{(x_i,y_i)_{i=1}^{N}\}\)</span>. The classic approach is to determine the equation of a line <span class="math inline">\(y=mx+b\)</span> that minimizes the “mean squared error”:</p>
 <p><span class="math display">\[ MSE(m,b) = \frac{1}{N}\sum_{i=1}^{n} (y_i-mx_i-b)^2 \]</span></p>
-<p>It’s worth emphasizing that the <span class="math inline">\(MSE\)</span> is a function of two variables – the slope <span class="math inline">\(m\)</span> and the intercept <span class="math inline">\(b\)</span> – and that the data points <span class="math inline">\(\{(x_i,y_i)\}\)</span> are constants for these purposes. Furthermore, it’s a quadratic function in those two variables. Since our goal is to find <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> that minimize the <span class="math inline">\(MSE\)</span>, we have a Calculus problem that we can solve by taking partial derivatives and setting them to zero.</p>
+<p>Practically speaking, minimizing the <span class="math inline">\(MSE\)</span> is a good strategy because it captures the difference between our predictions and the true values in a reasonable way and it is easy to work with analytically. There are underlying statistical hypotheses that also argue in favor of the <span class="math inline">\(MSE\)</span>, and we will discuss those later in the course.</p>
+<p>Remember that the <span class="math inline">\(MSE\)</span> is a function of two variables – the slope <span class="math inline">\(m\)</span> and the intercept <span class="math inline">\(b\)</span> – and that the data points <span class="math inline">\(\{(x_i,y_i)\}\)</span> are constants for these purposes. Furthermore, it’s a quadratic function in those two variables. Since our goal is to find <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> that minimize the <span class="math inline">\(MSE\)</span>, we have a Calculus problem that we can solve by taking partial derivatives and setting them to zero.</p>
 <p>To simplify the notation, let’s abbreviate <span class="math inline">\(MSE\)</span> by <span class="math inline">\(E\)</span>.</p>
 <p><span class="math display">\[
 \begin{aligned} \frac{\partial E}{\partial m} &amp;=
@@ -342,12 +343,12 @@ x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2k} \\ \vdots &amp; \vdots &amp; \ddot
 m_k\end{matrix}\right]+\left[\begin{matrix} 1 \\ 1 \\ \cdots \\
 1\end{matrix}\right]b
 \]</span></p>
-<p>and our goal is to choose these parameters <span class="math inline">\(m_i\)</span> and <span class="math inline">\(b\)</span> to make the mean squared error:</p>
+<p>and our goal is to choose these parameters <span class="math inline">\(m_i\)</span> and <span class="math inline">\(b\)</span> to minimize the mean squared error:</p>
 <p><span class="math display">\[ MSE(m_1,\ldots, m_k,b) = \|Y-\hat{Y}\|^2 = \sum_{i=1}^{N} (y_i -
 \sum_{j=1}^{k} x_{ij}m_j -b )^2.
 \]</span></p>
-<p>Here we are summing over the <span class="math inline">\(N\)</span> different car models, and for each model taking the squared difference between the true mileage <span class="math inline">\(y_i\)</span> and the “predicted” mileage <span class="math inline">\(\sum_{j=1}^{k} x_{ij}m_j +b\)</span>. We wish to minimize this MSE.</p>
-<p>Let’s make one more simplification. The intercept variable <span class="math inline">\(b\)</span> is annoying because it requires separate treatment from the <span class="math inline">\(m_i\)</span>. But we can use a trick to eliminate the need for special treatment. Let’s add a new feature to our data matrix (a new column) that has the constant value <span class="math inline">\(1\)</span>.</p>
+<p>Here we are summing over the <span class="math inline">\(N\)</span> different car models, and for each model taking the squared difference between the true mileage <span class="math inline">\(y_i\)</span> and the “predicted” mileage <span class="math inline">\(\sum_{j=1}^{k} x_{ij}m_j +b\)</span> and we want this to be as small as possible.</p>
+<p>Let’s make one more simplification. The intercept variable <span class="math inline">\(b\)</span> is annoying because it requires separate treatment from the <span class="math inline">\(m_i\)</span>. But we can use a trick to eliminate the need for this special treatment. Let’s add a new feature to our data matrix (a new column) that has the constant value <span class="math inline">\(1\)</span>.</p>
 <p><span class="math display">\[ X = \left(\begin{matrix} x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1k} &amp; 1\\
 x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2k} &amp; 1\\ \vdots &amp; \vdots &amp; \ddots &amp;
 \vdots &amp; 1\\ x_{N1} &amp; x_{k2} &amp; \cdots &amp; x_{Nk} &amp; 1\\
@@ -365,7 +366,7 @@ MSE(M) = \|Y - XM\|^2
 <p><span class="math display">\[ M=\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
 m_{k+1}\end{matrix}\right].
 \]</span></p>
-<p><strong>Remark:</strong> Later on (see {<a href="#sec-centered"><span>Section&nbsp;1.6</span></a>}) we will see that if we “center” our features about their mean, by subtracting the average value of each column of <span class="math inline">\(X\)</span> from that column; and we also subtract the average value of <span class="math inline">\(Y\)</span> from the entries of <span class="math inline">\(Y\)</span>, then the <span class="math inline">\(b\)</span> that emerges from the least squares fit is zero. As a result, instead of adding a column of <span class="math inline">\(1\)</span>’s, you can change coordinates to center each feature about its mean, and keep your <span class="math inline">\(X\)</span> matrix <span class="math inline">\(N\times k\)</span>.</p>
+<p><strong>Remark:</strong> Later on (see <a href="#sec-centered"><span>Section&nbsp;1.6</span></a> ) we will see that if we “center” our features about their mean, by subtracting the average value of each column of <span class="math inline">\(X\)</span> from that column; and we also subtract the average value of <span class="math inline">\(Y\)</span> from the entries of <span class="math inline">\(Y\)</span>, then the <span class="math inline">\(b\)</span> that emerges from the least squares fit is zero. As a result, instead of adding a column of <span class="math inline">\(1\)</span>’s, you can change coordinates to center each feature about its mean, and keep your <span class="math inline">\(X\)</span> matrix <span class="math inline">\(N\times k\)</span>.</p>
 <p>The Calculus approach to minimizing the <span class="math inline">\(MSE\)</span> is to take its partial derivatives with respect to the <span class="math inline">\(m_{i}\)</span> and set them to zero. Let’s first work out the derivatives in a nice form for later.</p>
 <p><strong>Proposition:</strong> The gradient of <span class="math inline">\(MSE(M)=E\)</span> is given by</p>
 <p><span id="eq-gradient"><span class="math display">\[
@@ -411,7 +412,7 @@ D^{-1}X^{\intercal}Y  \tag{1.7}\]</span></span> and the “predicted value” <s
 <ul>
 <li><span class="math inline">\(PY\)</span> belongs to the subspace <span class="math inline">\(H\)</span> for any <span class="math inline">\(Y\in\mathbf{R}^{N}\)</span>.</li>
 <li><span class="math inline">\((Y-PY)\)</span> is orthogonal to <span class="math inline">\(H\)</span>.</li>
-<li><span class="math inline">\(P*P = P\)</span>.</li>
+<li><span class="math inline">\(P^2 = P\)</span>.</li>
 </ul>
 <p><strong>Proof:</strong> First of all, <span class="math inline">\(PY=XD^{-1}X^{\intercal}Y\)</span> so <span class="math inline">\(PY\)</span> is a linear combination of the columns of <span class="math inline">\(X\)</span> and is therefore an element of <span class="math inline">\(H\)</span>. Next, we can compute the dot product of <span class="math inline">\(PY\)</span> against a basis of <span class="math inline">\(H\)</span> by computing</p>
 <p><span class="math display">\[ X^{\intercal}PY = X^{\intercal}XD^{-1}X^{\intercal}Y =
