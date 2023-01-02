@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-99.9.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>gradientdescentimages</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="GradientDescentImages_files/libs/clipboard/clipboard.min.js"></script>
+<script src="GradientDescentImages_files/libs/quarto-html/quarto.js"></script>
+<script src="GradientDescentImages_files/libs/quarto-html/popper.min.js"></script>
+<script src="GradientDescentImages_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="GradientDescentImages_files/libs/quarto-html/anchor.min.js"></script>
+<link href="GradientDescentImages_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="GradientDescentImages_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="GradientDescentImages_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="GradientDescentImages_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="GradientDescentImages_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bokeh.plotting <span class="im">import</span> figure, output_notebook, show,row</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bokeh.models <span class="im">import</span> Range, DataRange1d,Label, LabelSet, ColumnDataSource</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bokeh.io <span class="im">import</span> export_png</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>output_notebook()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>
+        .bk-notebook-logo {
+            display: block;
+            width: 20px;
+            height: 20px;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAOkSURBVDiNjZRtaJVlGMd/1/08zzln5zjP1LWcU9N0NkN8m2CYjpgQYQXqSs0I84OLIC0hkEKoPtiH3gmKoiJDU7QpLgoLjLIQCpEsNJ1vqUOdO7ppbuec5+V+rj4ctwzd8IIbbi6u+8f1539dt3A78eXC7QizUF7gyV1fD1Yqg4JWz84yffhm0qkFqBogB9rM8tZdtwVsPUhWhGcFJngGeWrPzHm5oaMmkfEg1usvLFyc8jLRqDOMru7AyC8saQr7GG7f5fvDeH7Ej8CM66nIF+8yngt6HWaKh7k49Soy9nXurCi1o3qUbS3zWfrYeQDTB/Qj6kX6Ybhw4B+bOYoLKCC9H3Nu/leUTZ1JdRWkkn2ldcCamzrcf47KKXdAJllSlxAOkRgyHsGC/zRday5Qld9DyoM4/q/rUoy/CXh3jzOu3bHUVZeU+DEn8FInkPBFlu3+nW3Nw0mk6vCDiWg8CeJaxEwuHS3+z5RgY+YBR6V1Z1nxSOfoaPa4LASWxxdNp+VWTk7+4vzaou8v8PN+xo+KY2xsw6une2frhw05CTYOmQvsEhjhWjn0bmXPjpE1+kplmmkP3suftwTubK9Vq22qKmrBhpY4jvd5afdRA3wGjFAgcnTK2s4hY0/GPNIb0nErGMCRxWOOX64Z8RAC4oCXdklmEvcL8o0BfkNK4lUg9HTl+oPlQxdNo3Mg4Nv175e/1LDGzZen30MEjRUtmXSfiTVu1kK8W4txyV6BMKlbgk3lMwYCiusNy9fVfvvwMxv8Ynl6vxoByANLTWplvuj/nF9m2+PDtt1eiHPBr1oIfhCChQMBw6Aw0UulqTKZdfVvfG7VcfIqLG9bcldL/+pdWTLxLUy8Qq38heUIjh4XlzZxzQm19lLFlr8vdQ97rjZVOLf8nclzckbcD4wxXMidpX30sFd37Fv/GtwwhzhxGVAprjbg0gCAEeIgwCZyTV2Z1REEW8O4py0wsjeloKoMr6iCY6dP92H6Vw/oTyICIthibxjm/DfN9lVz8IqtqKYLUXfoKVMVQVVJOElGjrnnUt9T9wbgp8AyYKaGlqingHZU/uG2NTZSVqwHQTWkx9hxjkpWDaCg6Ckj5qebgBVbT3V3NNXMSiWSDdGV3hrtzla7J+duwPOToIg42ChPQOQjspnSlp1V+Gjdged7+8UN5CRAV7a5EdFNwCjEaBR27b3W890TE7g24NAP/mMDXRWrGoFPQI9ls/MWO2dWFAar/xcOIImbbpA3zgAAAABJRU5ErkJggg==);
+        }
+    </style>
+    <div>
+        <a href="https://bokeh.org" target="_blank" class="bk-notebook-logo"></a>
+        <span id="p1001">Loading BokehJS ...</span>
+    </div>
+</div>
+<div class="cell-output cell-output-display">
+
+<script type="application/javascript">
+(function(root) {
+  function now() {
+    return new Date();
+  }
+
+  const force = true;
+
+  if (typeof root._bokeh_onload_callbacks === "undefined" || force === true) {
+    root._bokeh_onload_callbacks = [];
+    root._bokeh_is_loading = undefined;
+  }
+
+const JS_MIME_TYPE = 'application/javascript';
+  const HTML_MIME_TYPE = 'text/html';
+  const EXEC_MIME_TYPE = 'application/vnd.bokehjs_exec.v0+json';
+  const CLASS_NAME = 'output_bokeh rendered_html';
+
+  /**
+   * Render data to the DOM node
+   */
+  function render(props, node) {
+    const script = document.createElement("script");
+    node.appendChild(script);
+  }
+
+  /**
+   * Handle when an output is cleared or removed
+   */
+  function handleClearOutput(event, handle) {
+    const cell = handle.cell;
+
+    const id = cell.output_area._bokeh_element_id;
+    const server_id = cell.output_area._bokeh_server_id;
+    // Clean up Bokeh references
+    if (id != null && id in Bokeh.index) {
+      Bokeh.index[id].model.document.clear();
+      delete Bokeh.index[id];
+    }
+
+    if (server_id !== undefined) {
+      // Clean up Bokeh references
+      const cmd_clean = "from bokeh.io.state import curstate; print(curstate().uuid_to_server['" + server_id + "'].get_sessions()[0].document.roots[0]._id)";
+      cell.notebook.kernel.execute(cmd_clean, {
+        iopub: {
+          output: function(msg) {
+            const id = msg.content.text.trim();
+            if (id in Bokeh.index) {
+              Bokeh.index[id].model.document.clear();
+              delete Bokeh.index[id];
+            }
+          }
+        }
+      });
+      // Destroy server and session
+      const cmd_destroy = "import bokeh.io.notebook as ion; ion.destroy_server('" + server_id + "')";
+      cell.notebook.kernel.execute(cmd_destroy);
+    }
+  }
+
+  /**
+   * Handle when a new output is added
+   */
+  function handleAddOutput(event, handle) {
+    const output_area = handle.output_area;
+    const output = handle.output;
+
+    // limit handleAddOutput to display_data with EXEC_MIME_TYPE content only
+    if ((output.output_type != "display_data") || (!Object.prototype.hasOwnProperty.call(output.data, EXEC_MIME_TYPE))) {
+      return
+    }
+
+    const toinsert = output_area.element.find("." + CLASS_NAME.split(' ')[0]);
+
+    if (output.metadata[EXEC_MIME_TYPE]["id"] !== undefined) {
+      toinsert[toinsert.length - 1].firstChild.textContent = output.data[JS_MIME_TYPE];
+      // store reference to embed id on output_area
+      output_area._bokeh_element_id = output.metadata[EXEC_MIME_TYPE]["id"];
+    }
+    if (output.metadata[EXEC_MIME_TYPE]["server_id"] !== undefined) {
+      const bk_div = document.createElement("div");
+      bk_div.innerHTML = output.data[HTML_MIME_TYPE];
+      const script_attrs = bk_div.children[0].attributes;
+      for (let i = 0; i < script_attrs.length; i++) {
+        toinsert[toinsert.length - 1].firstChild.setAttribute(script_attrs[i].name, script_attrs[i].value);
+        toinsert[toinsert.length - 1].firstChild.textContent = bk_div.children[0].textContent
+      }
+      // store reference to server id on output_area
+      output_area._bokeh_server_id = output.metadata[EXEC_MIME_TYPE]["server_id"];
+    }
+  }
+
+  function register_renderer(events, OutputArea) {
+
+    function append_mime(data, metadata, element) {
+      // create a DOM node to render to
+      const toinsert = this.create_output_subarea(
+        metadata,
+        CLASS_NAME,
+        EXEC_MIME_TYPE
+      );
+      this.keyboard_manager.register_events(toinsert);
+      // Render to node
+      const props = {data: data, metadata: metadata[EXEC_MIME_TYPE]};
+      render(props, toinsert[toinsert.length - 1]);
+      element.append(toinsert);
+      return toinsert
+    }
+
+    /* Handle when an output is cleared or removed */
+    events.on('clear_output.CodeCell', handleClearOutput);
+    events.on('delete.Cell', handleClearOutput);
+
+    /* Handle when a new output is added */
+    events.on('output_added.OutputArea', handleAddOutput);
+
+    /**
+     * Register the mime type and append_mime function with output_area
+     */
+    OutputArea.prototype.register_mime_type(EXEC_MIME_TYPE, append_mime, {
+      /* Is output safe? */
+      safe: true,
+      /* Index of renderer in `output_area.display_order` */
+      index: 0
+    });
+  }
+
+  // register the mime type if in Jupyter Notebook environment and previously unregistered
+  if (root.Jupyter !== undefined) {
+    const events = require('base/js/events');
+    const OutputArea = require('notebook/js/outputarea').OutputArea;
+
+    if (OutputArea.prototype.mime_types().indexOf(EXEC_MIME_TYPE) == -1) {
+      register_renderer(events, OutputArea);
+    }
+  }
+  if (typeof (root._bokeh_timeout) === "undefined" || force === true) {
+    root._bokeh_timeout = Date.now() + 5000;
+    root._bokeh_failed_load = false;
+  }
+
+  const NB_LOAD_WARNING = {'data': {'text/html':
+     "<div style='background-color: #fdd'>\n"+
+     "<p>\n"+
+     "BokehJS does not appear to have successfully loaded. If loading BokehJS from CDN, this \n"+
+     "may be due to a slow or bad network connection. Possible fixes:\n"+
+     "</p>\n"+
+     "<ul>\n"+
+     "<li>re-rerun `output_notebook()` to attempt to load from CDN again, or</li>\n"+
+     "<li>use INLINE resources instead, as so:</li>\n"+
+     "</ul>\n"+
+     "<code>\n"+
+     "from bokeh.resources import INLINE\n"+
+     "output_notebook(resources=INLINE)\n"+
+     "</code>\n"+
+     "</div>"}};
+
+  function display_loaded() {
+    const el = document.getElementById("p1001");
+    if (el != null) {
+      el.textContent = "BokehJS is loading...";
+    }
+    if (root.Bokeh !== undefined) {
+      if (el != null) {
+        el.textContent = "BokehJS " + root.Bokeh.version + " successfully loaded.";
+      }
+    } else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(display_loaded, 100)
+    }
+  }
+
+  function run_callbacks() {
+    try {
+      root._bokeh_onload_callbacks.forEach(function(callback) {
+        if (callback != null)
+          callback();
+      });
+    } finally {
+      delete root._bokeh_onload_callbacks
+    }
+    console.debug("Bokeh: all callbacks have finished");
+  }
+
+  function load_libs(css_urls, js_urls, callback) {
+    if (css_urls == null) css_urls = [];
+    if (js_urls == null) js_urls = [];
+
+    root._bokeh_onload_callbacks.push(callback);
+    if (root._bokeh_is_loading > 0) {
+      console.debug("Bokeh: BokehJS is being loaded, scheduling callback at", now());
+      return null;
+    }
+    if (js_urls == null || js_urls.length === 0) {
+      run_callbacks();
+      return null;
+    }
+    console.debug("Bokeh: BokehJS not loaded, scheduling load and callback at", now());
+    root._bokeh_is_loading = css_urls.length + js_urls.length;
+
+    function on_load() {
+      root._bokeh_is_loading--;
+      if (root._bokeh_is_loading === 0) {
+        console.debug("Bokeh: all BokehJS libraries/stylesheets loaded");
+        run_callbacks()
+      }
+    }
+
+    function on_error(url) {
+      console.error("failed to load " + url);
+    }
+
+    for (let i = 0; i < css_urls.length; i++) {
+      const url = css_urls[i];
+      const element = document.createElement("link");
+      element.onload = on_load;
+      element.onerror = on_error.bind(null, url);
+      element.rel = "stylesheet";
+      element.type = "text/css";
+      element.href = url;
+      console.debug("Bokeh: injecting link tag for BokehJS stylesheet: ", url);
+      document.body.appendChild(element);
+    }
+
+    for (let i = 0; i < js_urls.length; i++) {
+      const url = js_urls[i];
+      const element = document.createElement('script');
+      element.onload = on_load;
+      element.onerror = on_error.bind(null, url);
+      element.async = false;
+      element.src = url;
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      document.head.appendChild(element);
+    }
+  };
+
+  function inject_raw_css(css) {
+    const element = document.createElement("style");
+    element.appendChild(document.createTextNode(css));
+    document.body.appendChild(element);
+  }
+
+  const js_urls = ["https://cdn.bokeh.org/bokeh/release/bokeh-3.0.1.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.0.1.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.0.1.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.0.1.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.0.1.min.js"];
+  const css_urls = [];
+
+  const inline_js = [    function(Bokeh) {
+      Bokeh.set_log_level("info");
+    },
+function(Bokeh) {
+    }
+  ];
+
+  function run_inline_js() {
+    if (root.Bokeh !== undefined || force === true) {
+          for (let i = 0; i < inline_js.length; i++) {
+      inline_js[i].call(root, root.Bokeh);
+    }
+if (force === true) {
+        display_loaded();
+      }} else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(run_inline_js, 100);
+    } else if (!root._bokeh_failed_load) {
+      console.log("Bokeh: BokehJS failed to load within specified timeout.");
+      root._bokeh_failed_load = true;
+    } else if (force !== true) {
+      const cell = $(document.getElementById("p1001")).parents('.cell').data().cell;
+      cell.output_area.append_execute_result(NB_LOAD_WARNING)
+    }
+  }
+
+  if (root._bokeh_is_loading === 0) {
+    console.debug("Bokeh: BokehJS loaded, going straight to plotting");
+    run_inline_js();
+  } else {
+    load_libs(css_urls, js_urls, function() {
+      console.debug("Bokeh: BokehJS plotting callback run at", now());
+      run_inline_js();
+    });
+  }
+}(window));
+</script>
+</div>
+</div>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> descent(x,n<span class="op">=</span><span class="dv">10</span>,nu<span class="op">=</span><span class="fl">.1</span>):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    answer<span class="op">=</span>np.zeros(n)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    answer[<span class="dv">0</span>]<span class="op">=</span>x</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,n):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>            x<span class="op">=</span>x<span class="op">-</span>nu<span class="op">*</span>df(x)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span>:</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        answer[i]<span class="op">=</span>x</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> answer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span>np.linspace(<span class="op">-</span><span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">100</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>f<span class="op">=</span> <span class="kw">lambda</span> x: <span class="dv">3</span><span class="op">*</span>x<span class="op">**</span><span class="dv">4</span><span class="op">+</span><span class="dv">4</span><span class="op">*</span>x<span class="op">**</span><span class="dv">3</span><span class="op">-</span><span class="dv">12</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2</span><span class="op">+</span><span class="dv">5</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="kw">lambda</span> x: <span class="dv">12</span><span class="op">*</span>x<span class="op">**</span><span class="dv">3</span><span class="op">+</span><span class="dv">12</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2</span><span class="op">-</span><span class="dv">24</span><span class="op">*</span>x</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>y<span class="op">=</span>f(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p<span class="op">=</span>figure(x_range<span class="op">=</span>[<span class="op">-</span><span class="dv">3</span>,<span class="dv">3</span>],y_range<span class="op">=</span>[<span class="op">-</span><span class="dv">30</span>,<span class="dv">30</span>],toolbar_location<span class="op">=</span><span class="va">None</span>,title<span class="op">=</span><span class="st">"A quartic curve"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>p.line(x<span class="op">=</span>x,y<span class="op">=</span>y,line_width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>export_png(p,filename<span class="op">=</span><span class="st">"../chapters/img/GradDescentQuartic.png"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>show(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+  <div id="1c4229f3-4dbe-455a-bfd0-8c3062b65470" data-root-id="p17036" style="display: contents;"></div>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/javascript">
+(function(root) {
+  function embed_document(root) {
+  const docs_json = {"41d9d2db-4250-4f57-8022-a9a8b86d5edf":{"version":"3.0.1","title":"Bokeh Application","defs":[],"roots":[{"type":"object","name":"Figure","id":"p17036","attributes":{"x_range":{"type":"object","name":"Range1d","id":"p17046","attributes":{"start":-3,"end":3}},"y_range":{"type":"object","name":"Range1d","id":"p17048","attributes":{"start":-30,"end":30}},"x_scale":{"type":"object","name":"LinearScale","id":"p17050"},"y_scale":{"type":"object","name":"LinearScale","id":"p17052"},"title":{"type":"object","name":"Title","id":"p17039","attributes":{"text":"A quartic curve"}},"renderers":[{"type":"object","name":"GlyphRenderer","id":"p17089","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p17083","attributes":{"selected":{"type":"object","name":"Selection","id":"p17085","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p17084"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAACMBDYt7OkJgHwIbEvJ0hMQfAyiabbLLJBsANiXk7Q2IGwFDrVwrU+gXAk0022WSTBcDXrxSo9SsFwBoS83aGxATAXXTRRRddBMCg1q8UqPUDwOQ4juM4jgPAJ5tssskmA8Bq/UqBWr8CwK1fKVDrVwLA8MEHH3zwAcA0JObtDIkBwHeGxLydIQHAuuiiiy66AMD+SoFav1IAwIFav1Kg1v+/CB988MEH/7+O4ziO4zj+vxWo9SsFav2/m2yyySab/L8iMW9nSMz7v6j1KwVq/fq/L7rooosu+r+1fqVArV/5vzxDYt7OkPi/wgcffPDB979JzNsZEvP2v8+QmLczJPa/VVVVVVVV9b/cGRLzdob0v2LezpCYt/O/6aKLLrro8r9vZ0jM2xnyv/YrBWr9SvG/fPDBBx988L8Eav1KgVrvvxTzdobEvO2/IHzwwQcf7L8sBWr9SoHqvziO4ziO4+i/SBdddNFF579UoNavFKjlv2ApUOtXCuS/bLLJJpts4r94O0Ni3s7gvxCJeTtDYt6/KJtssskm279ArV8pUOvXv1i/UqDWr9S/eNFFF1100b8gx3Ecx3HMv1DrVwrU+sW/AB988MEHv7+AZ0jM2xmyv4C/UqDWr5S/AB988MEHnz9gv1Kg1q+0P3A7Q2LezsA/QBdddNFFxz8Q83aGxLzNP3BnSMzbGdI/WFVVVVVV1T84Q2LezpDYPyAxb2dIzNs/CB988MEH3z94hsS8nSHhP2j9SoFav+I/XHTRRRdd5D9Q61cK1PrlP0Ri3s6QmOc/NNlkk0026T8oUOtXCtTqPxzHcRzHcew/ED744IMP7j8AtX6lQK3vP/yVArV+pfA/dNFFF1108T/sDIl5O0PyP2hIzNsZEvM/4IMPPvjg8z9cv1Kg1q/0P9T6lQK1fvU/TDbZZJNN9j/IcRzHcRz3P0CtXylQ6/c/uOiiiy66+D80JObtDIn5P6xfKVDrV/o/KJtssskm+z+g1q8UqPX7PxgS83aGxPw/lE022WST/T8MiXk7Q2L+P4jEvJ0hMf8/AAAAAAAAAEA="},"shape":[100],"dtype":"float64","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAAQEBANYymkgM5QPAGVTDElTJAYBwcUNtgKUAwp24vGzYdQMDxl2owOQNAQFQwdPtDAMAgA+M8VxwYwIheuxFVNCPAGDY5uFiOKcBEB1ms1iYvwNKi09AYBDLA3mxnckceNMBekMwt6+Y1wFD2dkLZYjfACMJpPMiWOMBIUTf0T4c5wCo8AY/pODrAMFV4fu+vOsAwqdyAnfA6wHl//aAQ/zrAmFk5NkffOsCX833kIJU6wNhDSJxeJDrAF3ukmqKQOcB6BC5pcN04wIaFD94sDjjAGd4CHB4mN8B7KFGSayg2wFW50vwdGDXApB/vYx/4M8DVJJ0cO8sywK7MYsgdlDHAVVVVVVVVMMCobjL8oSIuwCpLxJPClCvAwhrmGHAFKcDALDzM0HgmwERFiYfN8iPAIJ2uvRF3IcDaw1f1FhIewBpsPsfWVxnAImGKbUnFFMC2uvGW2l8QwCj0zkj2WAjAEBQ3UkJfAMD8+uqpH7XxvyDB2gX8Hc2/gEYMXwrT4j8KNEv2gmj1P3L4CM18KABAZGUyDEoOBUAjRu1SdGMJQAQtC1e8Jg1AqOzxNOwrEECumyo8unsRQDSwYQWZgxJAVk2MItREE0CyrGLzMcETQGMeYKXz+hNA/gjDM9X0E0CY6YxnDbITQMNTgtdNNhNAi/Eq6MKFEkB+g9HLE6URQKTgg4JimRBAB+0ltJfQDkBKkiXczi8MQATmtE+PXQlAN0oIffNnBkDaTdptC14DQOisa8fcTwBAfKAGlcWc+j+Um9ymHNf0P7Ch/2cX6e4/EEBGxpU55T8ACxdI9uXZP0BlmquSsck/gLY6lC8GsD8AoJlsAdJdPwDSlyrJLZ8/gItyuTKbxD8AScH/ogLaP6AiDHwg9+g/kJeR5xm99D/QSMEJLoD/P+DwZxTQgAZA6DwCgBfADkCgoGwgIU8UQJRxznVNHhpAUM0gbFhvIEDcHdIW81AkQGDFy5QBvShAcOq/Jsy8LUA4HyE67KwxQCz/48X0zjRANPlT8X9JOEDSNo2qrCE8QMJTjklcLkBAAAAAAACAQkA="},"shape":[100],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p17090","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p17091"}}},"glyph":{"type":"object","name":"Line","id":"p17086","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#1f77b4","line_width":2}},"nonselection_glyph":{"type":"object","name":"Line","id":"p17087","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#1f77b4","line_alpha":0.1,"line_width":2}},"muted_glyph":{"type":"object","name":"Line","id":"p17088","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#1f77b4","line_alpha":0.2,"line_width":2}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p17044","attributes":{"tools":[{"type":"object","name":"PanTool","id":"p17068"},{"type":"object","name":"WheelZoomTool","id":"p17069"},{"type":"object","name":"BoxZoomTool","id":"p17070","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p17071","attributes":{"syncable":false,"level":"overlay","visible":false,"left_units":"canvas","right_units":"canvas","bottom_units":"canvas","top_units":"canvas","line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5}}}},{"type":"object","name":"SaveTool","id":"p17072"},{"type":"object","name":"ResetTool","id":"p17073"},{"type":"object","name":"HelpTool","id":"p17074"}]}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p17061","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p17063","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p17064"},"major_label_policy":{"type":"object","name":"AllLabels","id":"p17062"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p17054","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p17056","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p17057"},"major_label_policy":{"type":"object","name":"AllLabels","id":"p17055"}}}],"center":[{"type":"object","name":"Grid","id":"p17060","attributes":{"axis":{"id":"p17054"}}},{"type":"object","name":"Grid","id":"p17067","attributes":{"dimension":1,"axis":{"id":"p17061"}}}]}}]}};
+  const render_items = [{"docid":"41d9d2db-4250-4f57-8022-a9a8b86d5edf","roots":{"p17036":"1c4229f3-4dbe-455a-bfd0-8c3062b65470"},"root_ids":["p17036"]}];
+  root.Bokeh.embed.embed_items_notebook(docs_json, render_items);
+  }
+  if (root.Bokeh !== undefined) {
+    embed_document(root);
+  } else {
+    let attempts = 0;
+    const timer = setInterval(function(root) {
+      if (root.Bokeh !== undefined) {
+        clearInterval(timer);
+        embed_document(root);
+      } else {
+        attempts++;
+        if (attempts > 100) {
+          clearInterval(timer);
+          console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+        }
+      }
+    }, 10, root)
+  }
+})(window);
+</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sx<span class="op">=</span><span class="fl">.5</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>iterations<span class="op">=</span><span class="dv">30</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>nu<span class="op">=</span><span class="fl">.01</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> figure(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    x_range<span class="op">=</span>[<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>],</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    y_range<span class="op">=</span>[<span class="op">-</span><span class="dv">30</span>, <span class="dv">30</span>],</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="ss">f"$$</span><span class="ch">\\</span><span class="ss">text</span><span class="ch">{{</span><span class="ss">Gradient descent: initial point </span><span class="ch">}}</span><span class="ss">x=</span><span class="sc">{</span>sx<span class="sc">}</span><span class="ss">, </span><span class="ch">\\</span><span class="ss">text</span><span class="ch">{{</span><span class="ss">iterations </span><span class="ch">}}</span><span class="ss">=</span><span class="sc">{</span>iterations<span class="sc">}</span><span class="ss">,</span><span class="ch">\\</span><span class="ss"> </span><span class="ch">\\</span><span class="ss">nu=</span><span class="sc">{</span>nu<span class="sc">}</span><span class="ss">$$"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    toolbar_location<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>p.line(x<span class="op">=</span>x, y<span class="op">=</span>y, line_width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>approx <span class="op">=</span> descent(sx, n<span class="op">=</span>iterations, nu<span class="op">=</span>nu)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>names <span class="op">=</span> [<span class="bu">str</span>(i) <span class="cf">for</span> i, x <span class="kw">in</span> <span class="bu">enumerate</span>(approx)]</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>p.scatter(x<span class="op">=</span>approx, y<span class="op">=</span>f(approx), color<span class="op">=</span><span class="st">"red"</span>,size<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>start_label <span class="op">=</span> Label(</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>approx[<span class="dv">0</span>], y<span class="op">=</span>f(approx[<span class="dv">0</span>]), text<span class="op">=</span><span class="st">"Start"</span>, y_offset<span class="op">=</span><span class="dv">5</span>, text_font_size<span class="op">=</span><span class="st">"10px"</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>end_label <span class="op">=</span> Label(</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>approx[<span class="op">-</span><span class="dv">1</span>],y<span class="op">=</span>f(approx[<span class="op">-</span><span class="dv">1</span>]),text<span class="op">=</span><span class="st">"End"</span>, y_offset<span class="op">=-</span><span class="dv">20</span>,text_font_size<span class="op">=</span><span class="st">"10px"</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>p.add_layout(start_label)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>p.add_layout(end_label)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>show(p)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>export_png(p, filename<span class="op">=</span><span class="st">"../chapters/img/grad_descent_local_minimum.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+  <div id="134a5341-d9cc-4578-86a5-71cd5b2625aa" data-root-id="p20544" style="display: contents;"></div>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/javascript">
+(function(root) {
+  function embed_document(root) {
+  const docs_json = {"88fdd4cb-6902-4829-8a0e-b634baa1476b":{"version":"3.0.1","title":"Bokeh Application","defs":[],"roots":[{"type":"object","name":"Figure","id":"p20544","attributes":{"x_range":{"type":"object","name":"Range1d","id":"p20554","attributes":{"start":-3,"end":3}},"y_range":{"type":"object","name":"Range1d","id":"p20556","attributes":{"start":-30,"end":30}},"x_scale":{"type":"object","name":"LinearScale","id":"p20558"},"y_scale":{"type":"object","name":"LinearScale","id":"p20560"},"title":{"type":"object","name":"Title","id":"p20547","attributes":{"text":"$$\\text{Gradient descent: initial point }x=0.5, \\text{iterations }=30, \\nu=0.01$$"}},"renderers":[{"type":"object","name":"GlyphRenderer","id":"p20597","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p20591","attributes":{"selected":{"type":"object","name":"Selection","id":"p20593","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p20592"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAACMBDYt7OkJgHwIbEvJ0hMQfAyiabbLLJBsANiXk7Q2IGwFDrVwrU+gXAk0022WSTBcDXrxSo9SsFwBoS83aGxATAXXTRRRddBMCg1q8UqPUDwOQ4juM4jgPAJ5tssskmA8Bq/UqBWr8CwK1fKVDrVwLA8MEHH3zwAcA0JObtDIkBwHeGxLydIQHAuuiiiy66AMD+SoFav1IAwIFav1Kg1v+/CB988MEH/7+O4ziO4zj+vxWo9SsFav2/m2yyySab/L8iMW9nSMz7v6j1KwVq/fq/L7rooosu+r+1fqVArV/5vzxDYt7OkPi/wgcffPDB979JzNsZEvP2v8+QmLczJPa/VVVVVVVV9b/cGRLzdob0v2LezpCYt/O/6aKLLrro8r9vZ0jM2xnyv/YrBWr9SvG/fPDBBx988L8Eav1KgVrvvxTzdobEvO2/IHzwwQcf7L8sBWr9SoHqvziO4ziO4+i/SBdddNFF579UoNavFKjlv2ApUOtXCuS/bLLJJpts4r94O0Ni3s7gvxCJeTtDYt6/KJtssskm279ArV8pUOvXv1i/UqDWr9S/eNFFF1100b8gx3Ecx3HMv1DrVwrU+sW/AB988MEHv7+AZ0jM2xmyv4C/UqDWr5S/AB988MEHnz9gv1Kg1q+0P3A7Q2LezsA/QBdddNFFxz8Q83aGxLzNP3BnSMzbGdI/WFVVVVVV1T84Q2LezpDYPyAxb2dIzNs/CB988MEH3z94hsS8nSHhP2j9SoFav+I/XHTRRRdd5D9Q61cK1PrlP0Ri3s6QmOc/NNlkk0026T8oUOtXCtTqPxzHcRzHcew/ED744IMP7j8AtX6lQK3vP/yVArV+pfA/dNFFF1108T/sDIl5O0PyP2hIzNsZEvM/4IMPPvjg8z9cv1Kg1q/0P9T6lQK1fvU/TDbZZJNN9j/IcRzHcRz3P0CtXylQ6/c/uOiiiy66+D80JObtDIn5P6xfKVDrV/o/KJtssskm+z+g1q8UqPX7PxgS83aGxPw/lE022WST/T8MiXk7Q2L+P4jEvJ0hMf8/AAAAAAAAAEA="},"shape":[100],"dtype":"float64","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAAQEBANYymkgM5QPAGVTDElTJAYBwcUNtgKUAwp24vGzYdQMDxl2owOQNAQFQwdPtDAMAgA+M8VxwYwIheuxFVNCPAGDY5uFiOKcBEB1ms1iYvwNKi09AYBDLA3mxnckceNMBekMwt6+Y1wFD2dkLZYjfACMJpPMiWOMBIUTf0T4c5wCo8AY/pODrAMFV4fu+vOsAwqdyAnfA6wHl//aAQ/zrAmFk5NkffOsCX833kIJU6wNhDSJxeJDrAF3ukmqKQOcB6BC5pcN04wIaFD94sDjjAGd4CHB4mN8B7KFGSayg2wFW50vwdGDXApB/vYx/4M8DVJJ0cO8sywK7MYsgdlDHAVVVVVVVVMMCobjL8oSIuwCpLxJPClCvAwhrmGHAFKcDALDzM0HgmwERFiYfN8iPAIJ2uvRF3IcDaw1f1FhIewBpsPsfWVxnAImGKbUnFFMC2uvGW2l8QwCj0zkj2WAjAEBQ3UkJfAMD8+uqpH7XxvyDB2gX8Hc2/gEYMXwrT4j8KNEv2gmj1P3L4CM18KABAZGUyDEoOBUAjRu1SdGMJQAQtC1e8Jg1AqOzxNOwrEECumyo8unsRQDSwYQWZgxJAVk2MItREE0CyrGLzMcETQGMeYKXz+hNA/gjDM9X0E0CY6YxnDbITQMNTgtdNNhNAi/Eq6MKFEkB+g9HLE6URQKTgg4JimRBAB+0ltJfQDkBKkiXczi8MQATmtE+PXQlAN0oIffNnBkDaTdptC14DQOisa8fcTwBAfKAGlcWc+j+Um9ymHNf0P7Ch/2cX6e4/EEBGxpU55T8ACxdI9uXZP0BlmquSsck/gLY6lC8GsD8AoJlsAdJdPwDSlyrJLZ8/gItyuTKbxD8AScH/ogLaP6AiDHwg9+g/kJeR5xm99D/QSMEJLoD/P+DwZxTQgAZA6DwCgBfADkCgoGwgIU8UQJRxznVNHhpAUM0gbFhvIEDcHdIW81AkQGDFy5QBvShAcOq/Jsy8LUA4HyE67KwxQCz/48X0zjRANPlT8X9JOEDSNo2qrCE8QMJTjklcLkBAAAAAAACAQkA="},"shape":[100],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p20598","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p20599"}}},"glyph":{"type":"object","name":"Line","id":"p20594","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#1f77b4","line_width":2}},"nonselection_glyph":{"type":"object","name":"Line","id":"p20595","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#1f77b4","line_alpha":0.1,"line_width":2}},"muted_glyph":{"type":"object","name":"Line","id":"p20596","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#1f77b4","line_alpha":0.2,"line_width":2}}}},{"type":"object","name":"GlyphRenderer","id":"p20606","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p20600","attributes":{"selected":{"type":"object","name":"Selection","id":"p20602","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p20601"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAA4D9mZmZmZmbiP8UbmUf+0OQ/51ROcVsh5z9sruSmnznpP/yYfw8TA+s/Lq39iPNy7D8Xgd3LIYvtP1tn+f3LVu4/7X+k8Gnl7j8hmViWgUbvP08uj39Hh+8/f2BoUuOx7z9HxGXSps3vP5Ypx/Wg3+8/Uu9slzjr7z84TjAbrfLvP8wqv1129+8/EcXtGYj67z8BVcmdf/zvP/aVbSHC/e8/VVfwpZD+7z+okyzdFP/vPwVrEoBp/+8/a4XMrJ//7z9LUZFZwv/vP8hFBYvY/+8/iy5Iv+b/7z/kB4vW7//vP0AkA6j1/+8/"},"shape":[30],"dtype":"float64","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAACABUDojCjtjfcAQOol52oO9/g/ZNeXrUv18D/ok5nfByflP4Aie6aoOdg/AFnDcIKhyT/ALS3ZLFS5P4CCISjEsac/AD6aCcBDlT8AEKuMpIWCPwBI8BOBmm8/APCWghmWWj8AQFQ9hyhGPwCAezL9WjI/AADSVT5KHj8AABhPnu0IPwAA0HtNe/Q+AABwfHbP4D4AACBeXJPLPgAAgA6Hm7Y+AACAA4GHoj4AAAAUPF6OPgAAAODz4Xg+AAAAaPJiZD4AAAAAuLNQPgAAAIC2XTs+AAAAAEdrJj4AAAAAuF0SPgAAAABoF/49"},"shape":[30],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p20607","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p20608"}}},"glyph":{"type":"object","name":"Scatter","id":"p20603","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"value","value":"red"},"fill_color":{"type":"value","value":"red"},"hatch_color":{"type":"value","value":"red"}}},"nonselection_glyph":{"type":"object","name":"Scatter","id":"p20604","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.1},"fill_color":{"type":"value","value":"red"},"fill_alpha":{"type":"value","value":0.1},"hatch_color":{"type":"value","value":"red"},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"Scatter","id":"p20605","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"red"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"value","value":"red"},"hatch_alpha":{"type":"value","value":0.2}}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p20552","attributes":{"tools":[{"type":"object","name":"PanTool","id":"p20576"},{"type":"object","name":"WheelZoomTool","id":"p20577"},{"type":"object","name":"BoxZoomTool","id":"p20578","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p20579","attributes":{"syncable":false,"level":"overlay","visible":false,"left_units":"canvas","right_units":"canvas","bottom_units":"canvas","top_units":"canvas","line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5}}}},{"type":"object","name":"SaveTool","id":"p20580"},{"type":"object","name":"ResetTool","id":"p20581"},{"type":"object","name":"HelpTool","id":"p20582"}]}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p20569","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p20571","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p20572"},"major_label_policy":{"type":"object","name":"AllLabels","id":"p20570"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p20562","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p20564","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p20565"},"major_label_policy":{"type":"object","name":"AllLabels","id":"p20563"}}}],"center":[{"type":"object","name":"Grid","id":"p20568","attributes":{"axis":{"id":"p20562"}}},{"type":"object","name":"Grid","id":"p20575","attributes":{"dimension":1,"axis":{"id":"p20569"}}},{"type":"object","name":"Label","id":"p20609","attributes":{"text":"Start","text_font_size":"10px","x":0.5,"y":2.6875,"y_offset":5}},{"type":"object","name":"Label","id":"p20610","attributes":{"text":"End","text_font_size":"10px","x":0.999995067738503,"y":4.3788794812371634e-10,"y_offset":-20}}]}}]}};
+  const render_items = [{"docid":"88fdd4cb-6902-4829-8a0e-b634baa1476b","roots":{"p20544":"134a5341-d9cc-4578-86a5-71cd5b2625aa"},"root_ids":["p20544"]}];
+  root.Bokeh.embed.embed_items_notebook(docs_json, render_items);
+  }
+  if (root.Bokeh !== undefined) {
+    embed_document(root);
+  } else {
+    let attempts = 0;
+    const timer = setInterval(function(root) {
+      if (root.Bokeh !== undefined) {
+        clearInterval(timer);
+        embed_document(root);
+      } else {
+        attempts++;
+        if (attempts > 100) {
+          clearInterval(timer);
+          console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+        }
+      }
+    }, 10, root)
+  }
+})(window);
+</script>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<pre><code>'/home/jet08013/GitHub/quarto/chapters/img/grad_descent_local_minimum.png'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="120">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>approx<span class="op">=</span>descent(<span class="fl">.5</span>,n<span class="op">=</span><span class="dv">15</span>,nu<span class="op">=</span><span class="fl">.1</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>p.scatter(x<span class="op">=</span>approx,y<span class="op">=</span>f(approx),color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>show(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+  <div id="6330f1e9-5b22-40ad-9b43-72bcf732539a" data-root-id="p153333" style="display: contents;"></div>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/javascript">
+(function(root) {
+  function embed_document(root) {
+  const docs_json = {"fd9e2057-061c-452e-9e5c-2769cc874230":{"version":"3.0.1","title":"Bokeh Application","defs":[],"roots":[{"type":"object","name":"Figure","id":"p153333","attributes":{"x_range":{"type":"object","name":"Range1d","id":"p153342","attributes":{"start":-3,"end":3}},"y_range":{"type":"object","name":"Range1d","id":"p153344","attributes":{"start":-30,"end":30}},"x_scale":{"type":"object","name":"LinearScale","id":"p153346"},"y_scale":{"type":"object","name":"LinearScale","id":"p153348"},"title":{"type":"object","name":"Title","id":"p153336"},"renderers":[{"type":"object","name":"GlyphRenderer","id":"p153385","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p153379","attributes":{"selected":{"type":"object","name":"Selection","id":"p153381","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p153380"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAACMBDYt7OkJgHwIbEvJ0hMQfAyiabbLLJBsANiXk7Q2IGwFDrVwrU+gXAk0022WSTBcDXrxSo9SsFwBoS83aGxATAXXTRRRddBMCg1q8UqPUDwOQ4juM4jgPAJ5tssskmA8Bq/UqBWr8CwK1fKVDrVwLA8MEHH3zwAcA0JObtDIkBwHeGxLydIQHAuuiiiy66AMD+SoFav1IAwIFav1Kg1v+/CB988MEH/7+O4ziO4zj+vxWo9SsFav2/m2yyySab/L8iMW9nSMz7v6j1KwVq/fq/L7rooosu+r+1fqVArV/5vzxDYt7OkPi/wgcffPDB979JzNsZEvP2v8+QmLczJPa/VVVVVVVV9b/cGRLzdob0v2LezpCYt/O/6aKLLrro8r9vZ0jM2xnyv/YrBWr9SvG/fPDBBx988L8Eav1KgVrvvxTzdobEvO2/IHzwwQcf7L8sBWr9SoHqvziO4ziO4+i/SBdddNFF579UoNavFKjlv2ApUOtXCuS/bLLJJpts4r94O0Ni3s7gvxCJeTtDYt6/KJtssskm279ArV8pUOvXv1i/UqDWr9S/eNFFF1100b8gx3Ecx3HMv1DrVwrU+sW/AB988MEHv7+AZ0jM2xmyv4C/UqDWr5S/AB988MEHnz9gv1Kg1q+0P3A7Q2LezsA/QBdddNFFxz8Q83aGxLzNP3BnSMzbGdI/WFVVVVVV1T84Q2LezpDYPyAxb2dIzNs/CB988MEH3z94hsS8nSHhP2j9SoFav+I/XHTRRRdd5D9Q61cK1PrlP0Ri3s6QmOc/NNlkk0026T8oUOtXCtTqPxzHcRzHcew/ED744IMP7j8AtX6lQK3vP/yVArV+pfA/dNFFF1108T/sDIl5O0PyP2hIzNsZEvM/4IMPPvjg8z9cv1Kg1q/0P9T6lQK1fvU/TDbZZJNN9j/IcRzHcRz3P0CtXylQ6/c/uOiiiy66+D80JObtDIn5P6xfKVDrV/o/KJtssskm+z+g1q8UqPX7PxgS83aGxPw/lE022WST/T8MiXk7Q2L+P4jEvJ0hMf8/AAAAAAAAAEA="},"shape":[100],"dtype":"float64","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAAQEBANYymkgM5QPAGVTDElTJAYBwcUNtgKUAwp24vGzYdQMDxl2owOQNAQFQwdPtDAMAgA+M8VxwYwIheuxFVNCPAGDY5uFiOKcBEB1ms1iYvwNKi09AYBDLA3mxnckceNMBekMwt6+Y1wFD2dkLZYjfACMJpPMiWOMBIUTf0T4c5wCo8AY/pODrAMFV4fu+vOsAwqdyAnfA6wHl//aAQ/zrAmFk5NkffOsCX833kIJU6wNhDSJxeJDrAF3ukmqKQOcB6BC5pcN04wIaFD94sDjjAGd4CHB4mN8B7KFGSayg2wFW50vwdGDXApB/vYx/4M8DVJJ0cO8sywK7MYsgdlDHAVVVVVVVVMMCobjL8oSIuwCpLxJPClCvAwhrmGHAFKcDALDzM0HgmwERFiYfN8iPAIJ2uvRF3IcDaw1f1FhIewBpsPsfWVxnAImGKbUnFFMC2uvGW2l8QwCj0zkj2WAjAEBQ3UkJfAMD8+uqpH7XxvyDB2gX8Hc2/gEYMXwrT4j8KNEv2gmj1P3L4CM18KABAZGUyDEoOBUAjRu1SdGMJQAQtC1e8Jg1AqOzxNOwrEECumyo8unsRQDSwYQWZgxJAVk2MItREE0CyrGLzMcETQGMeYKXz+hNA/gjDM9X0E0CY6YxnDbITQMNTgtdNNhNAi/Eq6MKFEkB+g9HLE6URQKTgg4JimRBAB+0ltJfQDkBKkiXczi8MQATmtE+PXQlAN0oIffNnBkDaTdptC14DQOisa8fcTwBAfKAGlcWc+j+Um9ymHNf0P7Ch/2cX6e4/EEBGxpU55T8ACxdI9uXZP0BlmquSsck/gLY6lC8GsD8AoJlsAdJdPwDSlyrJLZ8/gItyuTKbxD8AScH/ogLaP6AiDHwg9+g/kJeR5xm99D/QSMEJLoD/P+DwZxTQgAZA6DwCgBfADkCgoGwgIU8UQJRxznVNHhpAUM0gbFhvIEDcHdIW81AkQGDFy5QBvShAcOq/Jsy8LUA4HyE67KwxQCz/48X0zjRANPlT8X9JOEDSNo2qrCE8QMJTjklcLkBAAAAAAACAQkA="},"shape":[100],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p153386","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p153387"}}},"glyph":{"type":"object","name":"Line","id":"p153382","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#1f77b4","line_width":2}},"nonselection_glyph":{"type":"object","name":"Line","id":"p153383","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#1f77b4","line_alpha":0.1,"line_width":2}},"muted_glyph":{"type":"object","name":"Line","id":"p153384","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#1f77b4","line_alpha":0.2,"line_width":2}}}},{"type":"object","name":"GlyphRenderer","id":"p156455","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p156449","attributes":{"selected":{"type":"object","name":"Selection","id":"p156451","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p156450"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAA4D9mZmZmZmbuP1QYWwhy0PA/44W8Qofe7T90fXo+8QjxP34vVMsGNe0/5e14wslG8T9+yn2grnDsP9CxEVejgvE/Prh969Gn6z9A/so7A7PxP7DeS42X/eo//7PZjwbS8T+k6KZpuYzqPzCgwhWf4fE/WtcGYttS6j+Ocy2AGejxP4CzUe+ZOuo/CGCC1oLq8T+4LrMXijHqPw=="},"shape":[20],"dtype":"float64","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAACABUCAxrq4jQamPwBT/tgd9ag/AEE1mXw8sz+Av/unw2a0PwBVs0YBNsA/AKGImCtxvz+A0MH3lcDJP8AW4cE9SMY/oKtai4C80j8AzMbtYn3MP+CrG6T6atg/gKMFS/Fz0D9AFz1pX4XcP8BK4dP3oNE/cHFKFxi53j8gi4HfViHSP4A2K7ZMqt8/AA/ZYaBR0j9wh5fhkgLgPw=="},"shape":[20],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p156456","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p156457"}}},"glyph":{"type":"object","name":"Scatter","id":"p156452","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"fill_color":{"type":"value","value":"red"},"hatch_color":{"type":"value","value":"red"}}},"nonselection_glyph":{"type":"object","name":"Scatter","id":"p156453","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.1},"fill_color":{"type":"value","value":"red"},"fill_alpha":{"type":"value","value":0.1},"hatch_color":{"type":"value","value":"red"},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"Scatter","id":"p156454","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"red"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"value","value":"red"},"hatch_alpha":{"type":"value","value":0.2}}}}},{"type":"object","name":"GlyphRenderer","id":"p168196","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p168190","attributes":{"selected":{"type":"object","name":"Selection","id":"p168192","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p168191"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAA4D8AAAAAAAD0PwAAAAAAAKA/AAAAAADkuj9mhq5zruvVP+YSp36hN+8/5ukUL8r48D8PP7dLBV/qPxXL3aOyC/U/rMTw9UVv1b8Ondp63abzv/IOD/pIGg7ARDC+aw4TQUDUtrlZy/XnwO4MpdZ7HuBC"},"shape":[15],"dtype":"float64","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAACABUAAAAAAADD2PwAAAMAg9BNA1RpS94l9E0BKt+UToloOQAByz5KZk4U/ACligbztsT+ggW4lOEHePxCcFb+IkgJA3la3POJUDEAiyYm3wV8rwKNZUWUK7WtAN+itefcdUEHIkm2lQCzuQ034RFb0uMhL"},"shape":[15],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p168197","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p168198"}}},"glyph":{"type":"object","name":"Scatter","id":"p168193","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"fill_color":{"type":"value","value":"red"},"hatch_color":{"type":"value","value":"red"}}},"nonselection_glyph":{"type":"object","name":"Scatter","id":"p168194","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.1},"fill_color":{"type":"value","value":"red"},"fill_alpha":{"type":"value","value":0.1},"hatch_color":{"type":"value","value":"red"},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"Scatter","id":"p168195","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"red"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"value","value":"red"},"hatch_alpha":{"type":"value","value":0.2}}}}},{"type":"object","name":"GlyphRenderer","id":"p174192","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p174186","attributes":{"selected":{"type":"object","name":"Selection","id":"p174188","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p174187"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAA4D9mZmZmZmbuP1QYWwhy0PA/44W8Qofe7T90fXo+8QjxP34vVMsGNe0/5e14wslG8T9+yn2grnDsP9CxEVejgvE/Prh969Gn6z9A/so7A7PxP7DeS42X/eo//7PZjwbS8T+k6KZpuYzqPzCgwhWf4fE/WtcGYttS6j+Ocy2AGejxP4CzUe+ZOuo/CGCC1oLq8T+4LrMXijHqPw=="},"shape":[20],"dtype":"float64","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAACABUCAxrq4jQamPwBT/tgd9ag/AEE1mXw8sz+Av/unw2a0PwBVs0YBNsA/AKGImCtxvz+A0MH3lcDJP8AW4cE9SMY/oKtai4C80j8AzMbtYn3MP+CrG6T6atg/gKMFS/Fz0D9AFz1pX4XcP8BK4dP3oNE/cHFKFxi53j8gi4HfViHSP4A2K7ZMqt8/AA/ZYaBR0j9wh5fhkgLgPw=="},"shape":[20],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p174193","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p174194"}}},"glyph":{"type":"object","name":"Scatter","id":"p174189","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"fill_color":{"type":"value","value":"red"},"hatch_color":{"type":"value","value":"red"}}},"nonselection_glyph":{"type":"object","name":"Scatter","id":"p174190","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.1},"fill_color":{"type":"value","value":"red"},"fill_alpha":{"type":"value","value":0.1},"hatch_color":{"type":"value","value":"red"},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"Scatter","id":"p174191","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"red"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"value","value":"red"},"hatch_alpha":{"type":"value","value":0.2}}}}},{"type":"object","name":"GlyphRenderer","id":"p186446","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p186440","attributes":{"selected":{"type":"object","name":"Selection","id":"p186442","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p186441"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAA4D8AAAAAAAD0PwAAAAAAAKA/AAAAAADkuj9mhq5zruvVP+YSp36hN+8/5ukUL8r48D8PP7dLBV/qPxXL3aOyC/U/rMTw9UVv1b8Ondp63abzv/IOD/pIGg7ARDC+aw4TQUDUtrlZy/XnwO4MpdZ7HuBC"},"shape":[15],"dtype":"float64","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAACABUAAAAAAADD2PwAAAMAg9BNA1RpS94l9E0BKt+UToloOQAByz5KZk4U/ACligbztsT+ggW4lOEHePxCcFb+IkgJA3la3POJUDEAiyYm3wV8rwKNZUWUK7WtAN+itefcdUEHIkm2lQCzuQ034RFb0uMhL"},"shape":[15],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p186447","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p186448"}}},"glyph":{"type":"object","name":"Scatter","id":"p186443","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"fill_color":{"type":"value","value":"red"},"hatch_color":{"type":"value","value":"red"}}},"nonselection_glyph":{"type":"object","name":"Scatter","id":"p186444","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.1},"fill_color":{"type":"value","value":"red"},"fill_alpha":{"type":"value","value":0.1},"hatch_color":{"type":"value","value":"red"},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"Scatter","id":"p186445","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"red"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"value","value":"red"},"hatch_alpha":{"type":"value","value":0.2}}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p153341","attributes":{"tools":[{"type":"object","name":"PanTool","id":"p153364"},{"type":"object","name":"WheelZoomTool","id":"p153365"},{"type":"object","name":"BoxZoomTool","id":"p153366","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p153367","attributes":{"syncable":false,"level":"overlay","visible":false,"left_units":"canvas","right_units":"canvas","bottom_units":"canvas","top_units":"canvas","line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5}}}},{"type":"object","name":"SaveTool","id":"p153368"},{"type":"object","name":"ResetTool","id":"p153369"},{"type":"object","name":"HelpTool","id":"p153370"}]}},"left":[{"type":"object","name":"LinearAxis","id":"p153357","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p153359","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p153360"},"major_label_policy":{"type":"object","name":"AllLabels","id":"p153358"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p153350","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p153352","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p153353"},"major_label_policy":{"type":"object","name":"AllLabels","id":"p153351"}}}],"center":[{"type":"object","name":"Grid","id":"p153356","attributes":{"axis":{"id":"p153350"}}},{"type":"object","name":"Grid","id":"p153363","attributes":{"dimension":1,"axis":{"id":"p153357"}}}]}}]}};
+  const render_items = [{"docid":"fd9e2057-061c-452e-9e5c-2769cc874230","roots":{"p153333":"6330f1e9-5b22-40ad-9b43-72bcf732539a"},"root_ids":["p153333"]}];
+  root.Bokeh.embed.embed_items_notebook(docs_json, render_items);
+  }
+  if (root.Bokeh !== undefined) {
+    embed_document(root);
+  } else {
+    let attempts = 0;
+    const timer = setInterval(function(root) {
+      if (root.Bokeh !== undefined) {
+        clearInterval(timer);
+        embed_document(root);
+      } else {
+        attempts++;
+        if (attempts > 100) {
+          clearInterval(timer);
+          console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+        }
+      }
+    }, 10, root)
+  }
+})(window);
+</script>
+</div>
+</div>
+<div class="cell" data-execution_count="87">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>approx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="87">
+<pre><code>array([ 5.00000000e-01,  1.25000000e+00,  3.12500000e-02,  1.05041504e-01,
+        3.42509854e-01,  9.75540874e-01,  1.06073969e+00,  8.24099205e-01,
+        1.31535591e+00, -3.34916582e-01, -1.22823856e+00, -3.76283450e+00,
+        3.41488776e+01, -4.90703547e+04,  1.41784902e+14])</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="89">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df(approx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="89">
+<pre><code>array([-7.50000000e+00,  1.21875000e+01, -7.37915039e-01, -2.37468350e+00,
+       -6.33031020e+00, -8.51988187e-01,  2.36640488e+00, -4.91256706e+00,
+        1.65027249e+01,  8.93321981e+00,  2.53459594e+01, -3.79117121e+02,
+        4.91045036e+05, -1.41784902e+15,  3.42035518e+43])</code></pre>
+</div>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
