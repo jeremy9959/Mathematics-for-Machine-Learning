@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lectures on Machine Learning - 5&nbsp; The Naive Bayes classification method</title>
+<title>Lectures on Machine Learning - 4&nbsp; The Naive Bayes classification method</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -96,7 +96,7 @@ $$
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -121,42 +121,42 @@ $$
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preface</span></a>
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/01-linear-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  <a href="../chapters/01-linear-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/02-pca.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></a>
+  <a href="../chapters/02-pca.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/03-probability.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Probability and Bayes Theorem</span></a>
+  <a href="../chapters/03-probability.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Probability and Bayes Theorem</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/04-naive-bayes.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></a>
+  <a href="../chapters/04-naive-bayes.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/05-1-gradient-descent.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Gradient Descent</span></a>
+  <a href="../chapters/05-1-gradient-descent.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Gradient Descent</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/05-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Logistic Regression</span></a>
+  <a href="../chapters/05-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logistic Regression</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/06-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  <a href="../chapters/06-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -173,13 +173,13 @@ $$
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">5.1</span>  Introduction</a></li>
-  <li><a href="#an-example-dataset" id="toc-an-example-dataset" class="nav-link" data-scroll-target="#an-example-dataset"><span class="toc-section-number">5.2</span>  An example dataset</a></li>
-  <li><a href="#bernoulli-tests" id="toc-bernoulli-tests" class="nav-link" data-scroll-target="#bernoulli-tests"><span class="toc-section-number">5.3</span>  Bernoulli tests</a></li>
-  <li><a href="#feature-vectors" id="toc-feature-vectors" class="nav-link" data-scroll-target="#feature-vectors"><span class="toc-section-number">5.4</span>  Feature vectors</a></li>
-  <li><a href="#likelihood" id="toc-likelihood" class="nav-link" data-scroll-target="#likelihood"><span class="toc-section-number">5.5</span>  Likelihood</a></li>
-  <li><a href="#the-bag-of-words" id="toc-the-bag-of-words" class="nav-link" data-scroll-target="#the-bag-of-words"><span class="toc-section-number">5.6</span>  The Bag of Words</a></li>
-  <li><a href="#other-applications" id="toc-other-applications" class="nav-link" data-scroll-target="#other-applications"><span class="toc-section-number">5.7</span>  Other applications</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">4.1</span>  Introduction</a></li>
+  <li><a href="#an-example-dataset" id="toc-an-example-dataset" class="nav-link" data-scroll-target="#an-example-dataset"><span class="toc-section-number">4.2</span>  An example dataset</a></li>
+  <li><a href="#bernoulli-tests" id="toc-bernoulli-tests" class="nav-link" data-scroll-target="#bernoulli-tests"><span class="toc-section-number">4.3</span>  Bernoulli tests</a></li>
+  <li><a href="#feature-vectors" id="toc-feature-vectors" class="nav-link" data-scroll-target="#feature-vectors"><span class="toc-section-number">4.4</span>  Feature vectors</a></li>
+  <li><a href="#likelihood" id="toc-likelihood" class="nav-link" data-scroll-target="#likelihood"><span class="toc-section-number">4.5</span>  Likelihood</a></li>
+  <li><a href="#the-bag-of-words" id="toc-the-bag-of-words" class="nav-link" data-scroll-target="#the-bag-of-words"><span class="toc-section-number">4.6</span>  The Bag of Words</a></li>
+  <li><a href="#other-applications" id="toc-other-applications" class="nav-link" data-scroll-target="#other-applications"><span class="toc-section-number">4.7</span>  Other applications</a></li>
   </ul>
 </nav>
     </div>
@@ -188,7 +188,7 @@ $$
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></h1>
 </div>
 
 
@@ -203,14 +203,14 @@ $$
 
 </header>
 
-<section id="introduction" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">5.1</span> Introduction</h2>
+<section id="introduction" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
 <p>In our discussion of Bayes Theorem, we looked at a situation in which we had a population consisting of people infected with COVID-19 and people not infected, and we had a test that we could apply to determine which class an individual belonged to. Because our test was not 100 percent reliable, a positive test result didn’t guarantee that a person was infected, and we used Bayes Theorem to evaluate how to interpret the positive test result. More specifically, our information about the test performance gave us the the conditional probabilities of positive and negative test results given infection status – so for example we were given <span class="math inline">\(P(+|\mathrm{infected})\)</span>, the chance of getting a positive test assuming the person is infected – and we used Bayes Theorem to determine <span class="math inline">\(P(\mathrm{infected}|+)\)</span>, the chance that a person was infected given a positive test result.</p>
 <p>The Naive Bayes classification method is a generalization of this idea. We have data that belongs to one of two classes, and based on the results of a series of tests, we wish to decide which class a particular data point belongs to. For one example, we are given a collection of product reviews from a website and we wish to classify those reviews as either “positive” or “negative.” This type of problem is called “sentiment analysis.” For another, related example, we have a collection of emails or text messages and we wish to label those that are likely “spam” emails. In both of these examples, the “test” that we will apply is to look for the appearance or absence of certain key words that make the text more or less likely to belong to a certain class. For example, we might find that a movie review that contains the word “great” is more likely to be positive than negative, while a review that contains the word “boring” is more likely to be negative.</p>
 <p>The reason for the word “naive” in the name of this method is that we will derive our probabilities from empirical data, rather than from any deeper theory. For example, to find the probability that a negative movie review contains the word “boring”, we will look at a bunch of reviews that our experts have said are negative, and compute the proportion of those that contain the word boring. Indeed, to develop our family of tests, we will rely on a training set of already classified data from which we can determine estimates of probabilities that we need.</p>
 </section>
-<section id="an-example-dataset" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="an-example-dataset"><span class="header-section-number">5.2</span> An example dataset</h2>
+<section id="an-example-dataset" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="an-example-dataset"><span class="header-section-number">4.2</span> An example dataset</h2>
 <p>To illustrate the Naive Bayes algorithm, we will work with the “Sentiment Labelled Sentences Data Set” (<span class="citation" data-cites="sentences">[<a href="20-references.html#ref-sentences" role="doc-biblioref">1</a>]</span>). This dataset contains 3 files, each containing 1000 documents labelled <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span> for “negative” or “positive” sentiment. There are 500 of each type of document in each file. One file contains reviews of products from amazon.com; one contains yelp restaurant reviews, and one contains movie reviews from imdb.com.</p>
 <p>Let’s focus on the amazon reviews data. Here are some samples:</p>
 <pre><code>So there is no way for me to plug it in here 
@@ -229,12 +229,12 @@ Needless to say, I wasted my money. 0
 What a waste of money and time!.    0</code></pre>
 <p>As you can see, each line consists of a product review followed by a <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>; in this file the review is separated from the text by a tab character.</p>
 </section>
-<section id="bernoulli-tests" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="bernoulli-tests"><span class="header-section-number">5.3</span> Bernoulli tests</h2>
-<p>We will describe the “Bernoulli” version of a Naive Bayes classifier for this data. The building block of this method is a test based on a single word. For example, let’s consider the word <strong>great</strong> among all of our amazon reviews. It turns out that <strong>great</strong> occurs <span class="math inline">\(5\)</span> times in negative reviews and <span class="math inline">\(92\)</span> times in positive reviews among our <span class="math inline">\(1000\)</span> examples. So it seems that seeing the word <strong>great</strong> in a review makes it more likely to be positive. The appearances of great are summarized in <a href="#tbl-great">Table&nbsp;<span>5.1</span></a> . We write ~<strong>great</strong> for the case where <strong>great</strong> does <em>not</em> appear.</p>
+<section id="bernoulli-tests" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="bernoulli-tests"><span class="header-section-number">4.3</span> Bernoulli tests</h2>
+<p>We will describe the “Bernoulli” version of a Naive Bayes classifier for this data. The building block of this method is a test based on a single word. For example, let’s consider the word <strong>great</strong> among all of our amazon reviews. It turns out that <strong>great</strong> occurs <span class="math inline">\(5\)</span> times in negative reviews and <span class="math inline">\(92\)</span> times in positive reviews among our <span class="math inline">\(1000\)</span> examples. So it seems that seeing the word <strong>great</strong> in a review makes it more likely to be positive. The appearances of great are summarized in <a href="#tbl-great">Table&nbsp;<span>4.1</span></a> . We write ~<strong>great</strong> for the case where <strong>great</strong> does <em>not</em> appear.</p>
 <div id="tbl-great" class="anchored">
 <table class="table">
-<caption>Table&nbsp;5.1: Ocurrences of <strong>great</strong> by type of review</caption>
+<caption>Table&nbsp;4.1: Ocurrences of <strong>great</strong> by type of review</caption>
 <thead>
 <tr class="header">
 <th></th>
@@ -283,10 +283,10 @@ P(+|\mathbf{great}) = \frac{.184}{.097}(.5) = 0.948.
 P(+|\sim\mathbf{great}) = \frac{408}{903} = .452
 \]</span></p>
 <p>In other words, <em>not</em> seeing the word great gives a little evidence that the review is negative (there’s a 55% chance it’s negative) but it’s not that conclusive.</p>
-<p>The word <strong>waste</strong> is associated with negative reviews. It’s statistics are summarized in <a href="#tbl-waste">Table&nbsp;<span>5.2</span></a> .</p>
+<p>The word <strong>waste</strong> is associated with negative reviews. It’s statistics are summarized in <a href="#tbl-waste">Table&nbsp;<span>4.2</span></a> .</p>
 <div id="tbl-waste" class="anchored">
 <table class="table">
-<caption>Table&nbsp;5.2: Ocurrences of <strong>waste</strong> by type of review</caption>
+<caption>Table&nbsp;4.2: Ocurrences of <strong>waste</strong> by type of review</caption>
 <thead>
 <tr class="header">
 <th></th>
@@ -334,14 +334,14 @@ P(\mathbf{great},\sim\mathbf{waste}|\pm) &amp;= P(\mathbf{great}|\pm)P(\sim\math
 P(+|\mathbf{great},\sim\mathbf{waste}) = \frac{P(\mathbf{great}|+)P(\sim\mathbf{waste}|+)P(+)}{P(\mathbf{great},\sim\mathbf{waste})}
 \]</span> while the probability of it being a negative review is <span class="math display">\[
 P(-|\mathbf{great},\sim\mathbf{waste}) = \frac{P(\mathbf{great}|-)P(\sim\mathbf{waste}|-)P(-)}{P(\mathbf{great},\sim\mathbf{waste})}
-\]</span> Rather than compute these probabilities (which involves working out the denominators), let’s just compare them. Since they have the same denominators, we just need to compare numerators, which we call <span class="math inline">\(L\)</span> for likelihood: Using the data from <a href="#tbl-great">Table&nbsp;<span>5.1</span></a> and <a href="#tbl-waste">Table&nbsp;<span>5.2</span></a> , we obtain: <span class="math display">\[
+\]</span> Rather than compute these probabilities (which involves working out the denominators), let’s just compare them. Since they have the same denominators, we just need to compare numerators, which we call <span class="math inline">\(L\)</span> for likelihood: Using the data from <a href="#tbl-great">Table&nbsp;<span>4.1</span></a> and <a href="#tbl-waste">Table&nbsp;<span>4.2</span></a> , we obtain: <span class="math display">\[
 L(+|\mathbf{great},\sim\mathbf{waste}) = (.184)(1)(.5) = .092
 \]</span> and <span class="math display">\[
 L(-|\mathbf{great},\sim\mathbf{waste}) = (.01)(.028)(.5) = .00014
 \]</span> so our data suggests strongly that this is a positive review.</p>
 </section>
-<section id="feature-vectors" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="feature-vectors"><span class="header-section-number">5.4</span> Feature vectors</h2>
+<section id="feature-vectors" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="feature-vectors"><span class="header-section-number">4.4</span> Feature vectors</h2>
 <p>To generalize this, suppose that we have extracted keywords <span class="math inline">\(w_1,\ldots, w_k\)</span> from our data and we have computed the empirical values <span class="math inline">\(P(w_{i}|+)\)</span> and <span class="math inline">\(P(w_{i}|-)\)</span> by counting the fraction of positive and negative reviews that contain the word <span class="math inline">\(w_{i}\)</span>:</p>
 <p><span class="math display">\[
 P(w_{i}|\pm) = \frac{\hbox{ number of $\pm$ reviews that mention $w_{i}$}}{\hbox{ number of $\pm$ reviews total}}
@@ -360,33 +360,33 @@ P_{-} = \frac{1}{N_{-}}(1-Y)^{\intercal}X =  \left[\begin{array}{cccc} P(w_{1}|-
 \]</span></p>
 <p>Note that the number of positive reviews is <span class="math inline">\(N_{+}=Y^{\intercal}Y\)</span> and the number of negative ones is <span class="math inline">\(N_{-}=N-N_{+}\)</span>. Since <span class="math inline">\(P(+)\)</span> is the fraction of positive reviews among all reviews, we can compute it as <span class="math inline">\(P(+)=\frac{1}{N}Y^{\intercal}Y\)</span>, and <span class="math inline">\(P(-)=1-P(+)\)</span>.</p>
 </section>
-<section id="likelihood" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="likelihood"><span class="header-section-number">5.5</span> Likelihood</h2>
+<section id="likelihood" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="likelihood"><span class="header-section-number">4.5</span> Likelihood</h2>
 <p>If a review has an associated feature vector <span class="math inline">\(f=(f_1,\ldots, f_k)\)</span>, then by independence the probability of that feature vector ocurring within one of the <span class="math inline">\(\pm\)</span> classes is <span class="math display">\[
 P(f|\pm) = \prod_{i: f_{i}=1} P(w_{i}|\pm)\prod_{i: f_{i}=0}(1-P(w_{i}|\pm))
 \]</span> which we can also write <span id="eq-likelihood"><span class="math display">\[
 P(f|\pm) = \prod_{i=1}^{k} P(w_{i}|\pm)^{f_{i}}(1-P(w_{i}|\pm))^{(1-f_{i})}.
-\tag{5.1}\]</span></span></p>
+\tag{4.1}\]</span></span></p>
 <p>These products aren’t practical to work with – they are often the product of many, many small numbers and are therefore really tiny. Therefore it’s much more practical to work with their logarithms. <span id="eq-loglikelihood"><span class="math display">\[
 \log P(f|\pm) = \sum_{i=1}^{k} f_{i}\log P(w_{i}|\pm) + (1-f_{i})\log(1-P(w_{i}|\pm))
-\tag{5.2}\]</span></span></p>
+\tag{4.2}\]</span></span></p>
 <p>If we have a group of reviews <span class="math inline">\(N\)</span> organized in a matrix <span class="math inline">\(X\)</span>, where each row is the feature vector associated to the corresponding review, then we can compute all of this at once. We’ll write <span class="math inline">\(\log P_{\pm}=\log P(X|\pm)\)</span> as the row vector whose <span class="math inline">\(i^{th}\)</span> entry is <span class="math inline">\(\log P(f_{i}|\pm)\)</span>:</p>
 <p><span id="eq-matrixlikelihood"><span class="math display">\[
 \log P(X|\pm) = X(\log P_{\pm})^{\intercal}+(1-X)(\log (1-P_{\pm}))^{\intercal}.
-\tag{5.3}\]</span></span></p>
+\tag{4.3}\]</span></span></p>
 <p>By Bayes Theorem, we can express the chance that our review with feature vector <span class="math inline">\(f\)</span> is positive or negative by the formula: <span class="math display">\[
 \log P(\pm|f) = \log P(f|\pm)+\log P(\pm) - \log P(f)
 \]</span> where <span class="math display">\[
 P(\pm) = \frac{\hbox{ the number of $\pm$ reviews}}{\hbox{ total number of reviews}}
 \]</span> and <span class="math inline">\(P(f)\)</span> is the fraction of reviews with the given feature vector. (Note: in practice, some of these probabilities will be zero, and so the log will not be defined. A common practical approach to dealing with this is to introduce a “fake document” into both classes in which every vocabulary word appears – this guarantees that the frequency matrix will have no zeros in it).</p>
-<p>A natural classification rule would be to say that a review is positive if <span class="math inline">\(\log P(+|f)&gt;\log P(-|f)\)</span>, and negative otherwise. In applying this, we can avoid computing <span class="math inline">\(P(f)\)</span> by just comparing <span class="math inline">\(\log P(f|+)+\log P(+)\)</span> and <span class="math inline">\(\log P(f|-)+\log P(-)\)</span> computed using <a href="#eq-loglikelihood">Equation&nbsp;<span>5.2</span></a>. Then we say:</p>
+<p>A natural classification rule would be to say that a review is positive if <span class="math inline">\(\log P(+|f)&gt;\log P(-|f)\)</span>, and negative otherwise. In applying this, we can avoid computing <span class="math inline">\(P(f)\)</span> by just comparing <span class="math inline">\(\log P(f|+)+\log P(+)\)</span> and <span class="math inline">\(\log P(f|-)+\log P(-)\)</span> computed using <a href="#eq-loglikelihood">Equation&nbsp;<span>4.2</span></a>. Then we say:</p>
 <ul>
 <li>a review is positive if <span class="math inline">\(\log P(f|+)+\log P(+)&gt;\log P(f|-)+\log P(-)\)</span> and negative otherwise.</li>
 </ul>
-<p>Again we can exploit the matrix structure to do this for a bunch of reviews at once. Using <a href="#eq-matrixlikelihood">Equation&nbsp;<span>5.3</span></a> and the vectors <span class="math inline">\(P_{\pm}\)</span> we can compute column vectors corresponding to both sides of our decision inequality and subtract them. The positive entries indicate positive reviews, and the negative ones, negative reviews.</p>
+<p>Again we can exploit the matrix structure to do this for a bunch of reviews at once. Using <a href="#eq-matrixlikelihood">Equation&nbsp;<span>4.3</span></a> and the vectors <span class="math inline">\(P_{\pm}\)</span> we can compute column vectors corresponding to both sides of our decision inequality and subtract them. The positive entries indicate positive reviews, and the negative ones, negative reviews.</p>
 </section>
-<section id="the-bag-of-words" class="level2" data-number="5.6">
-<h2 data-number="5.6" class="anchored" data-anchor-id="the-bag-of-words"><span class="header-section-number">5.6</span> The Bag of Words</h2>
+<section id="the-bag-of-words" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="the-bag-of-words"><span class="header-section-number">4.6</span> The Bag of Words</h2>
 <p>In our analysis above, we thought of the presence or absence of certain key words as a set of independent tests that provided evidence of whether our review was positive or negative. This approach is suited to short pieces of text, but what about longer documents? In that case, we might want to consider not just the presence or absence of words, but the frequency with which they appear. Multinomial Naive Bayes, based on the “bag of words” model, is a classification method similar to Bernoulli Naive Bayes but which takes term frequency into account.</p>
 <p>Let’s consider, as above, the problem of classifying documents into one of two classes. We assume that we have a set of keywords <span class="math inline">\(w_1,\ldots, w_k\)</span>. For each class <span class="math inline">\(\pm\)</span>, we have a set of probabilities <span class="math inline">\(P(w_i|\pm)\)</span> with the property that <span class="math display">\[
 \sum_{i=1}^{k}P(w_{i}|\pm)=1.
@@ -419,14 +419,14 @@ P(\pm|\mathbf{f}) = \frac{P(\mathbf{f}|\pm)P(\pm)}{P(\mathbf{f})}
 \hat{Y} = X\log P_{+}^{\intercal} + \log P(+)-X\log P_{-}^{\intercal} - \log P(-)
 \]</span> and assign those documents where <span class="math inline">\(\hat{Y}&gt;0\)</span> to the <span class="math inline">\(+\)</span> class and the rest to the <span class="math inline">\(-\)</span> class.</p>
 </section>
-<section id="other-applications" class="level2" data-number="5.7">
-<h2 data-number="5.7" class="anchored" data-anchor-id="other-applications"><span class="header-section-number">5.7</span> Other applications</h2>
+<section id="other-applications" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="other-applications"><span class="header-section-number">4.7</span> Other applications</h2>
 <p>We developed the Naive Bayes method for sentiment analysis, but once we chose a set of keywords our training data was reduced to an <span class="math inline">\(N\times k\)</span> matrix <span class="math inline">\(X\)</span> of <span class="math inline">\(0/1\)</span> entries, together with an <span class="math inline">\(N\times 1\)</span> target column vector <span class="math inline">\(Y\)</span>. Then our classification problem is to decide whether a given vector of <span class="math inline">\(k\)</span> entries, all <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>, is more likely to carry a <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span> label. All of the parameters we needed for Naive Bayes – the various probabilities – can be extracted from the matrix <span class="math inline">\(X\)</span>.</p>
-<p>For example, suppose we have a collection of images represented as black/white pixels in a grid that belong to one of two classes. For example, we might have <span class="math inline">\(28x28\)</span> bitmaps of handwritten zeros and ones that are labelled, and we wish to construct a classifier that can decide whether a new <span class="math inline">\(28x28\)</span> bitmap is a zero or one. An example of such a bitmap is given in <a href="#fig-mnist0">Figure&nbsp;<span>5.1</span></a>. We can view each <span class="math inline">\(28x28\)</span> bitmap as a vector of length <span class="math inline">\(784\)</span> with <span class="math inline">\(0/1\)</span> entries and apply the same approach outlined above. However, there are other methods that are more commonly used for this problem, such as logistic regression and neural networks.</p>
+<p>For example, suppose we have a collection of images represented as black/white pixels in a grid that belong to one of two classes. For example, we might have <span class="math inline">\(28x28\)</span> bitmaps of handwritten zeros and ones that are labelled, and we wish to construct a classifier that can decide whether a new <span class="math inline">\(28x28\)</span> bitmap is a zero or one. An example of such a bitmap is given in <a href="#fig-mnist0">Figure&nbsp;<span>4.1</span></a>. We can view each <span class="math inline">\(28x28\)</span> bitmap as a vector of length <span class="math inline">\(784\)</span> with <span class="math inline">\(0/1\)</span> entries and apply the same approach outlined above. However, there are other methods that are more commonly used for this problem, such as logistic regression and neural networks.</p>
 <div id="fig-mnist0" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/mnist_data_10_0.png" class="img-fluid figure-img" style="width:2in"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;5.1: Handwritten 0</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;4.1: Handwritten 0</figcaption><p></p>
 </figure>
 </div>
 
@@ -575,12 +575,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../chapters/03-probability.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Probability and Bayes Theorem</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Probability and Bayes Theorem</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../chapters/05-1-gradient-descent.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Gradient Descent</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Gradient Descent</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
