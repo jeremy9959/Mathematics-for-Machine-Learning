@@ -2,4 +2,7 @@
 
 These notes are being developed for the UConn Math Department's undergraduate course on the Mathematics of Machine Learning, Math 3180.
 
-This is a (very) *rough draft*.  Please let the author know if you have questions or find mistakes.
+This is a (very) *rough draft*.  
+
+You can [view this project on GitHub](https://github.com/jeremy9959/Mathematics-for-Machine-Learning).
+Please let the author know if you have questions or find mistakes by opening an issue there.
