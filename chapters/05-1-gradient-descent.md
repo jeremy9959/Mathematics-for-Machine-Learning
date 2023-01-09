@@ -163,7 +163,7 @@ The gradient descent algorithm looks like this.
 ### Gradient Descent Algorithm for Linear Regression
 
 Set $M^{0}$ to a random vector in $\R^{k+1}$ for an 
-initial guess and choose a learning rate parameter $\nu$ and a tolerance $\epsilon$.
+initial guess and choose a learning rate parameter $\nu$.
 Compute $A=X^{\intercal}Y$ (an element of $\R^{k+1}$ and $D=X^{\intercal}X$ (a $(k+1)\times (k+1)$ matrix).
 
 Iteratively compute
@@ -172,6 +172,7 @@ $$
 M^{(k+1)}=M^{(k)}-\nu(-2A+2DM^{(k)})
 $$
 
-until the entries in the successive $M^{k}$ change by less than the tolerance.
+until the entries a stopping condition is met. For example, stop if the mean squared error $\|Y-XM^{(k)}\|^2$ changes by less than some
+tolerance on each iteration, or the entries of $M^{(k)}$ change by less than some tolerance.
 
 :::
