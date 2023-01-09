@@ -1,5 +1,7 @@
 
 # Gradient Descent {#sec-gradient_descent}
+$$\newcommand{\df}[1]{\frac{\partial}{\partial #1}}$$
+$$\newcommand{\R}{\mathbf{R}}$$
 
 ## Introduction
 
@@ -23,7 +25,6 @@ The main tool in this approach is a fact from multivariate calculus.
 **Proposition:** Let $f(x_0,\ldots, x_{k-1})$ be a function and let $\nabla f$ be its gradient.
 Then at each point $x$ in $\R^{k}$, the gradient $(\nabla f)(x)$ is a vector that points in
 the direction in which $f$ is increasing most rapidly from $x$ and $(-\nabla f)(x)$ points
-in the direction in which $f$ is decreasing most rapidly.  If $\nabla f=0$ at $x$ then $x$
 is a critical point of $f$. 
 
 This fact arises from thinking about the *directional derivative* of a function.  
@@ -128,4 +129,49 @@ As we hope, the red dots quickly descend to the bottom of the "valley" at the po
 this valley is only a *local minimum* of the function; the true minimum is at $x=-2$.  Gradient descent can't see that far away point and so we don't find the true minimum of the function.  One way to 
 handle this is to *run gradient descent multiple times with random starting coordinates* and then look for the minimum value it finds among all of these tries.
 
-Gradient descent can fail more spectacularly if we choose an unfortunate combination of learning rate and starting point.  
+
+## Linear Regression via Gradient Descent
+
+In our discussion of Linear Regression in @sec-LinearRegression, we used Calculus to find the
+values of the parameters that minimzed the squared difference to the desired values.  If our features were
+stored in the matrix $X$ (with an additional column of $1$'s) and our target values in the vector $Y$, then we showed that that optimal parameters $M$ were given by
+
+$$
+M=D^{-1}X^{\intercal}Y
+$$
+
+where $D=X^{\intercal}X$. This set of parameters minimizes the "mean-squared-error"
+
+$$
+MSE = \frac{1}{N}\| Y-XM \|^2.
+$$
+
+See @eq-Msolution and @eq-projection.
+
+As an alternative, we can approach this problem via gradient descent using the computation of the gradient in @eq-gradient:
+
+$$ 
+\nabla E = \left[\begin{matrix} \df{M_1}E \\ \df{M_2}E \\ \vdots \\
+\df{m_{M+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
+X^{\intercal}XM 
+$$
+
+The gradient descent algorithm looks like this.
+
+::: {#alg-graddescentLinearRegression}
+
+### Gradient Descent Algorithm for Linear Regression
+
+Set $M^{0}$ to a random vector in $\R^{k+1}$ for an 
+initial guess and choose a learning rate parameter $\nu$ and a tolerance $\epsilon$.
+Compute $A=X^{\intercal}Y$ (an element of $\R^{k+1}$ and $D=X^{\intercal}X$ (a $(k+1)\times (k+1)$ matrix).
+
+Iteratively compute
+
+$$
+M^{(k+1)}=M^{(k)}-\nu(-2A+2DM^{(k)})
+$$
+
+until the entries in the successive $M^{k}$ change by less than the tolerance.
+
+:::

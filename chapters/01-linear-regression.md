@@ -1,5 +1,6 @@
-# Linear Regression
-
+# Linear Regression {#sec-LinearRegression}
+$$\newcommand{\df}[1]{\frac{\partial}{\partial #1}}$$
+$$\newcommand{\R}{\mathbf{R}}$$
 ## Introduction {#sec-Intro}
 
 Suppose that we are trying to study two quantities $x$ and $y$ that we
