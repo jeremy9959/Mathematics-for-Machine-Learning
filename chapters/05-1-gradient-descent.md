@@ -148,7 +148,8 @@ $$
 
 See @eq-Msolution and @eq-projection.
 
-As an alternative, we can approach this problem via gradient descent using the computation of the gradient in @eq-gradient:
+One problem with this approach is the need to invert the matrix $D$, which is a serious computation in its own right.  We can avoid relying on matrix inversion by approaching this problem numerically
+via gradient descent, using the computation of the gradient in @eq-gradient:
 
 $$ 
 \nabla E = \left[\begin{matrix} \df{M_1}E \\ \df{M_2}E \\ \vdots \\
@@ -169,10 +170,62 @@ Compute $A=X^{\intercal}Y$ (an element of $\R^{k+1}$ and $D=X^{\intercal}X$ (a $
 Iteratively compute
 
 $$
-M^{(k+1)}=M^{(k)}-\nu(-2A+2DM^{(k)})
+M^{(j+1)}=M^{(j)}-\nu(-2A+2DM^{(j)})
 $$
 
-until the entries a stopping condition is met. For example, stop if the mean squared error $\|Y-XM^{(k)}\|^2$ changes by less than some
-tolerance on each iteration, or the entries of $M^{(k)}$ change by less than some tolerance.
+until the entries a stopping condition is met. For example, stop if the mean squared error $\|Y-XM^{(k)}\|^2$ changes by less than some tolerance on each iteration, or the entries of $M^{(k)}$ change by less than some tolerance.
 
 :::
+
+Notice that this algorithm does not need computation of $D^{-1}$. 
+
+## Stochastic Gradient Descent {@sec-sgd}
+
+Using the numerical approach to  linear regression avoids computing $D^{-1}$, but still leaves
+us the task of computing the matrix $D=X^{\intercal}X$.  Typically $X$ has many rows, and so this computation is time intensive.  We would like to avoid having to use *all* of the data for each iteration of our algorithm. 
+
+
+Stochastic Gradient Descent is a method for numerical optimization that does not require use of all the data on each iteration; rather it uses each data point in succession.  Let's look at this 
+in the context of linear regression.  Suppose we have an estimated value $M$ for the parameters.  We take one data point $x$ -- a single row
+of the data matrix $X$ -- and the associated target value $y$.  The MSE error for this particular point is
+
+$$
+MSE = \| (y-xM)\|^2 = (y-xM)\cdot (y-xM).
+$$
+
+The gradient for this particular point is 
+
+$$
+\nabla MSE = -2(y-xM)x
+$$
+
+Notice that $y-xM$ is just a scalar so this is a scalar multiple of the vector $x$. 
+
+Now we iterate over the data, adjusting the parameters $M$ by this partial gradient.  Each pass
+through the entire set is sometimes called an "epoch."
+
+::: {#alg-stochastic-sgd}
+
+### Stochastic Gradient Descent for Linear Regression
+
+Set $M^{0}$ to a random starting vector in $\R^{k+1}$ as an initial guess and choose a learning rate
+parameter.
+
+For each data point $x$ and target value $y$, adjust the parameters by the gradient of the error
+associated with this point:
+
+$$
+M^{(j+1)} = M^{(j)}-\nu(-2x(y-xM)) = M^{(j)}+2\nu(y-xM)x
+$$
+
+Run through the data set multiple times and track the $MSE$ $\|(y-xM)\|^2$ for each pair $(x,y)$.
+These will bounce around but trend overall downward.  When they vary by less than some threshold, stop.
+
+
+
+**Note:** To minimize the bias introduced by the particular order in which you read the data, it's often
+worthwhile to shuffle the order in which you consider the points $(x,y)$ in each epoch.
+
+:::
+
+

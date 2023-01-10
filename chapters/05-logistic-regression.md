@@ -448,9 +448,10 @@ $$
 P(\hbox{ sample i in class j})=\prod_{s=1}^{r} p_{s}(x;M)^{y_{s}}.
 $$
 Taking the logarithm, we find
+
 $$
 \log P = \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
-$$
+$${#eq-multiclasslikelihood}
 
 Since each sample is independent, the total likelihood is the product of these probabilites, and the log-likelihood the corresponding sum:
 $$
@@ -546,7 +547,7 @@ Given:
 
 Iterate:
 $$
-M=M+\nu X^{\intercal}(Y-\sigma(XM))
+M^{(j+1)}=M^{(j)}+\nu X^{\intercal}(Y-\sigma(XM^{(j)}))
 $$
 until $M$ changes by less than some tolerance.
 
@@ -554,15 +555,25 @@ until $M$ changes by less than some tolerance.
 
 
 
-## Batch Descent
+## Stochastic Gradient Descent for Logistic Regression
 
-A look at the formulae for the gradient (see @eq-multiclassgradient) tells us that each iteration of the algorithm requires us to multiply the entire data matrix times the weights (to compute $XM$) and
-then again to multiply by $X^{\intercal}$.  In practice, $X$ may have a very large number of rows,
-and working with the entire matrix may be impractical.
+The gradient descent process for logistic regression suffers from the same limitation as for linear regression that we discussed in @sec-sgd.  Each iteration requires us to compute the matrix product
+$X^{\intercal}(Y-\sigma(XM^{(j)}))$ which uses all of the data and is therefore time- and even more importantly memory-intensive.
 
-One simple solution to this is to work with the data in batches.  Each main iteration of gradient
-descent is made up of smaller steps, each of which works with a subset of the data matrix.  These
-smaller steps could be single rows of the data matrix, or submatrices.  
+Therefore logistic regression is also a candidate for stochastic gradient descent, in which we
+iterate over each data point $x$ and associated target $y$ and make adjustments point by point. 
+From @eq-multiclasslikelihood that we know that the contribution to the likelihood of a single
+data point $x$ with target class $y$ is
+$$
+\log P = \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
+$$
+
+Remember that $y$ is one-hot encoded so $y_{s}$ is zero unless $x$ properly belongs to class $k$
+in which case $y_{k}=1$. Also remember that $p_{s}(x;M)$ is given by the softmax function
+$$
+p_{t}(x;M) = \frac{e^{xm_{s}}}{\sum_{s=1}^{r} e^{xm_{s}}}.
+$$
+
 
 
 
