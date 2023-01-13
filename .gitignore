@@ -4,4 +4,8 @@
 
 /.luarc.json
 index.fdb_latexmk
+*.aux
+*.log
+*.toc
+
 
