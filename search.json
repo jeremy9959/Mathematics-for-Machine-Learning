@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Lectures on Machine Learning",
     "section": "",
-    "text": "$$\\newcommand{\\df}[1]{\\frac{\\partial}{\\partial #1}}$$\n$$\\newcommand{\\R}{\\mathbb{R}}$$\n\n\n\n\nPreface\nThese notes are being developed for the UConn Math Department’s undergraduate course on the Mathematics of Machine Learning, Math 3180.\nThis is a (very) rough draft.\nYou can view this project on GitHub. Please let the author know if you have questions or find mistakes by opening an issue there."
+    "text": "$$\\newcommand{\\df}[1]{\\frac{\\partial}{\\partial #1}}$$\n$$\\newcommand{\\R}{\\mathbb{R}}$$\n\n\n\n\nPreface\nThese notes are being developed for the UConn Math Department’s undergraduate course on the Mathematics of Machine Learning, Math \\(3180\\).\nThis is a (very) rough draft.\nYou can view this project on GitHub. Please let the author know if you have questions or find mistakes by opening an issue there."
   },
   {
     "objectID": "chapters/01-linear-regression.html#sec-Intro",
