@@ -1,7 +1,6 @@
 # Linear Regression {#sec-LinearRegression}
 
-$$\newcommand{\df}[1]{\frac{\partial}{\partial #1}}$$
-$$\newcommand{\R}{\mathbf{R}}$$
+
 
 ## Introduction {#sec-Intro}
 

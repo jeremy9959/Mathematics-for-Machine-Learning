@@ -37,7 +37,9 @@ format:
   html:
     theme: cosmo 
     include-in-body: 
-      - file: chapters/macros.html      
+      - text: |
+          \newcommand{\df}[1]{\frac{\partial}{\partial #1}}
+          \newcommand{\R}{\mathbb{R}}
   pdf:
     documentclass: scrbook
     geometry:
@@ -47,9 +49,9 @@ format:
     include-in-header: 
       - text: |
           \usepackage{listings}
-      - file: chapters/macros.tex
-
-      
+      - text: |
+          \newcommand{\df}[1]{\frac{\partial}{\partial #1}}
+          \newcommand{\R}{\mathbb{R}}
 
 
 

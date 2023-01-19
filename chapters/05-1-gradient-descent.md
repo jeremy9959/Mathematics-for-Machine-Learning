@@ -1,7 +1,6 @@
 
 # Gradient Descent {#sec-gradient_descent}
-$$\newcommand{\df}[1]{\frac{\partial}{\partial #1}}$$
-$$\newcommand{\R}{\mathbf{R}}$$
+
 
 ## Introduction
 
