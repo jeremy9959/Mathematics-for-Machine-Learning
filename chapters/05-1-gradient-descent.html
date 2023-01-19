@@ -151,6 +151,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">5.1</span>  Introduction</a></li>
   <li><a href="#the-key-idea" id="toc-the-key-idea" class="nav-link" data-scroll-target="#the-key-idea"><span class="toc-section-number">5.2</span>  The Key Idea</a></li>
   <li><a href="#the-algorithm" id="toc-the-algorithm" class="nav-link" data-scroll-target="#the-algorithm"><span class="toc-section-number">5.3</span>  The Algorithm</a></li>
+  <li><a href="#linear-regression-via-gradient-descent" id="toc-linear-regression-via-gradient-descent" class="nav-link" data-scroll-target="#linear-regression-via-gradient-descent"><span class="toc-section-number">5.4</span>  Linear Regression via Gradient Descent</a></li>
+  <li><a href="#sec-sgd" id="toc-sec-sgd" class="nav-link" data-scroll-target="#sec-sgd"><span class="toc-section-number">5.5</span>  Stochastic Gradient Descent</a></li>
   </ul>
 </nav>
     </div>
@@ -183,7 +185,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-number="5.2" class="anchored" data-anchor-id="the-key-idea"><span class="header-section-number">5.2</span> The Key Idea</h2>
 <p>Suppose that we have a function <span class="math inline">\(f(x_0,\ldots, x_{k-1})\)</span> and we wish to find its minimum value. In Calculus classes, we are taught to take the derivates of the function and set them equal to zero, but for anything other than the simplest functions this problem is not solvable in practice. In real life, we use iterative methods to find the minimum of the function <span class="math inline">\(f\)</span>.</p>
 <p>The main tool in this approach is a fact from multivariate calculus.</p>
-<p><strong>Proposition:</strong> Let <span class="math inline">\(f(x_0,\ldots, x_{k-1})\)</span> be a function and let <span class="math inline">\(\nabla f\)</span> be its gradient. Then at each point <span class="math inline">\(x\)</span> in <span class="math inline">\(\R^{k}\)</span>, the gradient <span class="math inline">\((\nabla f)(x)\)</span> is a vector that points in the direction in which <span class="math inline">\(f\)</span> is increasing most rapidly from <span class="math inline">\(x\)</span> and <span class="math inline">\((-\nabla f)(x)\)</span> points in the direction in which <span class="math inline">\(f\)</span> is decreasing most rapidly. If <span class="math inline">\(\nabla f=0\)</span> at <span class="math inline">\(x\)</span> then <span class="math inline">\(x\)</span> is a critical point of <span class="math inline">\(f\)</span>.</p>
+<p><strong>Proposition:</strong> Let <span class="math inline">\(f(x_0,\ldots, x_{k-1})\)</span> be a function and let <span class="math inline">\(\nabla f\)</span> be its gradient. Then at each point <span class="math inline">\(x\)</span> in <span class="math inline">\(\R^{k}\)</span>, the gradient <span class="math inline">\((\nabla f)(x)\)</span> is a vector that points in the direction in which <span class="math inline">\(f\)</span> is increasing most rapidly from <span class="math inline">\(x\)</span> and <span class="math inline">\((-\nabla f)(x)\)</span> points is a critical point of <span class="math inline">\(f\)</span>.</p>
 <p>This fact arises from thinking about the <em>directional derivative</em> of a function.<br>
 The directional derivative <span class="math inline">\(D_{v}f\)</span> measures the rate of change of <span class="math inline">\(f\)</span> as one moves with velocity vector <span class="math inline">\(v\)</span> from the point <span class="math inline">\(x\)</span> and it is defined as <span class="math display">\[
 D_{v}f(x) = \frac{d}{dt}f(x+tv)|_{t=0}
@@ -243,7 +245,57 @@ c^{(n+1)} = c^{(n)}-12\nu((c^{(n)})^3+(c^{(n)})^2-2c^{(n)}).
 </figure>
 </div>
 <p>As we hope, the red dots quickly descend to the bottom of the “valley” at the point <span class="math inline">\(x=1\)</span>. However, this valley is only a <em>local minimum</em> of the function; the true minimum is at <span class="math inline">\(x=-2\)</span>. Gradient descent can’t see that far away point and so we don’t find the true minimum of the function. One way to handle this is to <em>run gradient descent multiple times with random starting coordinates</em> and then look for the minimum value it finds among all of these tries.</p>
-<p>Gradient descent can fail more spectacularly if we choose an unfortunate combination of learning rate and starting point.</p>
+</section>
+<section id="linear-regression-via-gradient-descent" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="linear-regression-via-gradient-descent"><span class="header-section-number">5.4</span> Linear Regression via Gradient Descent</h2>
+<p>In our discussion of Linear Regression in <a href="01-linear-regression.html"><span>Chapter&nbsp;1</span></a>, we used Calculus to find the values of the parameters that minimzed the squared difference to the desired values. If our features were stored in the matrix <span class="math inline">\(X\)</span> (with an additional column of <span class="math inline">\(1\)</span>’s) and our target values in the vector <span class="math inline">\(Y\)</span>, then we showed that that optimal parameters <span class="math inline">\(M\)</span> were given by</p>
+<p><span class="math display">\[
+M=D^{-1}X^{\intercal}Y
+\]</span></p>
+<p>where <span class="math inline">\(D=X^{\intercal}X\)</span>. This set of parameters minimizes the “mean-squared-error”</p>
+<p><span class="math display">\[
+MSE = \frac{1}{N}\| Y-XM \|^2.
+\]</span></p>
+<p>See <a href="01-linear-regression.html#eq-Msolution">Equation&nbsp;<span>1.7</span></a> and <a href="01-linear-regression.html#eq-projection">Equation&nbsp;<span>1.8</span></a>.</p>
+<p>One problem with this approach is the need to invert the matrix <span class="math inline">\(D\)</span>, which is a serious computation in its own right. We can avoid relying on matrix inversion by approaching this problem numerically via gradient descent, using the computation of the gradient in <a href="01-linear-regression.html#eq-gradient">Equation&nbsp;<span>1.5</span></a>:</p>
+<p><span class="math display">\[
+\nabla E = \left[\begin{matrix} \df{M_1}E \\ \df{M_2}E \\ \vdots \\
+\df{m_{M+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
+X^{\intercal}XM
+\]</span></p>
+<p>The gradient descent algorithm looks like this.</p>
+<div id="alg-graddescentLinearRegression" class="theorem algorithm">
+<p><span class="theorem-title"><strong>Algorithm 5.2 (Gradient Descent Algorithm for Linear Regression) </strong></span>Set <span class="math inline">\(M^{0}\)</span> to a random vector in <span class="math inline">\(\R^{k+1}\)</span> for an initial guess and choose a learning rate parameter <span class="math inline">\(\nu\)</span>. Compute <span class="math inline">\(A=X^{\intercal}Y\)</span> (an element of <span class="math inline">\(\R^{k+1}\)</span> and <span class="math inline">\(D=X^{\intercal}X\)</span> (a <span class="math inline">\((k+1)\times (k+1)\)</span> matrix).</p>
+<p>Iteratively compute</p>
+<p><span class="math display">\[
+M^{(j+1)}=M^{(j)}-\nu(-2A+2DM^{(j)})
+\]</span></p>
+<p>until the entries a stopping condition is met. For example, stop if the mean squared error <span class="math inline">\(\|Y-XM^{(k)}\|^2\)</span> changes by less than some tolerance on each iteration, or the entries of <span class="math inline">\(M^{(k)}\)</span> change by less than some tolerance.</p>
+</div>
+<p>Notice that this algorithm does not need computation of <span class="math inline">\(D^{-1}\)</span>.</p>
+</section>
+<section id="sec-sgd" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="sec-sgd"><span class="header-section-number">5.5</span> Stochastic Gradient Descent</h2>
+<p>Using the numerical approach to linear regression avoids computing <span class="math inline">\(D^{-1}\)</span>, but still leaves us the task of computing the matrix <span class="math inline">\(D=X^{\intercal}X\)</span>. Typically <span class="math inline">\(X\)</span> has many rows, and so this computation is time intensive. We would like to avoid having to use <em>all</em> of the data for each iteration of our algorithm.</p>
+<p>Stochastic Gradient Descent is a method for numerical optimization that does not require use of all the data on each iteration; rather it uses each data point in succession. Let’s look at this in the context of linear regression. Suppose we have an estimated value <span class="math inline">\(M\)</span> for the parameters. We take one data point <span class="math inline">\(x\)</span> – a single row of the data matrix <span class="math inline">\(X\)</span> – and the associated target value <span class="math inline">\(y\)</span>. The MSE error for this particular point is</p>
+<p><span class="math display">\[
+MSE = \| (y-xM)\|^2 = (y-xM)\cdot (y-xM).
+\]</span></p>
+<p>The gradient for this particular point is</p>
+<p><span class="math display">\[
+\nabla MSE = -2(y-xM)x
+\]</span></p>
+<p>Notice that <span class="math inline">\(y-xM\)</span> is just a scalar so this is a scalar multiple of the vector <span class="math inline">\(x\)</span>.</p>
+<p>Now we iterate over the data, adjusting the parameters <span class="math inline">\(M\)</span> by this partial gradient. Each pass through the entire set is sometimes called an “epoch.”</p>
+<div id="alg-stochastic-sgd" class="theorem algorithm">
+<p><span class="theorem-title"><strong>Algorithm 5.3 (Stochastic Gradient Descent for Linear Regression) </strong></span>Set <span class="math inline">\(M^{0}\)</span> to a random starting vector in <span class="math inline">\(\R^{k+1}\)</span> as an initial guess and choose a learning rate parameter.</p>
+<p>For each data point <span class="math inline">\(x\)</span> and target value <span class="math inline">\(y\)</span>, adjust the parameters by the gradient of the error associated with this point:</p>
+<p><span class="math display">\[
+M^{(j+1)} = M^{(j)}-\nu(-2x(y-xM)) = M^{(j)}+2\nu(y-xM)x
+\]</span></p>
+<p>Run through the data set multiple times and track the <span class="math inline">\(MSE\)</span> <span class="math inline">\(\|(y-xM)\|^2\)</span> for each pair <span class="math inline">\((x,y)\)</span>. These will bounce around but trend overall downward. When they vary by less than some threshold, stop.</p>
+<p><strong>Note:</strong> To minimize the bias introduced by the particular order in which you read the data, it’s often worthwhile to shuffle the order in which you consider the points <span class="math inline">\((x,y)\)</span> in each epoch.</p>
+</div>
 
 
 </section>

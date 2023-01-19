@@ -187,7 +187,7 @@ div.csl-indent {
   <li><a href="#multiclass-logistic-regression---the-likelihood" id="toc-multiclass-logistic-regression---the-likelihood" class="nav-link" data-scroll-target="#multiclass-logistic-regression---the-likelihood"><span class="toc-section-number">6.5.1</span>  Multiclass logistic regression - the likelihood</a></li>
   <li><a href="#multiclass-logistic-regression---the-gradient." id="toc-multiclass-logistic-regression---the-gradient." class="nav-link" data-scroll-target="#multiclass-logistic-regression---the-gradient."><span class="toc-section-number">6.5.2</span>  Multiclass logistic regression - the gradient.</a></li>
   </ul></li>
-  <li><a href="#batch-descent" id="toc-batch-descent" class="nav-link" data-scroll-target="#batch-descent"><span class="toc-section-number">6.6</span>  Batch Descent</a></li>
+  <li><a href="#stochastic-gradient-descent-for-logistic-regression" id="toc-stochastic-gradient-descent-for-logistic-regression" class="nav-link" data-scroll-target="#stochastic-gradient-descent-for-logistic-regression"><span class="toc-section-number">6.6</span>  Stochastic Gradient Descent for Logistic Regression</a></li>
   </ul>
 </nav>
     </div>
@@ -458,9 +458,10 @@ p_{j}(x;M)=\hbox{The chance that x is in class j}.
 <p>We have captured the class membership of the samples in a <span class="math inline">\((k+1)\times r\)</span> matrix <span class="math inline">\(Y\)</span> which is “one-hot” encoded. Each row of this matrix has is zero in each place, except in the “correct” class, where it is one. Let <span class="math inline">\(y=Y[i,:]\)</span> be the <span class="math inline">\(i^{th}\)</span> row of this matrix, so it is an <span class="math inline">\(r\)</span>-entry row vector which is <span class="math inline">\(1\)</span> in the position giving the “correct” class for our sample <span class="math inline">\(x\)</span>.</p>
 <p>So we can represent the chance that sample <span class="math inline">\(j\)</span> belongs to class <span class="math inline">\(i\)</span> as <span class="math display">\[
 P(\hbox{ sample i in class j})=\prod_{s=1}^{r} p_{s}(x;M)^{y_{s}}.
-\]</span> Taking the logarithm, we find <span class="math display">\[
+\]</span> Taking the logarithm, we find</p>
+<p><span id="eq-multiclasslikelihood"><span class="math display">\[
 \log P = \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
-\]</span></p>
+\tag{6.4}\]</span></span></p>
 <p>Since each sample is independent, the total likelihood is the product of these probabilites, and the log-likelihood the corresponding sum: <span class="math display">\[
 \log L(M) = \sum_{X,Y} \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
 \]</span> where the sum is over the <span class="math inline">\(N\)</span> rows of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. This is equivalent to the matrix expression <span class="math display">\[
@@ -497,8 +498,8 @@ p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
 \frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y} (y_{q}-p_{q})x^{\intercal}.
 \]</span> This is equivalent to the matrix expression <span id="eq-multiclassgradient"><span class="math display">\[
 \nabla \log L(M) = X^{\intercal}(Y-P)=X^{\intercal}(Y-\sigma(XM)).
-\tag{6.4}\]</span></span></p>
-<p>Compare <a href="#eq-multiclassgradient">Equation&nbsp;<span>6.4</span></a> to <a href="#thm-logisticgradient">Theorem&nbsp;<span>6.1</span></a> and we see that the form is identical whether in the two-class or multi-class case if we set things up properly.</p>
+\tag{6.5}\]</span></span></p>
+<p>Compare <a href="#eq-multiclassgradient">Equation&nbsp;<span>6.5</span></a> to <a href="#thm-logisticgradient">Theorem&nbsp;<span>6.1</span></a> and we see that the form is identical whether in the two-class or multi-class case if we set things up properly.</p>
 <div id="alg-graddescent" class="theorem algorithm">
 <p><span class="theorem-title"><strong>Algorithm 6.1 (Multiclass Gradient Descent) </strong></span>Given:</p>
 <ul>
@@ -508,15 +509,15 @@ p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
 <li>a “learning rate” <span class="math inline">\(\nu\)</span>,</li>
 </ul>
 <p>Iterate: <span class="math display">\[
-M=M+\nu X^{\intercal}(Y-\sigma(XM))
+M^{(j+1)}=M^{(j)}+\nu X^{\intercal}(Y-\sigma(XM^{(j)}))
 \]</span> until <span class="math inline">\(M\)</span> changes by less than some tolerance.</p>
 </div>
 </section>
 </section>
-<section id="batch-descent" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="batch-descent"><span class="header-section-number">6.6</span> Batch Descent</h2>
-<p>A look at the formulae for the gradient (see <a href="#eq-multiclassgradient">Equation&nbsp;<span>6.4</span></a>) tells us that each iteration of the algorithm requires us to multiply the entire data matrix times the weights (to compute <span class="math inline">\(XM\)</span>) and then again to multiply by <span class="math inline">\(X^{\intercal}\)</span>. In practice, <span class="math inline">\(X\)</span> may have a very large number of rows, and working with the entire matrix may be impractical.</p>
-<p>One simple solution to this is to work with the data in batches. Each main iteration of gradient descent is made up of smaller steps, each of which works with a subset of the data matrix. These smaller steps could be single rows of the data matrix, or submatrices.</p>
+<section id="stochastic-gradient-descent-for-logistic-regression" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="stochastic-gradient-descent-for-logistic-regression"><span class="header-section-number">6.6</span> Stochastic Gradient Descent for Logistic Regression</h2>
+<p>The gradient descent process for logistic regression suffers from the same limitation as for linear regression that we discussed in <a href="05-1-gradient-descent.html#sec-sgd"><span>Section&nbsp;5.5</span></a>. Each iteration requires us to compute the matrix product <span class="math inline">\(X^{\intercal}(Y-\sigma(XM^{(j)}))\)</span> which uses all of the data and is therefore time- and even more importantly memory-intensive.</p>
+<p>Therefore logistic regression is also a candidate for stochastic gradient descent, in which we iterate over each data point <span class="math inline">\(x\)</span> and associated target <span class="math inline">\(y\)</span> and make adjustments point by point. To do this we use the gradient from <a href="#eq-multiclassgradient">Equation&nbsp;<span>6.5</span></a> in the much simpler case where <span class="math inline">\(X\)</span> is a single row of the data matrix and <span class="math inline">\(Y\)</span> is a row vector that is zero except for a one in the spot corresponding to the target class for <span class="math inline">\(X\)</span>.</p>
 
 
 <div id="refs" class="references csl-bib-body" role="doc-bibliography" style="display: none">
