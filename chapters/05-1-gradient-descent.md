@@ -179,7 +179,7 @@ until the entries a stopping condition is met. For example, stop if the mean squ
 
 Notice that this algorithm does not need computation of $D^{-1}$. 
 
-## Stochastic Gradient Descent {@sec-sgd}
+## Stochastic Gradient Descent {#sec-sgd}
 
 Using the numerical approach to  linear regression avoids computing $D^{-1}$, but still leaves
 us the task of computing the matrix $D=X^{\intercal}X$.  Typically $X$ has many rows, and so this computation is time intensive.  We would like to avoid having to use *all* of the data for each iteration of our algorithm. 
