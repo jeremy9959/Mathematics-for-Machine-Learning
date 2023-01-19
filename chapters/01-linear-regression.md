@@ -324,7 +324,7 @@ Y_{j}X_{jt} - \sum_{j=1}^{N}\sum_{s=1}^{k+1} X_{jt}X_{js}M_{s}) \\ &=
 -2(X^{\intercal}[t,:]Y - \sum_{s=1}^{k+1}\sum_{j=1}^{N}
 X^{\intercal}_{tj}X_{js}M_{s}) \\ &= -2(X^{\intercal}[t,:]Y -
 \sum_{s=1}^{k+1} (X^{\intercal}X)_{ts}M_{s}) \\ &=
--2[X^{\intercal}[t,:]Y - (X^{\intercal}X](t,:)M)\\
+-2(X^{\intercal}[t,:]Y - (X^{\intercal}X)[t,:]M)\\
 \end{aligned}$${#eq-gradient2}
 
 Stacking up the different rows to make $E$ yields the desired formula.

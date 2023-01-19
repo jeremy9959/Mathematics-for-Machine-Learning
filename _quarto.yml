@@ -36,10 +36,9 @@ csl: references/stat.csl
 format:
   html:
     theme: cosmo 
-    include-in-body: 
-      - text: |
-          \newcommand{\df}[1]{\frac{\partial}{\partial #1}}
-          \newcommand{\R}{\mathbb{R}}
+    include-before: |
+        $$\newcommand{\df}[1]{\frac{\partial}{\partial #1}}$$
+        $$\newcommand{\R}{\mathbb{R}}$$
   pdf:
     documentclass: scrbook
     geometry:
