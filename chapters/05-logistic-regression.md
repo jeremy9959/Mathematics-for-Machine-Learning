@@ -553,8 +553,6 @@ until $M$ changes by less than some tolerance.
 
 ::: 
 
-
-
 ## Stochastic Gradient Descent for Logistic Regression
 
 The gradient descent process for logistic regression suffers from the same limitation as for linear regression that we discussed in @sec-sgd.  Each iteration requires us to compute the matrix product
@@ -562,17 +560,9 @@ $X^{\intercal}(Y-\sigma(XM^{(j)}))$ which uses all of the data and is therefore 
 
 Therefore logistic regression is also a candidate for stochastic gradient descent, in which we
 iterate over each data point $x$ and associated target $y$ and make adjustments point by point. 
-From @eq-multiclasslikelihood that we know that the contribution to the likelihood of a single
-data point $x$ with target class $y$ is
-$$
-\log P = \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
-$$
-
-Remember that $y$ is one-hot encoded so $y_{s}$ is zero unless $x$ properly belongs to class $k$
-in which case $y_{k}=1$. Also remember that $p_{s}(x;M)$ is given by the softmax function
-$$
-p_{t}(x;M) = \frac{e^{xm_{s}}}{\sum_{s=1}^{r} e^{xm_{s}}}.
-$$
+To do this we use the gradient from @eq-multiclassgradient in the much simpler case where $X$
+is a single row of the data matrix and $Y$ is a row vector that is zero except for a one in the
+spot corresponding to the target class for $X$.
 
 
 
