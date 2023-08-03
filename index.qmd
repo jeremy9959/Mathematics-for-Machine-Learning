@@ -2,6 +2,12 @@
 
 These notes are being developed for the UConn Math Department's undergraduate course on the Mathematics of Machine Learning, Math $3180$. 
 
+::: {.hidden}
+
+$$ \int_{0}^{\infty} f(x) dx $$
+
+:::
+
 This is a (very) *rough draft*.  
 
 You can [view this project on GitHub](https://github.com/jeremy9959/Mathematics-for-Machine-Learning).
