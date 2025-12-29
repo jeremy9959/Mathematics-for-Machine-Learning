@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-99.9.9">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,7 +17,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
@@ -57,10 +57,12 @@ ul.task-list li input[type="checkbox"] {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
@@ -69,11 +71,16 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/02-pca.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -81,102 +88,112 @@ ul.task-list li input[type="checkbox"] {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Lectures on Machine Learning</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/01-linear-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  <a href="../chapters/01-linear-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Linear Regression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/02-pca.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></a>
+  <a href="../chapters/02-pca.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/03-probability.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Probability and Bayes Theorem</span></a>
+  <a href="../chapters/03-probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Probability and Bayes Theorem</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/04-naive-bayes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></a>
+  <a href="../chapters/04-naive-bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/05-1-gradient-descent.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Gradient Descent</span></a>
+  <a href="../chapters/05-1-gradient-descent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Gradient Descent</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/05-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logistic Regression</span></a>
+  <a href="../chapters/05-logistic-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logistic Regression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/06-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  <a href="../chapters/06-svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/20-references.html" class="sidebar-item-text sidebar-link">References</a>
+  <a href="../chapters/20-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">2.1</span>  Introduction</a></li>
-  <li><a href="#variance-and-covariance" id="toc-variance-and-covariance" class="nav-link" data-scroll-target="#variance-and-covariance"><span class="toc-section-number">2.2</span>  Variance and Covariance</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">2.1</span> Introduction</a></li>
+  <li><a href="#variance-and-covariance" id="toc-variance-and-covariance" class="nav-link" data-scroll-target="#variance-and-covariance"><span class="header-section-number">2.2</span> Variance and Covariance</a>
   <ul class="collapse">
-  <li><a href="#variance" id="toc-variance" class="nav-link" data-scroll-target="#variance"><span class="toc-section-number">2.2.1</span>  Variance</a></li>
-  <li><a href="#covariance" id="toc-covariance" class="nav-link" data-scroll-target="#covariance"><span class="toc-section-number">2.2.2</span>  Covariance</a></li>
-  <li><a href="#correlation" id="toc-correlation" class="nav-link" data-scroll-target="#correlation"><span class="toc-section-number">2.2.3</span>  Correlation</a></li>
-  <li><a href="#sec-covarmat" id="toc-sec-covarmat" class="nav-link" data-scroll-target="#sec-covarmat"><span class="toc-section-number">2.2.4</span>  The covariance matrix</a></li>
-  <li><a href="#sec-visualizecovar" id="toc-sec-visualizecovar" class="nav-link" data-scroll-target="#sec-visualizecovar"><span class="toc-section-number">2.2.5</span>  Visualizing the covariance matrix</a></li>
-  <li><a href="#linear-combinations-of-features-scores" id="toc-linear-combinations-of-features-scores" class="nav-link" data-scroll-target="#linear-combinations-of-features-scores"><span class="toc-section-number">2.2.6</span>  Linear Combinations of Features (Scores)</a></li>
-  <li><a href="#mean-and-variance-of-scores" id="toc-mean-and-variance-of-scores" class="nav-link" data-scroll-target="#mean-and-variance-of-scores"><span class="toc-section-number">2.2.7</span>  Mean and variance of scores</a></li>
-  <li><a href="#geometry-of-scores" id="toc-geometry-of-scores" class="nav-link" data-scroll-target="#geometry-of-scores"><span class="toc-section-number">2.2.8</span>  Geometry of Scores</a></li>
+  <li><a href="#variance" id="toc-variance" class="nav-link" data-scroll-target="#variance"><span class="header-section-number">2.2.1</span> Variance</a></li>
+  <li><a href="#covariance" id="toc-covariance" class="nav-link" data-scroll-target="#covariance"><span class="header-section-number">2.2.2</span> Covariance</a></li>
+  <li><a href="#correlation" id="toc-correlation" class="nav-link" data-scroll-target="#correlation"><span class="header-section-number">2.2.3</span> Correlation</a></li>
+  <li><a href="#sec-covarmat" id="toc-sec-covarmat" class="nav-link" data-scroll-target="#sec-covarmat"><span class="header-section-number">2.2.4</span> The covariance matrix</a></li>
+  <li><a href="#sec-visualizecovar" id="toc-sec-visualizecovar" class="nav-link" data-scroll-target="#sec-visualizecovar"><span class="header-section-number">2.2.5</span> Visualizing the covariance matrix</a></li>
+  <li><a href="#linear-combinations-of-features-scores" id="toc-linear-combinations-of-features-scores" class="nav-link" data-scroll-target="#linear-combinations-of-features-scores"><span class="header-section-number">2.2.6</span> Linear Combinations of Features (Scores)</a></li>
+  <li><a href="#mean-and-variance-of-scores" id="toc-mean-and-variance-of-scores" class="nav-link" data-scroll-target="#mean-and-variance-of-scores"><span class="header-section-number">2.2.7</span> Mean and variance of scores</a></li>
+  <li><a href="#geometry-of-scores" id="toc-geometry-of-scores" class="nav-link" data-scroll-target="#geometry-of-scores"><span class="header-section-number">2.2.8</span> Geometry of Scores</a></li>
   </ul></li>
-  <li><a href="#principal-components" id="toc-principal-components" class="nav-link" data-scroll-target="#principal-components"><span class="toc-section-number">2.3</span>  Principal Components</a>
+  <li><a href="#principal-components" id="toc-principal-components" class="nav-link" data-scroll-target="#principal-components"><span class="header-section-number">2.3</span> Principal Components</a>
   <ul class="collapse">
-  <li><a href="#change-of-variance-with-direction" id="toc-change-of-variance-with-direction" class="nav-link" data-scroll-target="#change-of-variance-with-direction"><span class="toc-section-number">2.3.1</span>  Change of variance with direction</a></li>
-  <li><a href="#sec-extremalvariance" id="toc-sec-extremalvariance" class="nav-link" data-scroll-target="#sec-extremalvariance"><span class="toc-section-number">2.3.2</span>  Directions of extremal variance</a></li>
-  <li><a href="#sec-critvals" id="toc-sec-critvals" class="nav-link" data-scroll-target="#sec-critvals"><span class="toc-section-number">2.3.3</span>  Critical values of the variance</a></li>
-  <li><a href="#sec-subspaces" id="toc-sec-subspaces" class="nav-link" data-scroll-target="#sec-subspaces"><span class="toc-section-number">2.3.4</span>  Subspaces of extremal variance</a></li>
-  <li><a href="#definition-of-principal-components" id="toc-definition-of-principal-components" class="nav-link" data-scroll-target="#definition-of-principal-components"><span class="toc-section-number">2.3.5</span>  Definition of Principal Components</a></li>
+  <li><a href="#change-of-variance-with-direction" id="toc-change-of-variance-with-direction" class="nav-link" data-scroll-target="#change-of-variance-with-direction"><span class="header-section-number">2.3.1</span> Change of variance with direction</a></li>
+  <li><a href="#sec-extremalvariance" id="toc-sec-extremalvariance" class="nav-link" data-scroll-target="#sec-extremalvariance"><span class="header-section-number">2.3.2</span> Directions of extremal variance</a></li>
+  <li><a href="#sec-critvals" id="toc-sec-critvals" class="nav-link" data-scroll-target="#sec-critvals"><span class="header-section-number">2.3.3</span> Critical values of the variance</a></li>
+  <li><a href="#sec-subspaces" id="toc-sec-subspaces" class="nav-link" data-scroll-target="#sec-subspaces"><span class="header-section-number">2.3.4</span> Subspaces of extremal variance</a></li>
+  <li><a href="#definition-of-principal-components" id="toc-definition-of-principal-components" class="nav-link" data-scroll-target="#definition-of-principal-components"><span class="header-section-number">2.3.5</span> Definition of Principal Components</a></li>
   </ul></li>
-  <li><a href="#dimensionality-reduction-via-principal-components" id="toc-dimensionality-reduction-via-principal-components" class="nav-link" data-scroll-target="#dimensionality-reduction-via-principal-components"><span class="toc-section-number">2.4</span>  Dimensionality Reduction via Principal Components</a>
+  <li><a href="#dimensionality-reduction-via-principal-components" id="toc-dimensionality-reduction-via-principal-components" class="nav-link" data-scroll-target="#dimensionality-reduction-via-principal-components"><span class="header-section-number">2.4</span> Dimensionality Reduction via Principal Components</a>
   <ul class="collapse">
-  <li><a href="#loadings" id="toc-loadings" class="nav-link" data-scroll-target="#loadings"><span class="toc-section-number">2.4.1</span>  Loadings</a></li>
-  <li><a href="#sec-svd" id="toc-sec-svd" class="nav-link" data-scroll-target="#sec-svd"><span class="toc-section-number">2.4.2</span>  The singular value decomposition</a></li>
+  <li><a href="#loadings" id="toc-loadings" class="nav-link" data-scroll-target="#loadings"><span class="header-section-number">2.4.1</span> Loadings</a></li>
+  <li><a href="#sec-svd" id="toc-sec-svd" class="nav-link" data-scroll-target="#sec-svd"><span class="header-section-number">2.4.2</span> The singular value decomposition</a></li>
   </ul></li>
-  <li><a href="#sec-spectraltheorem" id="toc-sec-spectraltheorem" class="nav-link" data-scroll-target="#sec-spectraltheorem"><span class="toc-section-number">2.5</span>  Eigenvalues and Eigenvectors of Real Symmetric Matrices (The Spectral Theorem)</a>
+  <li><a href="#sec-spectraltheorem" id="toc-sec-spectraltheorem" class="nav-link" data-scroll-target="#sec-spectraltheorem"><span class="header-section-number">2.5</span> Eigenvalues and Eigenvectors of Real Symmetric Matrices (The Spectral Theorem)</a>
   <ul class="collapse">
-  <li><a href="#sec-gsprocess" id="toc-sec-gsprocess" class="nav-link" data-scroll-target="#sec-gsprocess"><span class="toc-section-number">2.5.1</span>  Gram-Schmidt</a></li>
-  <li><a href="#the-spectral-theorem" id="toc-the-spectral-theorem" class="nav-link" data-scroll-target="#the-spectral-theorem"><span class="toc-section-number">2.5.2</span>  The spectral theorem</a></li>
+  <li><a href="#sec-gsprocess" id="toc-sec-gsprocess" class="nav-link" data-scroll-target="#sec-gsprocess"><span class="header-section-number">2.5.1</span> Gram-Schmidt</a></li>
+  <li><a href="#the-spectral-theorem" id="toc-the-spectral-theorem" class="nav-link" data-scroll-target="#the-spectral-theorem"><span class="header-section-number">2.5.2</span> The spectral theorem</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -188,7 +205,7 @@ $$\newcommand{\R}{\mathbb{R}}$$
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></h1>
 </div>
 
 
@@ -265,7 +282,7 @@ r_{XY} = \frac{\sigma_{XY}}{\sigma_{X}\sigma_{Y}}
 <div id="fig-corrfig" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/correlation.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.1: Correlation</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.1: Correlation</figcaption>
 </figure>
 </div>
 </section>
@@ -338,7 +355,7 @@ d_{ij} = \sigma_{ij} = \frac{1}{N}\sum_{s=1}^{N}(x_{si}-\mu_{i})(x_{sj}-\mu_{j})
 <div id="fig-density0" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/density2x2.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.2: Density Matrix Plot</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.2: Density Matrix Plot</figcaption>
 </figure>
 </div>
 </section>
@@ -398,21 +415,21 @@ S = X_{0}a.
 <div id="fig-pcasimfig" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/PCAsimulated-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.3: Simulated Data with Two Features</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.3: Simulated Data with Two Features</figcaption>
 </figure>
 </div>
 <p>How can we get a better grip on our data in this situation? We can try to find a “direction” in our data that better illuminates the variation of the data. For example, suppose that we pick a unit vector at the origin pointing in a particular direction in our data. See <a href="#fig-pcasimfig-1">Figure&nbsp;<span>2.4</span></a>.</p>
 <div id="fig-pcasimfig-1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/PCAsimulated-2.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.4: A direction in the data</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.4: A direction in the data</figcaption>
 </figure>
 </div>
 <p>Now we can orthogonally project the datapoints onto the line defined by this vector, as shown in <a href="#fig-pcasimfig-2">Figure&nbsp;<span>2.5</span></a>.</p>
 <div id="fig-pcasimfig-2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/PCAsimulated-3.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.5: Projecting the datapoints</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.5: Projecting the datapoints</figcaption>
 </figure>
 </div>
 <p>Recall that if the unit vector is defined by coordinates <span class="math inline">\(u=[u_0,u_1]\)</span>, then the orthogonal projection of the point <span class="math inline">\(x\)</span> with coordinates <span class="math inline">\((x_0,x_1)\)</span> is <span class="math inline">\((x\cdot u)u\)</span>. Now <span class="math display">\[
@@ -423,7 +440,7 @@ Z = X_0 u
 <div id="fig-pcasimfig-3" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/PCAsimulated-4.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.6: Distribution of Z</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.6: Distribution of Z</figcaption>
 </figure>
 </div>
 <p>This histogram shows the distribution of the values of <span class="math inline">\(Z\)</span> along the tilted line defined by the unit vector <span class="math inline">\(u\)</span>.</p>
@@ -450,14 +467,14 @@ u(\theta) = \left[\begin{matrix} \cos(\theta) &amp; \sin(\theta)\end{matrix}\rig
 <div id="fig-pcatheta" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/PCAtheta.png" class="img-fluid figure-img" style="width:25.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.7: Change of variance with angle theta</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.7: Change of variance with angle theta</figcaption>
 </figure>
 </div>
 <p>The two directions where the variance is maximum and minimum are drawn on the original data scatter plot in <a href="#fig-pcaprincipal">Figure&nbsp;<span>2.8</span></a> .</p>
 <div id="fig-pcaprincipal" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/PCAprincipal.png" class="img-fluid figure-img" style="width:25.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.8: Data with principal directions</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.8: Data with principal directions</figcaption>
 </figure>
 </div>
 <p>Let’s try to understand why this is happening.</p>
@@ -743,7 +760,7 @@ H(v) = \max_{v\not = 0}\frac{v^{\intercal}Dv}{v^{\intercal}v}.
 <div id="fig-features" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/features.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.9: Scatter Plot of Two Features</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.9: Scatter Plot of Two Features</figcaption>
 </figure>
 </div>
 <p>Unfortunately there’s not much to see in <a href="#fig-features">Figure&nbsp;<span>2.9</span></a> – just a blob – because the individual features of the data don’t tell us much in isolation, whatever structure there is in this data arises out of the relationship between different features.</p>
@@ -751,14 +768,14 @@ H(v) = \max_{v\not = 0}\frac{v^{\intercal}Dv}{v^{\intercal}v}.
 <div id="fig-densitygrid" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/density.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.10: Density Grid Plot of All Features</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.10: Density Grid Plot of All Features</figcaption>
 </figure>
 </div>
 <p>So let’s apply the theory of principal components. We use a software package to compute the eigenvalues and eigenvectors of the matrix <span class="math inline">\(D_{0}\)</span>. The <span class="math inline">\(15\)</span> eigenvalues <span class="math inline">\(\lambda_{1}\ge \cdots \ge \lambda_{15}\)</span> are plotted, in descending order, in <a href="#fig-eigenvalues">Figure&nbsp;<span>2.11</span></a> .</p>
 <div id="fig-eigenvalues" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/eigenvalues.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.11: Eigenvalues of the Covariance Matrix</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.11: Eigenvalues of the Covariance Matrix</figcaption>
 </figure>
 </div>
 <p>This plot shows that the first <span class="math inline">\(4\)</span> eigenvalues are relatively large, while the remaining <span class="math inline">\(11\)</span> are smaller and not much different from each other. We interpret this as saying that <em>most of the variation in the data is accounted for by the first four principal components.</em> We can even make this quantitative. The <em>total variance</em> of the data is the sum of the eigenvalues of the covariance matrix – the trace of <span class="math inline">\(D_{0}\)</span> – and in this example that sum is around <span class="math inline">\(5\)</span>. The sum of the first <span class="math inline">\(4\)</span> eigenvalues is about <span class="math inline">\(4\)</span>, so the first four eignvalues account for about <span class="math inline">\(4/5\)</span> of the total variance, or about <span class="math inline">\(80\%\)</span> of the variation of the data.</p>
@@ -766,7 +783,7 @@ H(v) = \max_{v\not = 0}\frac{v^{\intercal}Dv}{v^{\intercal}v}.
 <div id="fig-principalvalues" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/pcadimred.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.12: Scatter Plot of Scores in the First Two Principal Directions</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.12: Scatter Plot of Scores in the First Two Principal Directions</figcaption>
 </figure>
 </div>
 <p>Notice that suddenly some structure emerges in our data! We can see that the 200 points are separated into five clusters, distinguished by the values of their scores! This ability to find hidden structure in complicated data, is one of the most important applications of principal components.</p>
@@ -780,7 +797,7 @@ H(v) = \max_{v\not = 0}\frac{v^{\intercal}Dv}{v^{\intercal}v}.
 <div id="fig-loadings" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/loading.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.13: Loadings in the Principal Component Plane</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2.13: Loadings in the Principal Component Plane</figcaption>
 </figure>
 </div>
 </section>
@@ -946,9 +963,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1013,6 +1044,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -1067,7 +1184,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-      <div class="nav-footer-center">© 2021. This work is licensed by Jeremy Teitelbaum under the <a href="http://creativecommons.org/licenses/by-sa/4.0">Creative Commons Attribution-ShareAlike License</a>.</div>
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">© 2021. This work is licensed by Jeremy Teitelbaum under the <a href="http://creativecommons.org/licenses/by-sa/4.0">Creative Commons Attribution-ShareAlike License</a>.</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
   </div>
 </footer>
 
