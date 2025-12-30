@@ -4,11 +4,11 @@ project:
 book:
   title: "Lectures on Machine Learning"
   author: "Jeremy Teitelbaum"
-  date: "12/1/2022"
+  date: "1/1/2026"
   license: "CC BY-SA"
   page-footer:
     center: |
-      &copy; 2021. This work is licensed by Jeremy Teitelbaum under the [Creative Commons Attribution-ShareAlike License](http://creativecommons.org/licenses/by-sa/4.0).
+      &copy; 2026. This work is licensed by Jeremy Teitelbaum under the [Creative Commons Attribution-ShareAlike License](http://creativecommons.org/licenses/by-sa/4.0).
   chapters:
     - index.qmd
     - chapters/01-linear-regression.md

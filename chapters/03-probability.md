@@ -617,7 +617,7 @@ of this matrix were the covariances of samples from the  various random variable
 The theoretical origin of the covariance matrix arises from the "multivariate normal distribution" which generalizes the one-dimensional
 normal distribution and the more general distribution of $n$ independent normal random variables. 
 
-A more general multivariate gaussian can be constructed from a covariance matrix $D_{0}$, where
+A general multivariate gaussian can be constructed from a covariance matrix $D_{0}$, where
 $D_{0}$ is an $n\times n$,  symmetric, positive definite matrix like we considered in the chapter on principal component
 analysis.  In this case, the probability that an $n$-dimensional vector $x$ lies in a set $U\subset \mathbf{R}^{n}$
 is given by the integral
