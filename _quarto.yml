@@ -14,6 +14,7 @@ book:
     - chapters/01-linear-regression.md
     - chapters/02-pca.md
     - chapters/03-probability.md
+    - chapters/03-1-Bayesian-Inference.md
     - chapters/04-naive-bayes.md
     - chapters/05-1-gradient-descent.md
     - chapters/05-logistic-regression.md
