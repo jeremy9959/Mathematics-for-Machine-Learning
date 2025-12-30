@@ -427,36 +427,12 @@ P=P(|t_1-t_0|&lt;\delta,|t_2-t_0|&lt;\delta,\ldots) = P(|t_1-t_0|&lt;\delta)P(|t
 P = \left(\frac{1}{\sigma\sqrt{2\pi}}\right)^{10}\int_{-\delta}^{\delta}\cdots\int_{-\delta}^{\delta}
 e^{-(\sum_{i=1}^{10} x_i^2)/2\sigma^2} dx_1\cdots dx_{10}
 \]</span></p>
-</section>
-<section id="multivariate-gaussian-distribution" class="level4" data-number="3.4.1.4">
-<h4 data-number="3.4.1.4" class="anchored" data-anchor-id="multivariate-gaussian-distribution"><span class="header-section-number">3.4.1.4</span> Multivariate Gaussian Distribution</h4>
 <p>One way to look at this type of multivariate distribution is that the vector <span class="math inline">\(\mathbf{e}\)</span> of errors <span class="math inline">\((|t_1-t_0|,\ldots,|t_{10}-t_0|)\)</span> is distributed according to a <em>multivariate gaussian distribution</em>: <span id="eq-multivariategaussian"><span class="math display">\[
 P(\mathbf{e}\in U) =\left(\frac{1}{\sigma\sqrt{2\pi}}\right)^{10}\int_{U}
 e^{-\|x\|^2/2\sigma^2} d\mathbf{x}
 \tag{3.3}\]</span></span></p>
 <p>where <span class="math inline">\(x\)</span> is the vector of differences <span class="math inline">\(t_{i}-t_{0}\)</span> and <span class="math inline">\(U\)</span> is a region in <span class="math inline">\(\mathbf{R}^{10}\)</span>.</p>
 <p>In particular, the magnitude <span class="math inline">\(\|x\|\)</span>of the error vector <span class="math inline">\(x\)</span> is normally distributed.</p>
-<p>A more general multivariate gaussian can be constructed from a covariance matrix <span class="math inline">\(D_{0}\)</span>, where <span class="math inline">\(D_{0}\)</span> is an <span class="math inline">\(n\times n\)</span>, symmetric, positive definite matrix like we considered in the chapter on principal component analysis. In this case, the probability that an <span class="math inline">\(n\)</span>-dimensional vector <span class="math inline">\(x\)</span> lies in a set <span class="math inline">\(U\subset \mathbf{R}^{n}\)</span> is given by the integral</p>
-<p><span class="math display">\[
-P(x\in U) = \frac{1}{(2\pi)^{n/2}\sqrt{\det(D_{0})}}\int_{U} e^{-x^{T}D_{0}^{-1}x/2} d\mathbf{x}.
-\]</span></p>
-<p>If a random vector <span class="math inline">\(x=(x_1,\ldots, x_n)\)</span> has this distribution, then the individual components <span class="math inline">\(x_{i}\)</span> are normally distributed with variances given by the diagonal entries of <span class="math inline">\(D_{0}\)</span>, and covariances corresponding to the off-diagonal entries. In other words, <span class="math inline">\(D_{0}\)</span> is the covariance matrix of the components of <span class="math inline">\(x\)</span>.</p>
-<p>To see this, imagine that <span class="math inline">\(x\)</span> has the given distribution. Using the spectral theorem, we can write <span class="math inline">\(D_{0}=V\Lambda V^{T}\)</span> where <span class="math inline">\(V\)</span> is an orthogonal matrix and <span class="math inline">\(\Lambda\)</span> is a diagonal matrix with positive entries <span class="math inline">\(\lambda_{1},\ldots, \lambda_{n}\)</span>.</p>
-<p>If <span class="math inline">\(y=V^{T}x\)</span>, which is a rotation of the random vector <span class="math inline">\(x=Vy\)</span>, then the exponential in the probability density function becomes <span class="math display">\[
-x^{T}D_{0}^{-1}x = y^{T}V^{T}D_{0}^{-1}Vy = y^{T}V^{T}V\Lambda^{-1}V^{T}Vy = y^{T}\Lambda^{-1}y.
-\]</span></p>
-<p>In other words, the individual components <span class="math inline">\(y_{i}\)</span> of <span class="math inline">\(y\)</span> are independent normal random variables with variances <span class="math inline">\(\lambda_{i}\)</span>. The matrix <span class="math inline">\(n\times n\)</span> matrix <span class="math inline">\(xx^{T}\)</span> has entries <span class="math inline">\(x_{i}x_{j}\)</span>, so the expected values of the entries are the variances/covariances of the <span class="math inline">\(x_{i}\)</span>. But <span class="math display">\[
-E(xx^{T})=E(Vyy^{T}V^{T}) = VE(yy^{T})V^{T} = V\Lambda V^{T}=D_{0}..
-\]</span></p>
-<p>In other words, the covariance matrix of the components of <span class="math inline">\(x\)</span> is <span class="math inline">\(D_{0}\)</span>.</p>
-<p>This density function as a “bump” concentrated near the origin in <span class="math inline">\(\mathbf{R}^{2}\)</span>, and its level curves are a family of ellipses centered at the origin. See <a href="#fig-multivariate">Figure&nbsp;<span>3.3</span></a> for a plot of this function with <span class="math inline">\(\sigma=1\)</span>.</p>
-<div id="fig-multivariate" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="img/ellipse.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.3: Multivariate Gaussian</figcaption>
-</figure>
-</div>
-<p>In this situation we can look at the conditional probability of the first variable given the second, and see that the two variables are not independent. Indeed, if we fix <span class="math inline">\(x_2\)</span>, then the distribution of <span class="math inline">\(x_1\)</span> depends on our choice of <span class="math inline">\(x_2\)</span>. We could see this by a calculation, or we can just look at the graph: if <span class="math inline">\(x_2=0\)</span>, then the most likely values of <span class="math inline">\(x_1\)</span> cluster near zero, while if <span class="math inline">\(x_2=1\)</span>, then the most likely values of <span class="math inline">\(x_1\)</span> cluster somewhere above zero.</p>
 </section>
 </section>
 </section>
@@ -498,11 +474,11 @@ P(f&lt;r)&amp;=-\frac{1}{2\pi}\theta e^{-\rho^2/2}|_{\theta=0}^{2\pi}|_{\rho=0}^
 \end{align*}\]</span></p>
 <p>The probability density associated with this random variable is the derivative of <span class="math inline">\(1-e^{-r^2/2}\)</span> <span class="math display">\[
 P(f\in [a,b])=\int_{r=a}^{b} re^{-r^2/2} dr
-\]</span> as you can see by the fundamental theorem of calculus. This density is drawn in <a href="#fig-maxwell">Figure&nbsp;<span>3.4</span></a> where you can see that the points are clustered at a distance of <span class="math inline">\(1\)</span> from the origin.</p>
+\]</span> as you can see by the fundamental theorem of calculus. This density is drawn in <a href="#fig-maxwell">Figure&nbsp;<span>3.3</span></a> where you can see that the points are clustered at a distance of <span class="math inline">\(1\)</span> from the origin.</p>
 <div id="fig-maxwell" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/maxwell.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.4: Density of the Norm</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.3: Density of the Norm</figcaption>
 </figure>
 </div>
 <section id="independence-and-random-variables" class="level3" data-number="3.5.1">
@@ -588,6 +564,38 @@ E[x^2] = \frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^{\infty} x^2e^{-x^2/2\sigma^2
 E[x^2]=\sigma^2
 \]</span></p>
 <p>so that the <span class="math inline">\(\sigma^2\)</span> parameter in the normal distribution really <em>is</em> the variance of the associated random variable.</p>
+</section>
+<section id="covariance-and-the-multivariate-normal-distribution" class="level4" data-number="3.5.2.2">
+<h4 data-number="3.5.2.2" class="anchored" data-anchor-id="covariance-and-the-multivariate-normal-distribution"><span class="header-section-number">3.5.2.2</span> Covariance and the Multivariate Normal Distribution</h4>
+<p>Given two random variables <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span>, we can measure how much they vary together by looking at their covariance, which is the expected value of the product of their deviations from their means: <span class="math display">\[
+\hbox{Cov}(f,g) = E[(f-E[f])(g-E[g])]=E[fg]-E[f]E[g].
+\]</span></p>
+<p>If <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are independent, then their covariance is zero.</p>
+<p>In our discussion of linear regression and principal components, we made use of the “covariance matrix” <span class="math inline">\(D_{0}\)</span> which was computed from sample data as <span class="math inline">\(X_{0}^{T}X_{0}/N\)</span> where <span class="math inline">\(X_{0}\)</span> was the mean-centered data matrix. The entries of this matrix were the covariances of samples from the various random variables corresponding to the columns of <span class="math inline">\(X\)</span>.</p>
+<p>The theoretical origin of the covariance matrix arises from the “multivariate normal distribution” which generalizes the one-dimensional normal distribution and the more general distribution of <span class="math inline">\(n\)</span> independent normal random variables.</p>
+<p>A more general multivariate gaussian can be constructed from a covariance matrix <span class="math inline">\(D_{0}\)</span>, where <span class="math inline">\(D_{0}\)</span> is an <span class="math inline">\(n\times n\)</span>, symmetric, positive definite matrix like we considered in the chapter on principal component analysis. In this case, the probability that an <span class="math inline">\(n\)</span>-dimensional vector <span class="math inline">\(x\)</span> lies in a set <span class="math inline">\(U\subset \mathbf{R}^{n}\)</span> is given by the integral</p>
+<p><span class="math display">\[
+P(x\in U) = \frac{1}{(2\pi)^{n/2}\sqrt{\det(D_{0})}}\int_{U} e^{-x^{T}D_{0}^{-1}x/2} d\mathbf{x}.
+\]</span></p>
+<p>If a random vector <span class="math inline">\(x=(x_1,\ldots, x_n)\)</span> has this distribution, then the individual components <span class="math inline">\(x_{i}\)</span> are normally distributed with variances given by the diagonal entries of <span class="math inline">\(D_{0}\)</span>, and covariances corresponding to the off-diagonal entries. In other words, <span class="math inline">\(D_{0}\)</span> is the covariance matrix of the components of <span class="math inline">\(x\)</span>.</p>
+<p>To see this, imagine that <span class="math inline">\(x\)</span> has the given distribution. Using the spectral theorem, we can write <span class="math inline">\(D_{0}=V\Lambda V^{T}\)</span> where <span class="math inline">\(V\)</span> is an orthogonal matrix and <span class="math inline">\(\Lambda\)</span> is a diagonal matrix with positive entries <span class="math inline">\(\lambda_{1},\ldots, \lambda_{n}\)</span>.</p>
+<p>If <span class="math inline">\(y=V^{T}x\)</span>, which is a rotation of the random vector <span class="math inline">\(x=Vy\)</span>, then the exponential in the probability density function becomes <span class="math display">\[
+x^{T}D_{0}^{-1}x = y^{T}V^{T}D_{0}^{-1}Vy = y^{T}V^{T}V\Lambda^{-1}V^{T}Vy = y^{T}\Lambda^{-1}y.
+\]</span></p>
+<p>Since <span class="math inline">\(\Lambda\)</span> is diagonal, the normalizing constant <span class="math inline">\(\sqrt{\det(D_{0})}=\sqrt{\prod_{i=1}^{n}\lambda_{i}}\)</span> becomes the square root of the product of the variances <span class="math inline">\(\lambda_{i}\)</span>, and the density function is visibly the product of <span class="math inline">\(n\)</span> independent normal distributions with variances <span class="math inline">\(\lambda_{i}\)</span>.</p>
+<p>In other words, the random vector <span class="math inline">\(v\)</span>, when rotated into the coordinates given by the eigenvectors of <span class="math inline">\(D_{0}\)</span>, becomes a vector <span class="math inline">\(y\)</span> whose components are independent normal random variables with variances <span class="math inline">\(\lambda_{i}\)</span>.</p>
+<p>WOrking backwards, we can find the covariance matrix of the <span class="math inline">\(x_{i}\)</span>. The matrix <span class="math inline">\(n\times n\)</span> matrix <span class="math inline">\(xx^{T}\)</span> has entries <span class="math inline">\(x_{i}x_{j}\)</span>, so the expected values of the entries are the variances/covariances of the <span class="math inline">\(x_{i}\)</span>. But <span class="math display">\[
+E(xx^{T})=E(Vyy^{T}V^{T}) = VE(yy^{T})V^{T} = V\Lambda V^{T}=D_{0}.
+\]</span></p>
+<p>In other words, the covariance matrix of the components of <span class="math inline">\(x\)</span> is <span class="math inline">\(D_{0}\)</span>.</p>
+<p>This density function as a “bump” concentrated near the origin in <span class="math inline">\(\mathbf{R}^{2}\)</span>, and its level curves are a family of ellipses centered at the origin. See <a href="#fig-multivariate">Figure&nbsp;<span>3.4</span></a> for a plot of this function with <span class="math inline">\(\sigma=1\)</span>.</p>
+<div id="fig-multivariate" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/ellipse.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.4: Multivariate Gaussian</figcaption>
+</figure>
+</div>
+<p>In this situation we can look at the conditional probability of the first variable given the second, and see that the two variables are not independent. Indeed, if we fix <span class="math inline">\(x_2\)</span>, then the distribution of <span class="math inline">\(x_1\)</span> depends on our choice of <span class="math inline">\(x_2\)</span>. We could see this by a calculation, or we can just look at the graph: if <span class="math inline">\(x_2=0\)</span>, then the most likely values of <span class="math inline">\(x_1\)</span> cluster near zero, while if <span class="math inline">\(x_2=1\)</span>, then the most likely values of <span class="math inline">\(x_1\)</span> cluster somewhere above zero.</p>
 </section>
 </section>
 </section>
