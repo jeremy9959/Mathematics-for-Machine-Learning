@@ -427,16 +427,28 @@ P=P(|t_1-t_0|&lt;\delta,|t_2-t_0|&lt;\delta,\ldots) = P(|t_1-t_0|&lt;\delta)P(|t
 P = \left(\frac{1}{\sigma\sqrt{2\pi}}\right)^{10}\int_{-\delta}^{\delta}\cdots\int_{-\delta}^{\delta}
 e^{-(\sum_{i=1}^{10} x_i^2)/2\sigma^2} dx_1\cdots dx_{10}
 \]</span></p>
-<p>One way to look at this is that the vector <span class="math inline">\(\mathbf{e}\)</span> of errors <span class="math inline">\((|t_1-t_0|,\ldots,|t_{10}-t_0|)\)</span> is distributed according to a <em>multivariate gaussian distribution</em>: <span id="eq-multivariategaussian"><span class="math display">\[
+</section>
+<section id="multivariate-gaussian-distribution" class="level4" data-number="3.4.1.4">
+<h4 data-number="3.4.1.4" class="anchored" data-anchor-id="multivariate-gaussian-distribution"><span class="header-section-number">3.4.1.4</span> Multivariate Gaussian Distribution</h4>
+<p>One way to look at this type of multivariate distribution is that the vector <span class="math inline">\(\mathbf{e}\)</span> of errors <span class="math inline">\((|t_1-t_0|,\ldots,|t_{10}-t_0|)\)</span> is distributed according to a <em>multivariate gaussian distribution</em>: <span id="eq-multivariategaussian"><span class="math display">\[
 P(\mathbf{e}\in U) =\left(\frac{1}{\sigma\sqrt{2\pi}}\right)^{10}\int_{U}
 e^{-\|x\|^2/2\sigma^2} d\mathbf{x}
 \tag{3.3}\]</span></span></p>
-<p>where <span class="math inline">\(U\)</span> is a region in <span class="math inline">\(\mathbf{R}^{10}\)</span>.</p>
-<p>The multivariate gaussian can also describe situations where independence does not hold. For simplicity, let’s work in two dimensions and consider the probability density on <span class="math inline">\(\mathbf{R}^{2}\)</span> given by <span class="math display">\[
-P(\mathbf{e}\in U) = A\int_{U} e^{-(x_1^2-x_1x_2+x_2^2)/2\sigma^2} d\mathbf{x}.
-\]</span> where the constant <span class="math inline">\(A\)</span> is chosen so that <span class="math display">\[
-A\int_{\mathbf{R}^{2}}e^{-(x_1^2-x_1x_2+x_2^2)/2\sigma^2}d\mathbf{x} = 1.
+<p>where <span class="math inline">\(x\)</span> is the vector of differences <span class="math inline">\(t_{i}-t_{0}\)</span> and <span class="math inline">\(U\)</span> is a region in <span class="math inline">\(\mathbf{R}^{10}\)</span>.</p>
+<p>In particular, the magnitude <span class="math inline">\(\|x\|\)</span>of the error vector <span class="math inline">\(x\)</span> is normally distributed.</p>
+<p>A more general multivariate gaussian can be constructed from a covariance matrix <span class="math inline">\(D_{0}\)</span>, where <span class="math inline">\(D_{0}\)</span> is an <span class="math inline">\(n\times n\)</span>, symmetric, positive definite matrix like we considered in the chapter on principal component analysis. In this case, the probability that an <span class="math inline">\(n\)</span>-dimensional vector <span class="math inline">\(x\)</span> lies in a set <span class="math inline">\(U\subset \mathbf{R}^{n}\)</span> is given by the integral</p>
+<p><span class="math display">\[
+P(x\in U) = \frac{1}{(2\pi)^{n/2}\sqrt{\det(D_{0})}}\int_{U} e^{-x^{T}D_{0}^{-1}x/2} d\mathbf{x}.
 \]</span></p>
+<p>If a random vector <span class="math inline">\(x=(x_1,\ldots, x_n)\)</span> has this distribution, then the individual components <span class="math inline">\(x_{i}\)</span> are normally distributed with variances given by the diagonal entries of <span class="math inline">\(D_{0}\)</span>, and covariances corresponding to the off-diagonal entries. In other words, <span class="math inline">\(D_{0}\)</span> is the covariance matrix of the components of <span class="math inline">\(x\)</span>.</p>
+<p>To see this, imagine that <span class="math inline">\(x\)</span> has the given distribution. Using the spectral theorem, we can write <span class="math inline">\(D_{0}=V\Lambda V^{T}\)</span> where <span class="math inline">\(V\)</span> is an orthogonal matrix and <span class="math inline">\(\Lambda\)</span> is a diagonal matrix with positive entries <span class="math inline">\(\lambda_{1},\ldots, \lambda_{n}\)</span>.</p>
+<p>If <span class="math inline">\(y=V^{T}x\)</span>, which is a rotation of the random vector <span class="math inline">\(x=Vy\)</span>, then the exponential in the probability density function becomes <span class="math display">\[
+x^{T}D_{0}^{-1}x = y^{T}V^{T}D_{0}^{-1}Vy = y^{T}V^{T}V\Lambda^{-1}V^{T}Vy = y^{T}\Lambda^{-1}y.
+\]</span></p>
+<p>In other words, the individual components <span class="math inline">\(y_{i}\)</span> of <span class="math inline">\(y\)</span> are independent normal random variables with variances <span class="math inline">\(\lambda_{i}\)</span>. The matrix <span class="math inline">\(n\times n\)</span> matrix <span class="math inline">\(xx^{T}\)</span> has entries <span class="math inline">\(x_{i}x_{j}\)</span>, so the expected values of the entries are the variances/covariances of the <span class="math inline">\(x_{i}\)</span>. But <span class="math display">\[
+E(xx^{T})=E(Vyy^{T}V^{T}) = VE(yy^{T})V^{T} = V\Lambda V^{T}=D_{0}..
+\]</span></p>
+<p>In other words, the covariance matrix of the components of <span class="math inline">\(x\)</span> is <span class="math inline">\(D_{0}\)</span>.</p>
 <p>This density function as a “bump” concentrated near the origin in <span class="math inline">\(\mathbf{R}^{2}\)</span>, and its level curves are a family of ellipses centered at the origin. See <a href="#fig-multivariate">Figure&nbsp;<span>3.3</span></a> for a plot of this function with <span class="math inline">\(\sigma=1\)</span>.</p>
 <div id="fig-multivariate" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
