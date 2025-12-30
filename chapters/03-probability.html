@@ -49,7 +49,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/04-naive-bayes.html" rel="next">
+<link href="../chapters/03-1-Bayesian-Inference.html" rel="next">
 <link href="../chapters/02-pca.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -146,26 +146,32 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../chapters/03-1-Bayesian-Inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Inference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../chapters/04-naive-bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/05-1-gradient-descent.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Gradient Descent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Gradient Descent</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/05-logistic-regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logistic Regression</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Logistic Regression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/06-svm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -573,7 +579,7 @@ E[x^2]=\sigma^2
 <p>If <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are independent, then their covariance is zero.</p>
 <p>In our discussion of linear regression and principal components, we made use of the “covariance matrix” <span class="math inline">\(D_{0}\)</span> which was computed from sample data as <span class="math inline">\(X_{0}^{T}X_{0}/N\)</span> where <span class="math inline">\(X_{0}\)</span> was the mean-centered data matrix. The entries of this matrix were the covariances of samples from the various random variables corresponding to the columns of <span class="math inline">\(X\)</span>.</p>
 <p>The theoretical origin of the covariance matrix arises from the “multivariate normal distribution” which generalizes the one-dimensional normal distribution and the more general distribution of <span class="math inline">\(n\)</span> independent normal random variables.</p>
-<p>A more general multivariate gaussian can be constructed from a covariance matrix <span class="math inline">\(D_{0}\)</span>, where <span class="math inline">\(D_{0}\)</span> is an <span class="math inline">\(n\times n\)</span>, symmetric, positive definite matrix like we considered in the chapter on principal component analysis. In this case, the probability that an <span class="math inline">\(n\)</span>-dimensional vector <span class="math inline">\(x\)</span> lies in a set <span class="math inline">\(U\subset \mathbf{R}^{n}\)</span> is given by the integral</p>
+<p>A general multivariate gaussian can be constructed from a covariance matrix <span class="math inline">\(D_{0}\)</span>, where <span class="math inline">\(D_{0}\)</span> is an <span class="math inline">\(n\times n\)</span>, symmetric, positive definite matrix like we considered in the chapter on principal component analysis. In this case, the probability that an <span class="math inline">\(n\)</span>-dimensional vector <span class="math inline">\(x\)</span> lies in a set <span class="math inline">\(U\subset \mathbf{R}^{n}\)</span> is given by the integral</p>
 <p><span class="math display">\[
 P(x\in U) = \frac{1}{(2\pi)^{n/2}\sqrt{\det(D_{0})}}\int_{U} e^{-x^{T}D_{0}^{-1}x/2} d\mathbf{x}.
 \]</span></p>
@@ -660,14 +666,14 @@ Y=X\beta+\epsilon
 <p>We conclude our review of ideas from probability by examining the Bayesian perspective on data.</p>
 <p>Suppose that we wish to conduct an experiment to determine the temperature outside our house. We begin our experiment with a statistical model that is supposed to explain the variability in the results. The model depends on some parameters that we wish to estimate. For example, the parameters of our experiment might be the ‘true’ temperature <span class="math inline">\(t_*\)</span> and the variance <span class="math inline">\(\sigma^2\)</span> of the error.</p>
 <p>From the Bayesian point of view, at the beginning of this experiment we have an initial sense of what the temperature is likely to be, expressed in the form of a probability distribution. This initial information is called the <em>prior</em> distribution.</p>
-<p>For example, if we know that it’s December in Connecticut, our prior distribution might say that the temperature is more likely to be between 20 and 40 degrees Fahrenheit and is quite unlikely to be higher than 60 or lower than 0. So our prior distribution might look like <a href="#fig-tempprior">Figure&nbsp;<span>3.6</span></a>.</p>
+<p>For example, if we know that it’s December in Connecticut, our prior distribution might say that the temperature is more likely to be between 20 and 40 degrees Fahrenheit and is quite unlikely to be higher than 60 or lower than 0. So our prior distribution might look like <a href="03-1-Bayesian-Inference.html#fig-tempprior">Figure&nbsp;<span>4.13</span></a>.</p>
 <div id="fig-tempprior" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/prior.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Figure&nbsp;3.6: Prior Distribution on Temperature</figcaption>
 </figure>
 </div>
-<p>If we really have no opinion about the temperature other than its between say, <span class="math inline">\(-20\)</span> and <span class="math inline">\(100\)</span> degrees, our prior distribution might be uniform over that range, as in <a href="#fig-uniformprior">Figure&nbsp;<span>3.7</span></a>.</p>
+<p>If we really have no opinion about the temperature other than its between say, <span class="math inline">\(-20\)</span> and <span class="math inline">\(100\)</span> degrees, our prior distribution might be uniform over that range, as in <a href="03-1-Bayesian-Inference.html#fig-uniformprior">Figure&nbsp;<span>4.14</span></a>.</p>
 <div id="fig-uniformprior" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/uniform.png" class="img-fluid figure-img"></p>
@@ -693,7 +699,7 @@ P(\mathbf{t}=\mathbf{t}_{0})=\int_{t_{*},\sigma^2}P(\mathbf{t}=\mathbf{t}_{0}|t_
 </ul>
 <section id="bayesian-experiments-with-the-normal-distribution" class="level3" data-number="3.7.1">
 <h3 data-number="3.7.1" class="anchored" data-anchor-id="bayesian-experiments-with-the-normal-distribution"><span class="header-section-number">3.7.1</span> Bayesian experiments with the normal distribution</h3>
-<p>To illustrate these Bayesian ideas, we’ll consider the problem of measuring the temperature, but for simplicity let’s assume that we fix the variance in our error measurements at <span class="math inline">\(1\)</span> degree. Let’s use the prior distribution on the true temperature that I proposed in <a href="#fig-tempprior">Figure&nbsp;<span>3.6</span></a>, which is a normal distribution with variance <span class="math inline">\(15\)</span> “shifted” to be centered at <span class="math inline">\(30\)</span>: <span class="math display">\[
+<p>To illustrate these Bayesian ideas, we’ll consider the problem of measuring the temperature, but for simplicity let’s assume that we fix the variance in our error measurements at <span class="math inline">\(1\)</span> degree. Let’s use the prior distribution on the true temperature that I proposed in <a href="03-1-Bayesian-Inference.html#fig-tempprior">Figure&nbsp;<span>4.13</span></a>, which is a normal distribution with variance <span class="math inline">\(15\)</span> “shifted” to be centered at <span class="math inline">\(30\)</span>: <span class="math display">\[
 P(t_*)=\left(\frac{1}{\sqrt{2\pi}}\right)e^{-(t_*-30)^2/30}.
 \]</span> The expected value <span class="math inline">\(E[t]\)</span> – the mean of the this distribution – is <span class="math inline">\(30\)</span>.</p>
 <p>Since the error in our measurements is normally distributed with variance <span class="math inline">\(1\)</span>, we have <span class="math display">\[
@@ -734,7 +740,7 @@ e^{(t_{*}-U)^2/2V}
 <p>To make this explicit, suppose <span class="math inline">\(n=5\)</span> and we measured the following temperatures: <span class="math display">\[
 40, 41,39, 37, 44
 \]</span> The mean of these observations is <span class="math inline">\(40.2\)</span> and the variance is <span class="math inline">\(5.4\)</span>.</p>
-<p>A calculation shows that the posterior mean is <span class="math inline">\(40.1\)</span> and the posterior variance is <span class="math inline">\(0.2\)</span>. Comparing the prior with the posterior, we obtain the plot in <a href="#fig-comparison">Figure&nbsp;<span>3.8</span></a>. The posterior has a sharp peak at <span class="math inline">\(40.1\)</span> degrees. This value is just a bit smaller than the mean of the observed temperatures which is <span class="math inline">\(40.2\)</span> degrees. This difference is caused by the prior – our prior distribution said the temperature was likely to be around <span class="math inline">\(30\)</span> degrees, and so the prior pulls the observed mean a bit towards the prior mean taking into account past experience. Because the variance of the prior is large, it has a relatively small influence on the posterior.</p>
+<p>A calculation shows that the posterior mean is <span class="math inline">\(40.1\)</span> and the posterior variance is <span class="math inline">\(0.2\)</span>. Comparing the prior with the posterior, we obtain the plot in <a href="03-1-Bayesian-Inference.html#fig-comparison">Figure&nbsp;<span>4.15</span></a>. The posterior has a sharp peak at <span class="math inline">\(40.1\)</span> degrees. This value is just a bit smaller than the mean of the observed temperatures which is <span class="math inline">\(40.2\)</span> degrees. This difference is caused by the prior – our prior distribution said the temperature was likely to be around <span class="math inline">\(30\)</span> degrees, and so the prior pulls the observed mean a bit towards the prior mean taking into account past experience. Because the variance of the prior is large, it has a relatively small influence on the posterior.</p>
 <p>The general version of the calculation above is summarized in this proposition.</p>
 <p><strong>Proposition:</strong> Suppose that our statistical model for an experiment proposes that the measurements are normally distributed around an (unknown) mean value of <span class="math inline">\(\mu\)</span> with a (fixed) variance <span class="math inline">\(\sigma^2\)</span>. Suppose further that our prior distribution on the unknown mean <span class="math inline">\(\mu\)</span> is normal with mean <span class="math inline">\(\mu_0\)</span> and variance <span class="math inline">\(\tau^2\)</span>. Suppose we make measurements <span class="math display">\[
 y_1,\ldots, y_n
@@ -785,7 +791,7 @@ E[p]=\frac{h+1}{N+2}.
 <p>So if we obtained <span class="math inline">\(55\)</span> heads out of <span class="math inline">\(100\)</span> flips, the maximum a posteriori estimate for <span class="math inline">\(p\)</span> is <span class="math inline">\(.55\)</span>, while the posterior mean is <span class="math inline">\(56/102=.549\)</span> – just a bit less.</p>
 <p>Now suppose that we had some reason to believe that our coin was fair. Then we can choose a prior probability distribution that expresses this. For example, we can choose <span class="math display">\[
 P(p) = \frac{1}{B(5,5)}p^{4}(1-p)^{4}.
-\]</span> Here we use the Beta function to guarantee that <span class="math inline">\(\int_{0}^{1}P(p)dp=1\)</span>. We show this prior distribution in <a href="#fig-betaprior">Figure&nbsp;<span>3.9</span></a>.</p>
+\]</span> Here we use the Beta function to guarantee that <span class="math inline">\(\int_{0}^{1}P(p)dp=1\)</span>. We show this prior distribution in <a href="03-1-Bayesian-Inference.html#fig-betaprior">Figure&nbsp;<span>4.16</span></a>.</p>
 <div id="fig-betaprior" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/betaprior.png" class="img-fluid figure-img"></p>
@@ -826,9 +832,9 @@ M_{r}=(X^{\intercal}X+s)^{-1}X^{\intercal}Y
 <section id="practical-aspects-of-ridge-regression" class="level4" data-number="3.7.3.1">
 <h4 data-number="3.7.3.1" class="anchored" data-anchor-id="practical-aspects-of-ridge-regression"><span class="header-section-number">3.7.3.1</span> Practical aspects of ridge regression</h4>
 <p>Using ridge regression leads to a solution to the least squares problem in which the regression coefficients are biased towards being smaller. Beyond this, there are a number of implications of the technique which affect its use in practice.</p>
-<p>First, we can put the Bayesian derivation of the ridge regression formulae in the background and focus our attention on <a href="#eq-ridgecoeffs">Equation&nbsp;<span>3.5</span></a>. We can treat the parameter <span class="math inline">\(s\)</span> (which must be non-negative) as “adjustable”.</p>
-<p>One important consideration when using ridge regression is that <a href="#eq-ridgecoeffs">Equation&nbsp;<span>3.5</span></a> is not invariant if we scale <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> by a constant. This is different from “plain” regression where we consider the equation <span class="math inline">\(Y=XM\)</span>. In that case, rescaling <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> by the same factor leaves the coefficients <span class="math inline">\(M\)</span> alone. For this reason, ridge regression is typically used on centered, standardized coordinates. In other words, we replace each feature <span class="math inline">\(x_i\)</span> by <span class="math inline">\((x_i-\mu_i)/\sigma_i\)</span> where <span class="math inline">\(\mu_i\)</span> and <span class="math inline">\(\sigma_i\)</span> are the sample mean and standard deviation of the <span class="math inline">\(i^{th}\)</span> feature, and we replace our response variables <span class="math inline">\(y_i\)</span> similarly by <span class="math inline">\((y-\mu)/\sigma\)</span> where <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span> are the mean and standard deviation of the <span class="math inline">\(y\)</span>-values. Then we find <span class="math inline">\(M\)</span> using <a href="#eq-ridgecoeffs">Equation&nbsp;<span>3.5</span></a>, perhaps experimenting with different values of <span class="math inline">\(s\)</span>, using our centered and standardized variables.</p>
-<p>To emphasize that we are using centered coordinates, we write <span class="math inline">\(X_{0}\)</span> for our data matrix instead of <span class="math inline">\(X\)</span>. Recall that the matrix <span class="math inline">\(X_0^{\intercal}X_0\)</span> that enters into <a href="#eq-ridgeformula">Equation&nbsp;<span>3.4</span></a> is <span class="math inline">\(ND_{0}\)</span> where <span class="math inline">\(D_{0}\)</span> is the covariance matrix. Therefore in ridge regression we have replaced <span class="math inline">\(ND_0\)</span> by <span class="math inline">\(ND_0+s\)</span>. Since <span class="math inline">\(D_0\)</span> is a real symmetric matrix, as we’ve seen in Chapter 2 it is diagonalizable so that <span class="math inline">\(AD_0A^{-1}\)</span> is diagonal for an orthogonal matrix <span class="math inline">\(A\)</span> and has eigenvalues <span class="math inline">\(\lambda_1\ge \ldots\ge \lambda_k\)</span> which are the variances of the data along the principal directions.</p>
+<p>First, we can put the Bayesian derivation of the ridge regression formulae in the background and focus our attention on <a href="03-1-Bayesian-Inference.html#eq-ridgecoeffs">Equation&nbsp;<span>4.8</span></a>. We can treat the parameter <span class="math inline">\(s\)</span> (which must be non-negative) as “adjustable”.</p>
+<p>One important consideration when using ridge regression is that <a href="03-1-Bayesian-Inference.html#eq-ridgecoeffs">Equation&nbsp;<span>4.8</span></a> is not invariant if we scale <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> by a constant. This is different from “plain” regression where we consider the equation <span class="math inline">\(Y=XM\)</span>. In that case, rescaling <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> by the same factor leaves the coefficients <span class="math inline">\(M\)</span> alone. For this reason, ridge regression is typically used on centered, standardized coordinates. In other words, we replace each feature <span class="math inline">\(x_i\)</span> by <span class="math inline">\((x_i-\mu_i)/\sigma_i\)</span> where <span class="math inline">\(\mu_i\)</span> and <span class="math inline">\(\sigma_i\)</span> are the sample mean and standard deviation of the <span class="math inline">\(i^{th}\)</span> feature, and we replace our response variables <span class="math inline">\(y_i\)</span> similarly by <span class="math inline">\((y-\mu)/\sigma\)</span> where <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span> are the mean and standard deviation of the <span class="math inline">\(y\)</span>-values. Then we find <span class="math inline">\(M\)</span> using <a href="03-1-Bayesian-Inference.html#eq-ridgecoeffs">Equation&nbsp;<span>4.8</span></a>, perhaps experimenting with different values of <span class="math inline">\(s\)</span>, using our centered and standardized variables.</p>
+<p>To emphasize that we are using centered coordinates, we write <span class="math inline">\(X_{0}\)</span> for our data matrix instead of <span class="math inline">\(X\)</span>. Recall that the matrix <span class="math inline">\(X_0^{\intercal}X_0\)</span> that enters into <a href="03-1-Bayesian-Inference.html#eq-ridgeformula">Equation&nbsp;<span>4.7</span></a> is <span class="math inline">\(ND_{0}\)</span> where <span class="math inline">\(D_{0}\)</span> is the covariance matrix. Therefore in ridge regression we have replaced <span class="math inline">\(ND_0\)</span> by <span class="math inline">\(ND_0+s\)</span>. Since <span class="math inline">\(D_0\)</span> is a real symmetric matrix, as we’ve seen in Chapter 2 it is diagonalizable so that <span class="math inline">\(AD_0A^{-1}\)</span> is diagonal for an orthogonal matrix <span class="math inline">\(A\)</span> and has eigenvalues <span class="math inline">\(\lambda_1\ge \ldots\ge \lambda_k\)</span> which are the variances of the data along the principal directions.</p>
 <p>One effect of using ridge regression is that the eigenvalues of <span class="math inline">\(ND_{0}+s\)</span> are always at least <span class="math inline">\(s&gt;0\)</span>, so the use of ridge regression avoids the possibility that <span class="math inline">\(D_{0}\)</span> might not be invertible. In fact, a bit more is true. Numerical analysis tells us that when considering the problem of computing the inverse of a matrix, we should look at its <em>condition number</em>, which is the ratio <span class="math inline">\(\lambda_1/\lambda_k\)</span> of the largest to the smallest eigenvalue.</p>
 <p>If the condition number of a matrix is large, then results from numerical analysis show that it is <em>almost singular</em> and its inverse becomes very sensitive to small changes in the entries of the matrix. However, the eigenvalues of <span class="math inline">\(ND_0+s\)</span> are <span class="math inline">\(N\lambda_{i}+s\)</span> and so the condition number becomes <span class="math inline">\((N\lambda_1+s)/(N\lambda_k+s)\)</span>. For larger values of <span class="math inline">\(\lambda\)</span>, this condition number shrinks, and so the inverse of the matrix <span class="math inline">\(ND_0+s\)</span> becomes better behaved than <span class="math inline">\(ND_{0}\)</span>. In this way, ridge regression helps to improve the numerical stability of the linear regression algorithm.</p>
 <p>A second way to look at Ridge regression is to go back to the discussion of the singular value decomposition of the matrix <span class="math inline">\(X_{0}\)</span> in section <a href="02-pca.html#sec-svd"><span>Section&nbsp;2.4.2</span></a>. There we showed that the SVD of <span class="math inline">\(X_{0}\)</span> yields an expression <span class="math display">\[
@@ -1100,8 +1106,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/04-naive-bayes.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/03-1-Bayesian-Inference.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Inference</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
