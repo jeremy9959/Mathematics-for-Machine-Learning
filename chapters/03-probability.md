@@ -334,36 +334,21 @@ P = \left(\frac{1}{\sigma\sqrt{2\pi}}\right)^{10}\int_{-\delta}^{\delta}\cdots\i
 e^{-(\sum_{i=1}^{10} x_i^2)/2\sigma^2} dx_1\cdots dx_{10}
 $$
 
-One way to look at this is that the vector $\mathbf{e}$ of errors $(|t_1-t_0|,\ldots,|t_{10}-t_0|)$
+
+
+One way to look at this  type of multivariate distribution is that 
+the vector $\mathbf{e}$ of errors $(|t_1-t_0|,\ldots,|t_{10}-t_0|)$
 is distributed according to a *multivariate gaussian distribution*:
 $$
 P(\mathbf{e}\in U) =\left(\frac{1}{\sigma\sqrt{2\pi}}\right)^{10}\int_{U}
 e^{-\|x\|^2/2\sigma^2} d\mathbf{x}
 $${#eq-multivariategaussian}
+ 
+where $x$ is the vector of differences $t_{i}-t_{0}$ and $U$ is a region in $\mathbf{R}^{10}$.
 
-where $U$ is a region in $\mathbf{R}^{10}$.
+In particular,  the magnitude $\|x\|$of the error vector $x$ is normally distributed.
 
-The multivariate gaussian can also describe situations where independence does not hold.  For simplicity,
-let's work in two dimensions and consider the probability density on $\mathbf{R}^{2}$ given by
-$$
-P(\mathbf{e}\in U) = A\int_{U} e^{-(x_1^2-x_1x_2+x_2^2)/2\sigma^2} d\mathbf{x}.
-$$
-where the constant $A$ is chosen so that
-$$
-A\int_{\mathbf{R}^{2}}e^{-(x_1^2-x_1x_2+x_2^2)/2\sigma^2}d\mathbf{x} = 1.
-$$
 
-This density function as a "bump" concentrated near the origin in $\mathbf{R}^{2}$, and its level curves
-are a family of ellipses centered at the origin.  See @fig-multivariate for a plot of this function
-with $\sigma=1$.
-
-![Multivariate Gaussian](img/ellipse.png){#fig-multivariate}
-
-In this situation we can look at the conditional probability of the first variable given the second,
-and see that the two variables are not independent.  Indeed, if we fix  $x_2$, then
-the distribution of $x_1$ depends on our choice of $x_2$.  We could see this by a calculation,
-or we can just look at the graph: if $x_2=0$, then the most likely values of $x_1$ cluster near zero,
-while if $x_2=1$, then the most likely values of $x_1$ cluster somewhere above zero.  
 
 ## Random Variables, Mean, and Variance
 
@@ -614,6 +599,73 @@ $$
 
 so that the $\sigma^2$ parameter in the normal distribution really *is* the variance of the associated
 random variable.
+
+#### Covariance and the Multivariate Normal Distribution
+
+Given two random variables $f$ and $g$, we can measure how much they vary together by looking at their covariance,
+which is the expected value of the product of their deviations from their means:
+$$
+\hbox{Cov}(f,g) = E[(f-E[f])(g-E[g])]=E[fg]-E[f]E[g].
+$$
+
+If $f$ and $g$ are independent, then their covariance is zero.
+
+In our discussion of linear regression and principal components, we made use of the "covariance matrix" $D_{0}$ 
+which was computed from sample data as $X_{0}^{T}X_{0}/N$ where $X_{0}$ was the mean-centered data matrix.  The entries
+of this matrix were the covariances of samples from the  various random variables corresponding to the columns of $X$.
+
+The theoretical origin of the covariance matrix arises from the "multivariate normal distribution" which generalizes the one-dimensional
+normal distribution and the more general distribution of $n$ independent normal random variables. 
+
+A more general multivariate gaussian can be constructed from a covariance matrix $D_{0}$, where
+$D_{0}$ is an $n\times n$,  symmetric, positive definite matrix like we considered in the chapter on principal component
+analysis.  In this case, the probability that an $n$-dimensional vector $x$ lies in a set $U\subset \mathbf{R}^{n}$
+is given by the integral
+
+$$
+P(x\in U) = \frac{1}{(2\pi)^{n/2}\sqrt{\det(D_{0})}}\int_{U} e^{-x^{T}D_{0}^{-1}x/2} d\mathbf{x}.
+$$
+
+If a random vector $x=(x_1,\ldots, x_n)$ has this distribution, then the individual components $x_{i}$
+are normally distributed with variances given by the diagonal entries of $D_{0}$, and covariances 
+corresponding to the off-diagonal entries.  In other words, $D_{0}$ is the covariance matrix of the components of
+$x$.
+
+To see this, imagine that $x$ has the given distribution.  Using the spectral theorem, we can write $D_{0}=V\Lambda V^{T}$
+where $V$ is an orthogonal matrix and $\Lambda$ is a diagonal matrix with positive entries $\lambda_{1},\ldots, \lambda_{n}$.
+
+If $y=V^{T}x$, which is a rotation of the random vector $x=Vy$, then the exponential in the probability density function
+becomes
+$$
+x^{T}D_{0}^{-1}x = y^{T}V^{T}D_{0}^{-1}Vy = y^{T}V^{T}V\Lambda^{-1}V^{T}Vy = y^{T}\Lambda^{-1}y.
+$$
+
+Since $\Lambda$ is diagonal, the normalizing constant
+ $\sqrt{\det(D_{0})}=\sqrt{\prod_{i=1}^{n}\lambda_{i}}$ becomes the square root of the product of the variances $\lambda_{i}$,
+ and the density function is visibly the product of $n$ independent normal distributions with variances $\lambda_{i}$.
+
+In other words, the random vector $v$, when rotated into the coordinates given by the eigenvectors of $D_{0}$, becomes a vector $y$ whose components are independent normal random variables with variances $\lambda_{i}$.
+
+WOrking backwards, we can find the covariance matrix of the $x_{i}$. 
+The matrix $n\times n$ matrix $xx^{T}$ has entries $x_{i}x_{j}$, so the expected values of the entries are the variances/covariances of the $x_{i}$.
+But 
+$$
+E(xx^{T})=E(Vyy^{T}V^{T}) = VE(yy^{T})V^{T} = V\Lambda V^{T}=D_{0}.
+$$
+
+In other words, the covariance matrix of the components of $x$ is $D_{0}$.
+
+This density function as a "bump" concentrated near the origin in $\mathbf{R}^{2}$, and its level curves
+are a family of ellipses centered at the origin.  See @fig-multivariate for a plot of this function
+with $\sigma=1$.
+
+![Multivariate Gaussian](img/ellipse.png){#fig-multivariate}
+
+In this situation we can look at the conditional probability of the first variable given the second,
+and see that the two variables are not independent.  Indeed, if we fix  $x_2$, then
+the distribution of $x_1$ depends on our choice of $x_2$.  We could see this by a calculation,
+or we can just look at the graph: if $x_2=0$, then the most likely values of $x_1$ cluster near zero,
+while if $x_2=1$, then the most likely values of $x_1$ cluster somewhere above zero.  
 
 ## Models and Likelihood
 
