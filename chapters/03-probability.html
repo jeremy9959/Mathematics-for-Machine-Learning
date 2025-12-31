@@ -597,6 +597,49 @@ E(xx^{T})=E(Vyy^{T}V^{T}) = VE(yy^{T})V^{T} = V\Lambda V^{T}=D_{0}.
 </div>
 <p>In this situation we can look at the conditional probability of the first variable given the second, and see that the two variables are not independent. Indeed, if we fix <span class="math inline">\(x_2\)</span>, then the distribution of <span class="math inline">\(x_1\)</span> depends on our choice of <span class="math inline">\(x_2\)</span>. We could see this by a calculation, or we can just look at the graph: if <span class="math inline">\(x_2=0\)</span>, then the most likely values of <span class="math inline">\(x_1\)</span> cluster near zero, while if <span class="math inline">\(x_2=1\)</span>, then the most likely values of <span class="math inline">\(x_1\)</span> cluster somewhere above zero.</p>
 </section>
+<section id="application-a-tiny-bit-of-portfolio-theory" class="level4" data-number="3.5.2.3">
+<h4 data-number="3.5.2.3" class="anchored" data-anchor-id="application-a-tiny-bit-of-portfolio-theory"><span class="header-section-number">3.5.2.3</span> Application: a tiny bit of portfolio theory</h4>
+<p>We can see one application of the multivariate gaussian distribution in a very simple model from financial mathematics.</p>
+<p>Suppose we look at a collection of <span class="math inline">\(n\)</span> stocks. We make the very naive assumption that the performance of these stocks is given by (for each stock) an average price per share of <span class="math inline">\(\mu_{i}\)</span> with variance <span class="math inline">\(\sigma^2_{i}\)</span> for <span class="math inline">\(i=1,\ldots, n\)</span>. Rule out longer term trends over time and assume that each stock fluctuates around its average price per share according to a normal distribution with mean <span class="math inline">\(\mu_{i}\)</span> and variance <span class="math inline">\(\sigma^2_{i}\)</span>.</p>
+<p>We can think of the individual variances <span class="math inline">\(\sigma^2_{i}\)</span> as measuring the “risk” associated with each stock. A high variance means the return flucuates a lot around the mean return <span class="math inline">\(\mu_{i}\)</span>.</p>
+<p>It would be a mistake, however, to think that the performance of these stocks is independent of each other. For example, the performance of socks of companies in the same industry, tend to be correlated, and all stocks are correlated with the underlying economy. So a reasonable model for the collective performance of these stocks is the return is given by a multivariate gaussian distribution associated with an <span class="math inline">\(n\times n\)</span> covariance matrix. It’s worth noting that, in finance, the covariance between the performance of two securities is typically called “beta”.</p>
+<p>To make this concrete, suppose we are dealing with two securities and their covariance matrix is <span class="math display">\[
+D = \begin{pmatrix}1.5 &amp; .7 \\ .7 &amp; 1.0\end{pmatrix}
+\]</span></p>
+<p>If we sample the returns of these stocks (centered at their means, so the distribution of returns is around the origin) we get a plot like this.</p>
+<div id="fig-stockreturns" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/stock_returns.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.5: Correlated Stock Returns</figcaption>
+</figure>
+</div>
+<p>Notice that the stocks perform well or poorly together reflecting the fact that their returns are correlated.</p>
+<p>Now suppose we have <span class="math inline">\(1000\)</span> dollars to invest in these stocks. We can by <span class="math inline">\(p_{i}\)</span> shares of each stock and we must have</p>
+<p><span class="math display">\[
+\sum p_{i}\mu_{i} = 1000.
+\]</span></p>
+<p>The risk associated with this “portfolio” is captured by the variance of this linear combination of the normally distributed stock returns. That, in turn, is yet another example of the variance of a “score” and it is given by <span class="math display">\[
+\sigma^2 = \left[\begin{matrix} p_1 &amp; \cdots &amp; p_{n}\end{matrix}\right] D_{0} \left[\begin{matrix} p_1 \\ \cdots \\ p_{n}\end{matrix}\right]
+\]</span> which works out to the quadratic function <span class="math display">\[
+\sigma^2 = \sum_{i,j} p_{i}p_{j}\sigma_{ij}
+\]</span> where <span class="math inline">\(\sigma_{ij}\)</span> is the covariance of stock <span class="math inline">\(i\)</span> with stock <span class="math inline">\(j\)</span> (and <span class="math inline">\(\sigma_{ii}=\sigma^2_{i}\)</span> is the variance of stock <span class="math inline">\(i\)</span>.)</p>
+<p>A reasonable goal for us would be to invest our money so as to obtain <em>the same return</em> with <em>the minimum risk</em>. In this setting, that means we want to choose <span class="math inline">\(p_{i}\)</span> so that <span class="math inline">\(\sum p_{i}\mu_{i}=1000\)</span> and <span class="math inline">\(\sigma^2\)</span> is minimized.</p>
+<p>This is a constrained optimization problem that we can solve analytically by Lagrange multipliers. If we consider only two dimensions for simplicity, the objective function (the risk) is a quadratic: <span class="math display">\[
+\sigma^2(p_1,p_2) = \sigma_{1}^2p_1^2+2\sigma_{12}p_{1}p_{2}+\sigma_{2}^2p_{2}
+\]</span> while the constraint is a line <span class="math inline">\(p_1\mu_1+p_2\mu_2=1000\)</span>.</p>
+<p>The Lagrange formulation is <span class="math display">\[
+L(p_1,p_2,\lambda) = \sigma_{1}^2p_1^2+2\sigma_{12}p_{1}p_{2}+\sigma_{2}^2p_{2}-\lambda(p_1\mu_2+p_2\mu_2-1000)
+\]</span></p>
+<p>The geometry looks like this graph:</p>
+<div id="fig-constantrisk" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/constant_risk_and_line.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.6: Constant Risk with Portfolio Line</figcaption>
+</figure>
+</div>
+<p>and the point of minimum risk occurs on the “risk ellipse” that is tangent to the “portfolio line.”</p>
+<p>The most significant conclusion one obtains from this analysis is that, in general, <em>a diversified portfolio generates the same return at lower risk than a single security.</em> In our graph, the point of tangency occurs at a point where both <span class="math inline">\(p_1\)</span> and <span class="math inline">\(p_2\)</span> are nonzero, meaning we have bought a mix of both stocks.</p>
+</section>
 </section>
 </section>
 <section id="models-and-likelihood" class="level2" data-number="3.6">
@@ -610,11 +653,11 @@ Our description of the variation in temperature measurements as arising from per
 <p>We will approach this question via the “likelihood” function for our data. We ask: for a particular value of the parameter <span class="math inline">\(p\)</span>, how likely is this outcome? From <a href="#eq-binomial">Equation&nbsp;<span>3.2</span></a> we have <span class="math display">\[
 P(55H,45T)=\binom{100}{55}p^{55}(1-p)^{45}.
 \]</span></p>
-<p>This function is plotted in <a href="#fig-beta">Figure&nbsp;<span>3.5</span></a>. As you can see from that plot, it is extremely unlikely that we would have gotten <span class="math inline">\(55\)</span> heads if <span class="math inline">\(p\)</span> was smaller than <span class="math inline">\(.4\)</span> or greater than <span class="math inline">\(.7\)</span>, while the <em>most likely</em> value of <span class="math inline">\(p\)</span> occurs at the maximum value of this function, and a little calculus tells us that this point is where <span class="math inline">\(p=.55\)</span>. This <em>most likely</em> value of <span class="math inline">\(p\)</span> is called the <em>maximum likelihood estimate</em> for the parameter <span class="math inline">\(p\)</span>.</p>
+<p>This function is plotted in <a href="#fig-beta">Figure&nbsp;<span>3.7</span></a>. As you can see from that plot, it is extremely unlikely that we would have gotten <span class="math inline">\(55\)</span> heads if <span class="math inline">\(p\)</span> was smaller than <span class="math inline">\(.4\)</span> or greater than <span class="math inline">\(.7\)</span>, while the <em>most likely</em> value of <span class="math inline">\(p\)</span> occurs at the maximum value of this function, and a little calculus tells us that this point is where <span class="math inline">\(p=.55\)</span>. This <em>most likely</em> value of <span class="math inline">\(p\)</span> is called the <em>maximum likelihood estimate</em> for the parameter <span class="math inline">\(p\)</span>.</p>
 <div id="fig-beta" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/beta.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.5: Likelihood Plot</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.7: Likelihood Plot</figcaption>
 </figure>
 </div>
 </section>
