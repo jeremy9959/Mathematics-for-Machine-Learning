@@ -667,6 +667,80 @@ the distribution of $x_1$ depends on our choice of $x_2$.  We could see this by 
 or we can just look at the graph: if $x_2=0$, then the most likely values of $x_1$ cluster near zero,
 while if $x_2=1$, then the most likely values of $x_1$ cluster somewhere above zero.  
 
+#### Application: a tiny bit of portfolio theory
+
+We can see one application of the multivariate gaussian distribution in a very simple model from financial mathematics.
+
+Suppose we look at a collection of $n$ stocks.  We make the very naive assumption that the performance of these stocks is
+given by (for each stock) an average price per share of $\mu_{i}$ with variance $\sigma^2_{i}$ for $i=1,\ldots, n$. Rule out
+longer term trends over time and assume that each stock fluctuates around its average price per share according to a normal distribution
+with mean $\mu_{i}$ and variance $\sigma^2_{i}$.  
+
+We can think of the individual variances $\sigma^2_{i}$ as measuring the "risk" associated with each stock.  A high variance means
+the return flucuates a lot around the mean return $\mu_{i}$. 
+
+It would be a mistake, however, to think that the performance of these stocks is independent of each other. 
+For example, the performance of socks of companies in the same industry, tend to be correlated, and all stocks are correlated with the underlying economy. 
+So a reasonable model for the collective performance of these stocks is the return is given by a multivariate gaussian distribution
+associated with an $n\times n$ covariance matrix. It's worth noting that, in finance, the covariance between the performance of two securities is typically
+called "beta".
+
+To make this concrete, suppose we are dealing with two securities and their covariance matrix is 
+$$
+D = \begin{pmatrix}1.5 & .7 \\ .7 & 1.0\end{pmatrix}
+$$
+
+If we sample the returns of these stocks (centered at their means, so the distribution of returns is around the origin) we
+get a plot like this.
+
+![Correlated Stock Returns](img/stock_returns.png){#fig-stockreturns}
+
+Notice that the stocks perform well or poorly together reflecting the fact that their returns are correlated. 
+
+Now suppose we have $1000$ dollars to invest in these stocks. We can by $p_{i}$ shares of each stock and we must have
+
+$$
+\sum p_{i}\mu_{i} = 1000.
+$$
+
+The risk associated with this "portfolio" is captured by the variance of this linear combination of the normally distributed
+stock returns.  That, in turn, is yet another example of the variance of a "score" and it is given by
+$$
+\sigma^2 = \left[\begin{matrix} p_1 & \cdots & p_{n}\end{matrix}right] D_{0} \left[\begin{matrix} p_1 \\ \cdots \\ p_{n}\end{matrix}\right]
+$$
+which works out to the quadratic function
+$$
+\sigma^2 = \sum_{i,j} p_{i}p_{j}\sigma_{ij}
+$$
+where $\sigma_{ij}$ is the covariance of stock $i$ with stock $j$ (and $\sigma_{ii}=\sigma^2_{i}$ is the variance of stock $i$.)
+
+A reasonable goal for us would be to invest our money so as to obtain *the same return* with *the minimum risk*.  In this setting,
+that means we want to choose $p_{i}$ so that $\sum p_{i}\mu_{i}=1000$ and $\sigma^2$ is minimized.
+
+This is a constrained optimization problem that we can solve analytically by Lagrange multipliers. If we consider only two dimensions
+for simplicity, the objective function (the risk) is a quadratic:
+$$
+\sigma^2(p_1,p_2) = \sigma_{1}^2p_1^2+2\sigma_{12}p_{1}p_{2}+\sigma_{2}^2p_{2} 
+$$
+while the constraint is a line $p_1\mu_1+p_2\mu_2=1000$.
+
+The Lagrange formulation is
+$$
+L(p_1,p_2,\lambda) = \sigma_{1}^2p_1^2+2\sigma_{12}p_{1}p_{2}+\sigma_{2}^2p_{2}-\lambda(p_1\mu_2+p_2\mu_2-1000)
+$$
+
+The geometry looks like this graph:
+
+![Constant Risk with Portfolio Line](img/constant_risk_and_line.png){#fig-constantrisk}
+
+and the point of minimum risk occurs on the "risk ellipse" that is tangent to the "portfolio line."
+
+The most significant conclusion one obtains from this analysis is that, in general, *a diversified portfolio generates the same
+return at lower risk than a single security.*  In our graph, the point of tangency occurs at a point where both $p_1$ and $p_2$
+are nonzero, meaning we have bought a mix of both stocks.
+
+
+
 ## Models and Likelihood
 
 A *statistical model* is a mathematical model that accounts for data via a process that
