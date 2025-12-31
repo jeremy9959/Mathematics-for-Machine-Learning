@@ -706,7 +706,7 @@ $$
 The risk associated with this "portfolio" is captured by the variance of this linear combination of the normally distributed
 stock returns.  That, in turn, is yet another example of the variance of a "score" and it is given by
 $$
-\sigma^2 = \left[\begin{matrix} p_1 & \cdots & p_{n}\end{matrix}right] D_{0} \left[\begin{matrix} p_1 \\ \cdots \\ p_{n}\end{matrix}\right]
+\sigma^2 = \left[\begin{matrix} p_1 & \cdots & p_{n}\end{matrix}\right] D_{0} \left[\begin{matrix} p_1 \\ \cdots \\ p_{n}\end{matrix}\right]
 $$
 which works out to the quadratic function
 $$
