@@ -34,5 +34,30 @@ to pictures of cats and low probabilities to pictures of not-cats.
 
 In fact, both linear and logistic regression fit into this framework and are very simple examples of neural networks.  In the case of linear regression,
 we have "training data" $(x_i,y_i)$ and our goal is to find a matrix $M$ so that the function $Y=MX$ is a good approximation to a function giving $y_i=Mx_i$;
-the error is measured by the mean-squared error and we can find $M$ either analytically or by gradient descent.
+the error is measured by the mean-squared error and we can find $M$ either analytically or by gradient descent.  In this case the neural network is purely linear,
+with no non-linear maps involved. 
+
+In the case of (simple) logistic regression, we have a collection of data $(x_i,y_i)$ where now $y_i$ is $0$ or $1$ and the $x_i$ are vectors of length $n$.  Here we use the logistic function $\sigma$ together with a vector $w$ of length $n$ of weights and consider $F(x_i) = \sigma(w\cdot x)$.  The error we measure is the (negative of the ) log-likelihood of the data given the probabilities $F(x_i)$,
+which works out to 
+
+$$
+L = -\sum y_{i}\log F(x_i) + (1-y_i)\log(1-F(x_i))
+$$
+
+and we find $w$ by iteratively minimizing this $L$.
+
+## Graphical Representation of Neural Networks
+
+It is traditional, when working with neural networks, to take advantage of a graphical
+representation for the structure of the network.  @fig-neuron shows the fundamental
+element of such a graphical representation -- a single "neuron."  Here, the inputs $x_{i}$
+flow in to the neuron along the arrows from the left, where they are multipied by the weights $w_{i}$.  Then these values $x_{i}w_{i}$ are summed, yielding $z=\sum x_{i}w_{i}$ and then the  nonlinear "activation"
+function $\sigma$ is applied; the result is $a=\sigma(z)$.
+
+![A single neuron](img/neuron.png){#fig-neuron}
+
+A full-fledged neural network is built up from "layers." Each layer consists of a collection of neurons with input connections from the previous layer and output connections to the next layer.  This structure is illustrated in @fig-layers.
+
+
+![Layers](img/layers.png){#fig-layers}
 
