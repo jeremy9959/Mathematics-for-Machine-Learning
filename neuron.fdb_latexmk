@@ -1,7 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1767629219.19397 "/home/jet08013/GitHub/Mathematics-for-Machine-Learning/chapters/neuron.tex" "neuron.pdf" "neuron" 1767629219.77254 0
+["pdflatex"] 1767626296.42193 "chapters/neuron.tex" "neuron.pdf" "neuron" 1767626297.01206 0
   "/etc/texmf/web2c/texmf.cnf" 1761840625.75074 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/jet08013/GitHub/Mathematics-for-Machine-Learning/chapters/neuron.tex" 1767629219.0102 5622 c7f74447abcfab1021475eac30607708 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1246382020 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1246382020 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -126,8 +125,8 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1761841075.182 5312232 f3296911be9cc021788f3f879cf0a47d ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1761841087 6800787 56514a6b1176b170125655cfa5b20912 ""
-  "neuron.aux" 1767629219.71821 32 044b7f8fc9779af7531264e0c5c84b6d "pdflatex"
-  "neuron.tex" 1767629219.0102 5622 c7f74447abcfab1021475eac30607708 ""
+  "chapters/neuron.tex" 1767626288.84563 5511 c3cbab04f5b526aa3edc3bb4b89b5a23 ""
+  "neuron.aux" 1767626296.94372 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
   (generated)
   "neuron.aux"
   "neuron.log"

@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{tikz}
+\usetikzlibrary{positioning,fit}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath}
 \begin{document}
@@ -113,6 +114,76 @@
 
 \end{tikzpicture}
 
+% Preamble:
+% \usepackage{tikz}
+\vfill\eject
 
+\begin{tikzpicture}[
+  x=1cm,y=1cm,
+  >=stealth,
+  neuron/.style={circle,draw,very thick,minimum size=6mm,inner sep=0pt},
+  conn/.style={- ,very thick},
+  outarrow/.style={->,very thick},
+]
+
+% --- Nodes (3-2-3) ---
+% input layer
+\node[neuron] (i1) at (0, 2) {};
+\node[neuron] (i2) at (0, 1) {};
+\node[neuron] (i3) at (0, 0) {};
+
+% hidden layer
+\node[neuron] (h1) at (3, 1.5) {};
+\node[neuron] (h2) at (3, 0.5) {};
+
+% output layer
+\node[neuron] (o1) at (6, 1.8) {};
+\node[neuron] (o2) at (6, 1.0) {};
+\node[neuron] (o3) at (6, 0.2) {};
+
+% --- Connections (fully connected) ---
+\foreach \i in {i1,i2,i3}{
+  \foreach \h in {h1,h2}{
+    \draw[conn,->] (\i) -- (\h);
+  }
+}
+\foreach \h in {h1,h2}{
+  \foreach \o in {o1,o2,o3}{
+    \draw[conn,->] (\h) -- (\o);
+  }
+}
+
+% --- Output arrows ---
+\node (S) at (7.5,1.0) {$S$};
+\draw[outarrow] (o1) -- (S);
+\draw[outarrow] (o2) -- (S);
+\draw[outarrow] (o3) -- (S);
+
+\draw[conn,->] (S.east) -- ++(1.1,0); % starts at the right edge of the S node
+
+% --- Dashed grouping around outputs + circled bottom output ---
+\node[draw,dashed,rounded corners=10pt,fit=(o1)(o2)(o3),inner sep=6mm] (outbox) {};
+%\node[draw,circle,fit=(o3),inner sep=4mm] (circled) {};
+
+% --- Labels above layers ---
+\node[align=center] at (0, 3.1) {$z^{(0)}$\\{\small (input)}};
+\node[align=center] at (3, 3.1) {$z^{(1)}$\\{\small (hidden)}};
+\node[align=center] at (6, 3.1) {$z^{(2)}$\\{\small (output)}};
+
+% --- Weight labels ---
+\node at (1.6, -0.35) {$w^{(1)}$};
+\node at (4.4, -0.35) {$w^{(2)}$};
+
+% --- Matrix-shape notes (bottom) ---
+\node[anchor=west] at (0.0, -2.2) {$z^{(0)}$};
+\node[anchor=west] at (2.1, -2.2) {${1\times 3}$ matrix};
+
+\node[anchor=west] at (0.0, -3.0) {$w^{(1)}$};
+\node[anchor=west] at (2.1, -3.0) {${3\times 2}$ matrix};
+
+\node[anchor=west] at (0.0, -3.8) {$w^{(2)}$};
+\node[anchor=west] at (2.1, -3.8) {${2\times 3}$ matrix};
+
+\end{tikzpicture}
 
 \end{document}

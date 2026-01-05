@@ -61,3 +61,33 @@ A full-fledged neural network is built up from "layers." Each layer consists of 
 
 ![Layers](img/layers.png){#fig-layers}
 
+A multi-layer neural network with specified weights and activation functions defines a function called the "inference"
+or "feed-forward" function.   Consider the simple
+example shown in @fig-feedforward.
+
+![A Simple Network](img/feedforward.png){#fig-feedforward}
+
+The input layer has 3 components, which we can represent as a $1\times 3$ row vector with entries $(z_{1}^{0},z_{2}^{0},z_{3}^{0})$.  The middle "hidden layer" has two nodes.  The  6 weights
+$w_{ij}^{1}$ connecting node $z^{(0)}_{i}$ to  $z^{(1)}_{j}$
+form a $3\times 2$ matrix $W^{(1)}$, where
+$$
+z^{(1)}_{j} = \sum_{i=1}^{3} z^{(0)}_{i} w_{ij}^{(1)}.
+$$
+
+The outputs of the hidden layer are obtained by applying the activation function $\sigma$ to each of the $z^{(1)}_{j}$:
+$$
+a^{(1)}_{j} = \sigma(z^{(1)}_{j})
+$$
+for $j=1,2$.  Then these outputs form the inputs to the final layer, which has 3 outputs.  The weights $w_{jk}^{(2)}$ connecting node $a^{(1)}_{j}$ to output $z^{(2)}_{k}$ form a $2\times 3$ matrix $W^{(2)}$, where
+$$
+z^{(2)}_{k} = \sum_{j=1}^{2} a^{(1)}_{j} w_{jk}^{(2)}.
+$$
+
+The last step is to apply an output function to the vector $z^{(2)}$.
+While activation functions are typically applied element-wise, the output function is often something more complicated which uses all of
+the values in the layer.
+
+Putting this together, the feed forward function $F$ looks like
+$$
+F(z^{(0)}) = S(\sigma(z^{(0)}W^{(1)})W^{(2)})
+$$
