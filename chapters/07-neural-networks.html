@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Jeremy Teitelbaum">
-<meta name="dcterms.date" content="2026-01-01">
 
-<title>Lectures on Machine Learning</title>
+<title>Lectures on Machine Learning - 9&nbsp; Neural Networks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -25,23 +23,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./chapters/01-linear-regression.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/20-references.html" rel="next">
+<link href="../chapters/06-svm.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -77,7 +76,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Preface</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/07-neural-networks.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Neural Networks</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -92,7 +91,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Lectures on Machine Learning</a> 
+      <a href="../">Lectures on Machine Learning</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -104,67 +103,67 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/01-linear-regression.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/01-linear-regression.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Linear Regression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/02-pca.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/02-pca.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/03-probability.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/03-probability.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Probability and Bayes Theorem</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/03-1-Bayesian-Inference.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/03-1-Bayesian-Inference.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Inference</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/04-naive-bayes.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/04-naive-bayes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Naive Bayes classification method</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/05-1-gradient-descent.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/05-1-gradient-descent.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Gradient Descent</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/05-logistic-regression.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/05-logistic-regression.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Logistic Regression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/06-svm.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/06-svm.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/07-neural-networks.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/07-neural-networks.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Neural Networks</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/20-references.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/20-references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
@@ -178,7 +177,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
+  <li><a href="#graphical-representation-of-neural-networks" id="toc-graphical-representation-of-neural-networks" class="nav-link active" data-scroll-target="#graphical-representation-of-neural-networks"><span class="header-section-number">9.1</span> Graphical Representation of Neural Networks</a></li>
   </ul>
 </nav>
     </div>
@@ -189,26 +188,14 @@ $$\newcommand{\R}{\mathbb{R}}$$
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lectures on Machine Learning</h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Neural Networks</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Jeremy Teitelbaum </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -216,14 +203,57 @@ $$\newcommand{\R}{\mathbb{R}}$$
 
 </header>
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
-<p>These notes are being developed for the UConn Math Department’s undergraduate course on the Mathematics of Machine Learning, Math <span class="math inline">\(3180\)</span>.</p>
-<div class="hidden">
-<p><span class="math display">\[ \int_{0}^{\infty} f(x) dx \]</span></p>
+<p>## Introduction</p>
+<p>Many of the most impressive achievements in machine learning stem from the development of “artificial neural networks.” The earliest ideas for building algorithms based on models of neurons go back to the 40’s, and peaked in the late 1950’s and early 1960’s with the development of the “perceptron”, which was an early example of what we now call a multi-layer neural net.</p>
+<p>Hardware limitations, as well as a tendency for people to overstate the power of these early techniques, led to the abandonment of these ideas for nearly 50 years until Geoffrey Hinton and others returned to them with the benefit of the dramatic improvements in computer power, specialized hardware such as GPUs, and a number of crucial improvements to algorithms for optimization. Since then neural networks have shown an amazing ability to “learn” and have overcome challenges in image recognition and other classic problems in artificial intelligence, culminating in the invention of the attention mechanism, the transformer, and the LLM.</p>
+<p>## Basics of Neural Networks</p>
+<p>At its heart, a neural network is a function <span class="math inline">\(F\)</span> that is built out of two simple components:</p>
+<pre><code>- linear maps (matrices)
+- simple non-linear maps (activation functions).</code></pre>
+<p>The function <span class="math inline">\(F\)</span> is the composition of these types of functions so that <span class="math inline">\(F(x) = \cdots \sigma_2\circ M_2\circ\sigma_1\circ M_1\)</span>.</p>
+<p>The underlying idea for building a neural network to solve a particular problem is to construct the function <span class="math inline">\(F\)</span> with the matrices having random entries to start, then taking a large set of data <span class="math inline">\((x_i,y_i)\)</span> where the goal is to adjust <span class="math inline">\(F\)</span> so that <span class="math inline">\(F(x_i)\)</span> is as close to <span class="math inline">\(y_i\)</span> as possible (this is called “training”).</p>
+<p>So for example if the goal is to build a neural network that recognizes pictures of cats, one starts with a big library of images (a training set) <span class="math inline">\(x_i\)</span> and labels <span class="math inline">\(y_i\)</span> “cat” (or 1) and “not-cat” (or zero). Then one tries to build a function <span class="math inline">\(F\)</span> that attaches a probability to an image between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span> measuring how sure the function is that the picture is, or is not, a cat. To do this, one starts with an <span class="math inline">\(F\)</span> with random initial parameters (weights) in the matrices making up <span class="math inline">\(F\)</span>, and then computes <span class="math inline">\(F(x_i)\)</span> and compares it to <span class="math inline">\(y_i\)</span>. Using an optimization algorithm one adjusts the weights until <span class="math inline">\(F(x_i)\)</span> is close to <span class="math inline">\(1\)</span> when <span class="math inline">\(y_i\)</span> is one, and close to zero when <span class="math inline">\(y_i\)</span> is zero. Eventually one gets a function which, hopefully, can recognize images that were not in its training set and attach high probabilities to pictures of cats and low probabilities to pictures of not-cats.</p>
+<p>In fact, both linear and logistic regression fit into this framework and are very simple examples of neural networks. In the case of linear regression, we have “training data” <span class="math inline">\((x_i,y_i)\)</span> and our goal is to find a matrix <span class="math inline">\(M\)</span> so that the function <span class="math inline">\(Y=MX\)</span> is a good approximation to a function giving <span class="math inline">\(y_i=Mx_i\)</span>; the error is measured by the mean-squared error and we can find <span class="math inline">\(M\)</span> either analytically or by gradient descent. In this case the neural network is purely linear, with no non-linear maps involved.</p>
+<p>In the case of (simple) logistic regression, we have a collection of data <span class="math inline">\((x_i,y_i)\)</span> where now <span class="math inline">\(y_i\)</span> is <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span> and the <span class="math inline">\(x_i\)</span> are vectors of length <span class="math inline">\(n\)</span>. Here we use the logistic function <span class="math inline">\(\sigma\)</span> together with a vector <span class="math inline">\(w\)</span> of length <span class="math inline">\(n\)</span> of weights and consider <span class="math inline">\(F(x_i) = \sigma(w\cdot x)\)</span>. The error we measure is the (negative of the ) log-likelihood of the data given the probabilities <span class="math inline">\(F(x_i)\)</span>, which works out to</p>
+<p><span class="math display">\[
+L = -\sum y_{i}\log F(x_i) + (1-y_i)\log(1-F(x_i))
+\]</span></p>
+<p>and we find <span class="math inline">\(w\)</span> by iteratively minimizing this <span class="math inline">\(L\)</span>.</p>
+<section id="graphical-representation-of-neural-networks" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="graphical-representation-of-neural-networks"><span class="header-section-number">9.1</span> Graphical Representation of Neural Networks</h2>
+<p>It is traditional, when working with neural networks, to take advantage of a graphical representation for the structure of the network. <a href="#fig-neuron">Figure&nbsp;<span>9.1</span></a> shows the fundamental element of such a graphical representation – a single “neuron.” Here, the inputs <span class="math inline">\(x_{i}\)</span> flow in to the neuron along the arrows from the left, where they are multipied by the weights <span class="math inline">\(w_{i}\)</span>. Then these values <span class="math inline">\(x_{i}w_{i}\)</span> are summed, yielding <span class="math inline">\(z=\sum x_{i}w_{i}\)</span> and then the nonlinear “activation” function <span class="math inline">\(\sigma\)</span> is applied; the result is <span class="math inline">\(a=\sigma(z)\)</span>.</p>
+<div id="fig-neuron" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/neuron.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;9.1: A single neuron</figcaption>
+</figure>
 </div>
-<p>This is a (very) <em>rough draft</em>.</p>
-<p>You can <a href="https://github.com/jeremy9959/Mathematics-for-Machine-Learning">view this project on GitHub</a>. Please let the author know if you have questions or find mistakes by opening an issue there.</p>
+<p>A full-fledged neural network is built up from “layers.” Each layer consists of a collection of neurons with input connections from the previous layer and output connections to the next layer. This structure is illustrated in <a href="#fig-layers">Figure&nbsp;<span>9.2</span></a>.</p>
+<div id="fig-layers" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/layers.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;9.2: Layers</figcaption>
+</figure>
+</div>
+<p>A multi-layer neural network with specified weights and activation functions defines a function called the “inference” or “feed-forward” function. Consider the simple example shown in <a href="#fig-feedforward">Figure&nbsp;<span>9.3</span></a>.</p>
+<div id="fig-feedforward" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/feedforward.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;9.3: A Simple Network</figcaption>
+</figure>
+</div>
+<p>The input layer has 3 components, which we can represent as a <span class="math inline">\(1\times 3\)</span> row vector with entries <span class="math inline">\((z_{1}^{0},z_{2}^{0},z_{3}^{0})\)</span>. The middle “hidden layer” has two nodes. The 6 weights <span class="math inline">\(w_{ij}^{1}\)</span> connecting node <span class="math inline">\(z^{(0)}_{i}\)</span> to <span class="math inline">\(z^{(1)}_{j}\)</span> form a <span class="math inline">\(3\times 2\)</span> matrix <span class="math inline">\(W^{(1)}\)</span>, where <span class="math display">\[
+z^{(1)}_{j} = \sum_{i=1}^{3} z^{(0)}_{i} w_{ij}^{(1)}.
+\]</span></p>
+<p>The outputs of the hidden layer are obtained by applying the activation function <span class="math inline">\(\sigma\)</span> to each of the <span class="math inline">\(z^{(1)}_{j}\)</span>: <span class="math display">\[
+a^{(1)}_{j} = \sigma(z^{(1)}_{j})
+\]</span> for <span class="math inline">\(j=1,2\)</span>. Then these outputs form the inputs to the final layer, which has 3 outputs. The weights <span class="math inline">\(w_{jk}^{(2)}\)</span> connecting node <span class="math inline">\(a^{(1)}_{j}\)</span> to output <span class="math inline">\(z^{(2)}_{k}\)</span> form a <span class="math inline">\(2\times 3\)</span> matrix <span class="math inline">\(W^{(2)}\)</span>, where <span class="math display">\[
+z^{(2)}_{k} = \sum_{j=1}^{2} a^{(1)}_{j} w_{jk}^{(2)}.
+\]</span></p>
+<p>The last step is to apply an output function to the vector <span class="math inline">\(z^{(2)}\)</span>. While activation functions are typically applied element-wise, the output function is often something more complicated which uses all of the values in the layer.</p>
+<p>Putting this together, the feed forward function <span class="math inline">\(F\)</span> looks like <span class="math display">\[
+F(z^{(0)}) = S(\sigma(z^{(0)}W^{(1)})W^{(2)})
+\]</span></p>
 
 
 </section>
@@ -464,10 +494,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../chapters/06-svm.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapters/01-linear-regression.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Linear Regression</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/20-references.html" class="pagination-link">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
