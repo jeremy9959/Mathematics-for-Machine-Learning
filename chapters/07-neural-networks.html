@@ -265,6 +265,21 @@ F(z^{(0)}) = S(\sigma(z^{(0)}W^{(1)})W^{(2)})
 <figcaption class="figure-caption">Figure&nbsp;9.4: Linear Regression as a Neural Network</figcaption>
 </figure>
 </div>
+<p>Essentially this shows matrix multiplication as a very simple neural network with one layer and trivial activation and output functions.</p>
+</section>
+<section id="logistic-regression-as-a-neural-network" class="level4" data-number="9.1.0.2">
+<h4 data-number="9.1.0.2" class="anchored" data-anchor-id="logistic-regression-as-a-neural-network"><span class="header-section-number">9.1.0.2</span> Logistic Regression as a Neural Network</h4>
+<p>Although linear regression can be represented as a trivial neural network, logistic regression is a better first example. Let’s consider the problem of multi-class logistic regression, where the input vector is an <span class="math inline">\(N\)</span>-dimensional row vector <span class="math inline">\(x\)</span> and the output is a probability distribution over <span class="math inline">\(M\)</span> classes, represented as an <span class="math inline">\(M\)</span>-dimensional row vector <span class="math inline">\(y\)</span> with non-negative entries summing to one.</p>
+<p>From our earlier work, we know that this model relies on an <span class="math inline">\(N\times M\)</span> weight matrix, and the output of the logistic model is <span class="math inline">\(F(x) = S(xW)\)</span> where <span class="math inline">\(S\)</span> is the function defined by <span class="math display">\[
+S(z)_{i} = \frac{e^{z_{i}}}{\sum_{j=1}^{M} e^{z_{j}}}.
+\]</span></p>
+<p>The graphical representation of this neural network is shown in <span class="quarto-unresolved-ref">?fig-logistic-regression-network</span>.</p>
+<div id="fig-logistic-network" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/logistic_network.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;9.5: Logistic Regression as a Neural Network</figcaption>
+</figure>
+</div>
 
 
 </section>
