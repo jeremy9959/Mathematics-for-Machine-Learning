@@ -177,7 +177,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#graphical-representation-of-neural-networks" id="toc-graphical-representation-of-neural-networks" class="nav-link active" data-scroll-target="#graphical-representation-of-neural-networks"><span class="header-section-number">9.1</span> Graphical Representation of Neural Networks</a></li>
+  <li><a href="#graphical-representation-of-neural-networks" id="toc-graphical-representation-of-neural-networks" class="nav-link active" data-scroll-target="#graphical-representation-of-neural-networks"><span class="header-section-number">9.1</span> Graphical Representation of Neural Networks</a>
+  <ul class="collapse">
+  <li><a href="#loss-functions-and-training" id="toc-loss-functions-and-training" class="nav-link" data-scroll-target="#loss-functions-and-training"><span class="header-section-number">9.1.1</span> Loss functions and training</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -280,6 +283,33 @@ S(z)_{i} = \frac{e^{z_{i}}}{\sum_{j=1}^{M} e^{z_{j}}}.
 <figcaption class="figure-caption">Figure&nbsp;9.5: Logistic Regression as a Neural Network</figcaption>
 </figure>
 </div>
+</section>
+<section id="loss-functions-and-training" class="level3" data-number="9.1.1">
+<h3 data-number="9.1.1" class="anchored" data-anchor-id="loss-functions-and-training"><span class="header-section-number">9.1.1</span> Loss functions and training</h3>
+<p>Given a large collection of data <span class="math inline">\((x^{[i]},y^{[i]})\)</span>, where <span class="math inline">\(x\)</span> is the input and <span class="math inline">\(y\)</span> the target output, the goal of training a neural network <span class="math inline">\(F_{W}\)</span> on this data is to adjust the weights <span class="math inline">\(W\)</span> in <span class="math inline">\(F_{W}\)</span> so that <span class="math inline">\(F(x^{[i]})\)</span> is “approximately” <span class="math inline">\(y^{[i]}\)</span>. To make sense of this, we need to quantify how close <span class="math inline">\(F(x^{[i]})\)</span> is to <span class="math inline">\(y^{[i]}\)</span> by means of a function <span class="math inline">\(L_{W}\)</span> called the “loss function.”</p>
+<p>The choice of a loss function is based on the ultimate purpose of the neural network. We have seen two widely used examples. The first, which arises in linear regression, is the “mean squared error”. On a single data point <span class="math inline">\((x^{[i]},y^{[i]})\)</span>, this loss function is</p>
+<p><span class="math display">\[
+L_{W}(F_{W}(x^{[i]}),y^{[i]}) =  \|F_{W}(x^{[i]})-y^{[i]}\|
+\]</span></p>
+<p>and the overall loss is</p>
+<p><span class="math display">\[
+L_{W}=\frac{1}{M}\sum_{i=1}^{M} \|F_{W}(x^{[i]})-y^{[i]}\|.
+\]</span></p>
+<p>In the case of multi-class regression (with, say, <span class="math inline">\(n\)</span> classes), the loss function is usually the “cross entropy”. In this case the output vectors <span class="math inline">\(y^{[i]}\)</span> are <span class="math inline">\((y_{1}^{[i]},\ldots, y_{n}^{[i]})\)</span> where the <span class="math inline">\(y_{i}\)</span> are all zero except for a <span class="math inline">\(1\)</span> in the <span class="math inline">\(j^{th}\)</span> position where the proper class assignment is class <span class="math inline">\(j\)</span>. (This is called one-hot encoding). The output layer of a classification network consists of <span class="math inline">\((z_{1},\ldots, z_{n})\)</span> which are passed through the softmax function yielding <span class="math display">\[
+(\frac{e^{z_1}}{H},\ldots, \frac{e^{z_{n}}}{H})
+\]</span> where <span class="math inline">\(H=\sum_{j=1}^{n} e^{z_{j}}.\)</span> If we write <span class="math inline">\(p_{j}=e^{z_{j}}/H\)</span>, then the loss for a single data point <span class="math inline">\((x^{[i]},y^{[i]})\)</span> is</p>
+<p><span class="math display">\[
+L_{W}(x^{[i]},y^{[i]}) = \sum_{j=1}^{n} y^{[i]}_{j}\log(p_{j})
+\]</span></p>
+<p>and the total loss would be</p>
+<p><span class="math display">\[
+L_{W} = \frac{1}{M}\sum_{i=1}^{M} L_{W}(x^{[i],y^{[i]}})
+\]</span></p>
+<p>It is important to recognized that the loss <em>is a function of the weights</em> of the network; the data <span class="math inline">\((x,y)\)</span> are fixed.</p>
+<p>The goal of training is to minimize <span class="math inline">\(L_{W}\)</span> by varying <span class="math inline">\(W\)</span>. From a mathematical point of view, we do this by gradient descent. That is to say, for the fixed collection of data, we iteratively calculate <span class="math inline">\(\partial L_{W}/\partial W^{(j)}_{kl}\)</span> for all the weights <span class="math inline">\(W^{(j)}_{kl}\)</span> in the network, and then make a small adjustment <span class="math display">\[
+W^{(j)}_{kl} = W^{(j)}_{kl} - \lambda \frac{\partial L_{W}}{\partial W_{^{j}_{kl}}}
+\]</span> until the loss function changes by less then some threshold amount on each iteration.</p>
+<p>Computing the partial derivatives <span class="math inline">\(\partial L_{W}/\partial W^{(j)}_{kl}\)</span> is a miraculous application of the chain rule that exploits the architecture of the neural network. The algorithm for this computation is called “backpropagation” and we will discuss it in the next section.</p>
 
 
 </section>
