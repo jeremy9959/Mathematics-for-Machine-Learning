@@ -177,9 +177,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#graphical-representation-of-neural-networks" id="toc-graphical-representation-of-neural-networks" class="nav-link active" data-scroll-target="#graphical-representation-of-neural-networks"><span class="header-section-number">9.1</span> Graphical Representation of Neural Networks</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">9.1</span> Introduction</a></li>
+  <li><a href="#basics-of-neural-networks" id="toc-basics-of-neural-networks" class="nav-link" data-scroll-target="#basics-of-neural-networks"><span class="header-section-number">9.2</span> Basics of Neural Networks</a></li>
+  <li><a href="#graphical-representation-of-neural-networks" id="toc-graphical-representation-of-neural-networks" class="nav-link" data-scroll-target="#graphical-representation-of-neural-networks"><span class="header-section-number">9.3</span> Graphical Representation of Neural Networks</a></li>
+  <li><a href="#loss-functions-and-training" id="toc-loss-functions-and-training" class="nav-link" data-scroll-target="#loss-functions-and-training"><span class="header-section-number">9.4</span> Loss functions and training</a></li>
+  <li><a href="#backpropagation" id="toc-backpropagation" class="nav-link" data-scroll-target="#backpropagation"><span class="header-section-number">9.5</span> Backpropagation</a>
   <ul class="collapse">
-  <li><a href="#loss-functions-and-training" id="toc-loss-functions-and-training" class="nav-link" data-scroll-target="#loss-functions-and-training"><span class="header-section-number">9.1.1</span> Loss functions and training</a></li>
+  <li><a href="#backpropagation-first-step" id="toc-backpropagation-first-step" class="nav-link" data-scroll-target="#backpropagation-first-step"><span class="header-section-number">9.5.1</span> Backpropagation: first step</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -206,10 +210,13 @@ $$\newcommand{\R}{\mathbb{R}}$$
 
 </header>
 
-<p>## Introduction</p>
+<section id="introduction" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">9.1</span> Introduction</h2>
 <p>Many of the most impressive achievements in machine learning stem from the development of “artificial neural networks.” The earliest ideas for building algorithms based on models of neurons go back to the 40’s, and peaked in the late 1950’s and early 1960’s with the development of the “perceptron”, which was an early example of what we now call a multi-layer neural net.</p>
 <p>Hardware limitations, as well as a tendency for people to overstate the power of these early techniques, led to the abandonment of these ideas for nearly 50 years until Geoffrey Hinton and others returned to them with the benefit of the dramatic improvements in computer power, specialized hardware such as GPUs, and a number of crucial improvements to algorithms for optimization. Since then neural networks have shown an amazing ability to “learn” and have overcome challenges in image recognition and other classic problems in artificial intelligence, culminating in the invention of the attention mechanism, the transformer, and the LLM.</p>
-<p>## Basics of Neural Networks</p>
+</section>
+<section id="basics-of-neural-networks" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="basics-of-neural-networks"><span class="header-section-number">9.2</span> Basics of Neural Networks</h2>
 <p>At its heart, a neural network is a function <span class="math inline">\(F\)</span> that is built out of two simple components:</p>
 <pre><code>- linear maps (matrices)
 - simple non-linear maps (activation functions).</code></pre>
@@ -222,8 +229,9 @@ $$\newcommand{\R}{\mathbb{R}}$$
 L = -\sum y_{i}\log F(x_i) + (1-y_i)\log(1-F(x_i))
 \]</span></p>
 <p>and we find <span class="math inline">\(w\)</span> by iteratively minimizing this <span class="math inline">\(L\)</span>.</p>
-<section id="graphical-representation-of-neural-networks" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="graphical-representation-of-neural-networks"><span class="header-section-number">9.1</span> Graphical Representation of Neural Networks</h2>
+</section>
+<section id="graphical-representation-of-neural-networks" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="graphical-representation-of-neural-networks"><span class="header-section-number">9.3</span> Graphical Representation of Neural Networks</h2>
 <p>It is traditional, when working with neural networks, to take advantage of a graphical representation for the structure of the network. <a href="#fig-neuron">Figure&nbsp;<span>9.1</span></a> shows the fundamental element of such a graphical representation – a single “neuron.” Here, the inputs <span class="math inline">\(x_{i}\)</span> flow in to the neuron along the arrows from the left, where they are multipied by the weights <span class="math inline">\(w_{i}\)</span>. Then these values <span class="math inline">\(x_{i}w_{i}\)</span> are summed, yielding <span class="math inline">\(z=\sum x_{i}w_{i}\)</span> and then the nonlinear “activation” function <span class="math inline">\(\sigma\)</span> is applied; the result is <span class="math inline">\(a=\sigma(z)\)</span>.</p>
 <div id="fig-neuron" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -258,8 +266,8 @@ z^{(2)}_{k} = \sum_{j=1}^{2} a^{(1)}_{j} w_{jk}^{(2)}.
 F(z^{(0)}) = S(\sigma(z^{(0)}W^{(1)})W^{(2)})
 \]</span></p>
 <p>Here, the function <span class="math inline">\(\sigma\)</span> is applied element-wise to the vector <span class="math inline">\(z^{(0)}W^{(1)}\)</span>, while the output function <span class="math inline">\(S\)</span> is applied to the entire vector <span class="math inline">\(z^{(2)}\)</span>.</p>
-<section id="linear-regression-as-a-neural-network" class="level4" data-number="9.1.0.1">
-<h4 data-number="9.1.0.1" class="anchored" data-anchor-id="linear-regression-as-a-neural-network"><span class="header-section-number">9.1.0.1</span> Linear Regression as a Neural Network</h4>
+<section id="linear-regression-as-a-neural-network" class="level4" data-number="9.3.0.1">
+<h4 data-number="9.3.0.1" class="anchored" data-anchor-id="linear-regression-as-a-neural-network"><span class="header-section-number">9.3.0.1</span> Linear Regression as a Neural Network</h4>
 <p>A simple linear regression problem takes an <span class="math inline">\(N\)</span>-dimensional input vector <span class="math inline">\(x\)</span> (which we write as a <span class="math inline">\(1\times N\)</span> row vector) and produces an <span class="math inline">\(M\)</span> dimensional output vector <span class="math inline">\(y\)</span> (which we write as a <span class="math inline">\(1\times M\)</span> row vector) by multiplying by a weight matrix <span class="math inline">\(W\)</span> so that <span class="math inline">\(y=xW\)</span>.</p>
 <p>This is a neural network with no activation functions, just a single layer with weight matrix <span class="math inline">\(W\)</span> and output function the identity.</p>
 <div id="fig-linear-regression-network" class="quarto-figure quarto-figure-center anchored">
@@ -270,8 +278,8 @@ F(z^{(0)}) = S(\sigma(z^{(0)}W^{(1)})W^{(2)})
 </div>
 <p>Essentially this shows matrix multiplication as a very simple neural network with one layer and trivial activation and output functions.</p>
 </section>
-<section id="logistic-regression-as-a-neural-network" class="level4" data-number="9.1.0.2">
-<h4 data-number="9.1.0.2" class="anchored" data-anchor-id="logistic-regression-as-a-neural-network"><span class="header-section-number">9.1.0.2</span> Logistic Regression as a Neural Network</h4>
+<section id="logistic-regression-as-a-neural-network" class="level4" data-number="9.3.0.2">
+<h4 data-number="9.3.0.2" class="anchored" data-anchor-id="logistic-regression-as-a-neural-network"><span class="header-section-number">9.3.0.2</span> Logistic Regression as a Neural Network</h4>
 <p>Although linear regression can be represented as a trivial neural network, logistic regression is a better first example. Let’s consider the problem of multi-class logistic regression, where the input vector is an <span class="math inline">\(N\)</span>-dimensional row vector <span class="math inline">\(x\)</span> and the output is a probability distribution over <span class="math inline">\(M\)</span> classes, represented as an <span class="math inline">\(M\)</span>-dimensional row vector <span class="math inline">\(y\)</span> with non-negative entries summing to one.</p>
 <p>From our earlier work, we know that this model relies on an <span class="math inline">\(N\times M\)</span> weight matrix, and the output of the logistic model is <span class="math inline">\(F(x) = S(xW)\)</span> where <span class="math inline">\(S\)</span> is the function defined by <span class="math display">\[
 S(z)_{i} = \frac{e^{z_{i}}}{\sum_{j=1}^{M} e^{z_{j}}}.
@@ -284,16 +292,17 @@ S(z)_{i} = \frac{e^{z_{i}}}{\sum_{j=1}^{M} e^{z_{j}}}.
 </figure>
 </div>
 </section>
-<section id="loss-functions-and-training" class="level3" data-number="9.1.1">
-<h3 data-number="9.1.1" class="anchored" data-anchor-id="loss-functions-and-training"><span class="header-section-number">9.1.1</span> Loss functions and training</h3>
+</section>
+<section id="loss-functions-and-training" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="loss-functions-and-training"><span class="header-section-number">9.4</span> Loss functions and training</h2>
 <p>Given a large collection of data <span class="math inline">\((x^{[i]},y^{[i]})\)</span>, where <span class="math inline">\(x\)</span> is the input and <span class="math inline">\(y\)</span> the target output, the goal of training a neural network <span class="math inline">\(F_{W}\)</span> on this data is to adjust the weights <span class="math inline">\(W\)</span> in <span class="math inline">\(F_{W}\)</span> so that <span class="math inline">\(F(x^{[i]})\)</span> is “approximately” <span class="math inline">\(y^{[i]}\)</span>. To make sense of this, we need to quantify how close <span class="math inline">\(F(x^{[i]})\)</span> is to <span class="math inline">\(y^{[i]}\)</span> by means of a function <span class="math inline">\(L_{W}\)</span> called the “loss function.”</p>
 <p>The choice of a loss function is based on the ultimate purpose of the neural network. We have seen two widely used examples. The first, which arises in linear regression, is the “mean squared error”. On a single data point <span class="math inline">\((x^{[i]},y^{[i]})\)</span>, this loss function is</p>
 <p><span class="math display">\[
-L_{W}(F_{W}(x^{[i]}),y^{[i]}) =  \|F_{W}(x^{[i]})-y^{[i]}\|
+L_{W}(F_{W}(x^{[i]}),y^{[i]}) =  \|F_{W}(x^{[i]})-y^{[i]}\|^2
 \]</span></p>
 <p>and the overall loss is</p>
 <p><span class="math display">\[
-L_{W}=\frac{1}{M}\sum_{i=1}^{M} \|F_{W}(x^{[i]})-y^{[i]}\|.
+L_{W}=\frac{1}{M}\sum_{i=1}^{M} \|F_{W}(x^{[i]})-y^{[i]}\|^2.
 \]</span></p>
 <p>In the case of multi-class regression (with, say, <span class="math inline">\(n\)</span> classes), the loss function is usually the “cross entropy”. In this case the output vectors <span class="math inline">\(y^{[i]}\)</span> are <span class="math inline">\((y_{1}^{[i]},\ldots, y_{n}^{[i]})\)</span> where the <span class="math inline">\(y_{i}\)</span> are all zero except for a <span class="math inline">\(1\)</span> in the <span class="math inline">\(j^{th}\)</span> position where the proper class assignment is class <span class="math inline">\(j\)</span>. (This is called one-hot encoding). The output layer of a classification network consists of <span class="math inline">\((z_{1},\ldots, z_{n})\)</span> which are passed through the softmax function yielding <span class="math display">\[
 (\frac{e^{z_1}}{H},\ldots, \frac{e^{z_{n}}}{H})
@@ -303,13 +312,32 @@ L_{W}(x^{[i]},y^{[i]}) = \sum_{j=1}^{n} y^{[i]}_{j}\log(p_{j})
 \]</span></p>
 <p>and the total loss would be</p>
 <p><span class="math display">\[
-L_{W} = \frac{1}{M}\sum_{i=1}^{M} L_{W}(x^{[i],y^{[i]}})
+L_{W} = \frac{1}{M}\sum_{i=1}^{M} L_{W}(x^{[i]},y^{[i]})
 \]</span></p>
 <p>It is important to recognized that the loss <em>is a function of the weights</em> of the network; the data <span class="math inline">\((x,y)\)</span> are fixed.</p>
 <p>The goal of training is to minimize <span class="math inline">\(L_{W}\)</span> by varying <span class="math inline">\(W\)</span>. From a mathematical point of view, we do this by gradient descent. That is to say, for the fixed collection of data, we iteratively calculate <span class="math inline">\(\partial L_{W}/\partial W^{(j)}_{kl}\)</span> for all the weights <span class="math inline">\(W^{(j)}_{kl}\)</span> in the network, and then make a small adjustment <span class="math display">\[
-W^{(j)}_{kl} = W^{(j)}_{kl} - \lambda \frac{\partial L_{W}}{\partial W_{^{j}_{kl}}}
+W^{(j)}_{kl} = W^{(j)}_{kl} - \lambda \frac{\partial L_{W}}{\partial W^{j}_{kl}}
 \]</span> until the loss function changes by less then some threshold amount on each iteration.</p>
 <p>Computing the partial derivatives <span class="math inline">\(\partial L_{W}/\partial W^{(j)}_{kl}\)</span> is a miraculous application of the chain rule that exploits the architecture of the neural network. The algorithm for this computation is called “backpropagation” and we will discuss it in the next section.</p>
+</section>
+<section id="backpropagation" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="backpropagation"><span class="header-section-number">9.5</span> Backpropagation</h2>
+<p>Our neural network is made up of <span class="math inline">\(n\)</span> layers, with the output of the final <span class="math inline">\(n^{th}\)</span>-layer serving as input to the loss function. The nodes at the <span class="math inline">\(j^{th}\)</span> layer have values <span class="math inline">\(z^{(j)}_{k}\)</span>. The idea behind backpropagation is, for each data point <span class="math inline">\((x^{([i])},y^{[i]})\)</span>, to compute vectors <span class="math display">\[
+\delta^{(j)}_{k} = \frac{\partial L_{W}}{\partial z^{(j)}_{k}}
+\]</span> inductively starting with <span class="math inline">\(j=n\)</span> and working backwards. From these <span class="math inline">\(\delta^{(j)}\)</span> we can then compute the partials <span class="math inline">\(\partial L_{W}/\partial W^{(j)}_{rs}\)</span>.</p>
+<p>Since the total loss is accumulated as a sum over the data points, we can sum the <span class="math inline">\(\delta^{(j)}_{k}\)</span> obtained from successive data points to compute the gradient of the loss over all the data or over some portion of the data, and use these accumulated gradients to adjust the weights.</p>
+<p>The term “backpropagation” comes from the fact that we compute the <span class="math inline">\(\delta\)</span> starting at the output end of the network and working backwards toward the input end, in contrast with the inference or forward pass which goes from the input to the output.</p>
+<section id="backpropagation-first-step" class="level3" data-number="9.5.1">
+<h3 data-number="9.5.1" class="anchored" data-anchor-id="backpropagation-first-step"><span class="header-section-number">9.5.1</span> Backpropagation: first step</h3>
+<p>The first step of the backpropagation algorithm comes from the output layer of the neural network. The elements of the last layer <span class="math inline">\(z^{(n)}\)</span> are fed directly into the loss function <span class="math inline">\(L_{W}\)</span> as shown in <a href="#fig-backprop-1">Figure&nbsp;<span>9.6</span></a> and so <span class="math display">\[
+\delta^{(n)}_j = \frac{\partial L_{W}}{\partial z^{(n)_{j}}}
+\]</span> depends on the loss function <span class="math inline">\(L_{W}\)</span>. Let’s look at the two cases we considered above separately.</p>
+<div id="fig-backprop-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/backprop_1.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;9.6: Final Layer with Loss</figcaption>
+</figure>
+</div>
 
 
 </section>
