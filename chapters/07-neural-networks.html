@@ -212,8 +212,7 @@ $$\newcommand{\R}{\mathbb{R}}$$
 
 <section id="introduction" class="level2" data-number="9.1">
 <h2 data-number="9.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">9.1</span> Introduction</h2>
-<p>Many of the most impressive achievements in machine learning stem from the development of “artificial neural networks.” The earliest ideas for building algorithms based on models of neurons go back to the 40’s, and peaked in the late 1950’s and early 1960’s with the development of the “perceptron”, which was an early example of what we now call a multi-layer neural net.</p>
-<p>Hardware limitations, as well as a tendency for people to overstate the power of these early techniques, led to the abandonment of these ideas for nearly 50 years until Geoffrey Hinton and others returned to them with the benefit of the dramatic improvements in computer power, specialized hardware such as GPUs, and a number of crucial improvements to algorithms for optimization. Since then neural networks have shown an amazing ability to “learn” and have overcome challenges in image recognition and other classic problems in artificial intelligence, culminating in the invention of the attention mechanism, the transformer, and the LLM.</p>
+<p>Many of the most impressive achievements in machine learning stem from the development of “artificial neural networks. The earliest ideas for building algorithms based on models of neurons go back to the 40’s, and peaked in the late 1950’s an early 1960’s with the development of the”perceptron”, which was an early example of what we now call a multi-layer neural net Hardware limitations, as well as a tendency for people to overstate the power of these early techniques, led to the abandonmen of these ideas for nearly 50 years until Geoffrey Hinton and others returned to them with the benefit of the dramatic improvement in computer power, specialized hardware such as GPUs, and a number of crucial improvements to algorithms for optimization. Since then neural networks have shown an amazin ability to “learn” and have overcome challenges in image recognition and other classic problems in artificial intelligence culminating in the invention of the attention mechanism, the transformer, and the LLM.</p>
 </section>
 <section id="basics-of-neural-networks" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="basics-of-neural-networks"><span class="header-section-number">9.2</span> Basics of Neural Networks</h2>
@@ -330,8 +329,33 @@ W^{(j)}_{kl} = W^{(j)}_{kl} - \lambda \frac{\partial L_{W}}{\partial W^{j}_{kl}}
 <section id="backpropagation-first-step" class="level3" data-number="9.5.1">
 <h3 data-number="9.5.1" class="anchored" data-anchor-id="backpropagation-first-step"><span class="header-section-number">9.5.1</span> Backpropagation: first step</h3>
 <p>The first step of the backpropagation algorithm comes from the output layer of the neural network. The elements of the last layer <span class="math inline">\(z^{(n)}\)</span> are fed directly into the loss function <span class="math inline">\(L_{W}\)</span> as shown in <a href="#fig-backprop-1">Figure&nbsp;<span>9.6</span></a> and so <span class="math display">\[
-\delta^{(n)}_j = \frac{\partial L_{W}}{\partial z^{(n)_{j}}}
+\delta^{(n)}_j = \frac{\partial L_{W}}{\partial z^{(n)}_{j}}
 \]</span> depends on the loss function <span class="math inline">\(L_{W}\)</span>. Let’s look at the two cases we considered above separately.</p>
+<section id="mean-squared-error" class="level4" data-number="9.5.1.1">
+<h4 data-number="9.5.1.1" class="anchored" data-anchor-id="mean-squared-error"><span class="header-section-number">9.5.1.1</span> Mean Squared Error</h4>
+<p>In this case, as we’ve seen, the loss function is given by the squared euclidean distance between the output vector <span class="math inline">\(z^{(n)}\)</span> and the target vector <span class="math inline">\(y^{[i]}\)</span>. <span class="math display">\[
+L_{W}(x^{[i]},y^{[i]}) = \|z^{(n)}-y^{[i]}\|^2
+\]</span> and therefore the derivative is just <span class="math display">\[
+\frac{\partial L_{W}}{\partial z^{(n)}_{j}} = 2(z_{j}^{(n)}-y_{j}^{[i]}).
+\]</span></p>
+<p>In other words, since we are going to adjust the scaling anyway when we do gradient descent, we may as well set <span class="math display">\[
+\delta^{(n)} = z^{(n)}-y^{[i]}.
+\]</span></p>
+</section>
+<section id="cross-entropy" class="level4" data-number="9.5.1.2">
+<h4 data-number="9.5.1.2" class="anchored" data-anchor-id="cross-entropy"><span class="header-section-number">9.5.1.2</span> Cross Entropy</h4>
+<p>In the classification problem we saw that <span class="math display">\[
+L_{W}(x^{[i]},y^{[i]}) = -\sum y^{[i]}_{j}\log\frac{e^{z^{(n)_{j}}}}{H}
+\]</span> where <span class="math inline">\(H=\sum_{j} e^{z^{(n)}_{j}}\)</span>. Therefore <span class="math display">\[
+\delta^{(n)}_{j} = \frac{\partial L_{W}}{z_{j}^{(n)}} = -y^{[i]}_{j}+\partial{\partial \log H}{\partial z_{j}^{(n)}}
+\]</span> which gives <span class="math display">\[
+\delta^{(n)}_{j} = -y_{j}^{[i]}+p_{j}
+\]</span> where <span class="math display">\[
+p_{j}=\frac{e^{z_{j}^{(n)}}}{H}
+\]</span></p>
+<p>Putting this together yields <span class="math display">\[
+\delta^{(n)} = -y^{[i]}+p
+\]</span> where <span class="math inline">\(p\)</span> is the vector of probabilities with entries <span class="math inline">\(p_{j} = e^{z^{(n)}_{j}}/H\)</span>.</p>
 <div id="fig-backprop-1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/backprop_1.png" class="img-fluid figure-img"></p>
@@ -340,6 +364,7 @@ W^{(j)}_{kl} = W^{(j)}_{kl} - \lambda \frac{\partial L_{W}}{\partial W^{j}_{kl}}
 </div>
 
 
+</section>
 </section>
 </section>
 
