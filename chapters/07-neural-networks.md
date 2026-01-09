@@ -237,3 +237,66 @@ where $p$ is the vector of probabilities with entries $p_{j} = e^{z^{(n)}_{j}}/H
 ![Final Layer with Loss](img/backprop_1.png){#fig-backprop-1}
 
 ### Backpropagation - inductive steps
+
+![Backpropagation -- interior](img/backprop-2.png){#fig-backprop-2}
+
+The continue the backpropagation steps, we are going to compute $\delta^{(i-1)}$ from $\delta^{()}$ for $i<n$ inductively.
+Again, the key is the chain rule:
+$$
+\delta^{(i-1)}_k = \frac{\partial L_{W}}{\partial z^{(i-1)}_{k}} = \sum_{t}\frac{\partial L_{W}}{\partial z^{(i)}_{t}}\frac{\partial z^{(i)}_{t}}{\partial z^{(i-1)}_{k}}
+$$
+
+The structure of the neural network tells us that
+$$
+z_{t}^{(i)} = \sum_{j} \sigma(z_{j}^{(i-1)})w_{jt}^{(i)}.
+$${#eq-z-computation}
+
+Therefore
+$$
+\frac{\partial z^{(i)}_{t}}{\partial z^{(i-1)}_{k}}= \sigma'(z_{k}^{(i-1)})w_{kt}^{(i)}.
+$$
+
+Putting this in the chain rule sum yields
+$$
+\frac{\partial L_{W}}{\partial z^{(i-1)}_{k}} = \sum_{t}\frac{\partial L_{W}}{\partial z^{(i)}_{t}}\sigma'(z_{k}^{(i-1)})w_{kt}^{(i)}.
+$$
+
+In other words
+$$
+\delta^{(i-1)}_{k} = \sigma'(z_{k}^{(i-1)})w_{kt}^{(i)}\delta^{(i)}_{t}
+$$
+or, in vector form,
+
+$$
+\delta^{(i-1)} = \sigma'(z^{(i-1)})W^{(i)}\delta^{(i)}
+$$
+where the multiplication by the vector $(\sigma'(z^{(i-1)}_{j}))$ is done componentwise.
+
+### Backpropagation - putting it together
+
+As we've seen, by a backward pass through the network we can compute the 
+$\delta^{(i)}$, which are essentially the gradients of $L_{W}$ with respect to the
+variables making up the $i^{th}$ layer.
+
+Of course, what we *really* want are the gradients with respect to the weights, and that requires one more use of the chain rule.  We see that
+$$
+\frac{\partial L_{W}}{\partial w^{(i)_{jk}}} = \sum \frac{\partial L_{W}}{\partial z^{(i)}_{k}}\frac{\partial z^{(i)}_{k}}{\partial w^{(i)}_{jk}}
+$$
+and from @eq-z-computation we have
+
+$$
+\frac{\partial z^{(i)}_{k}}{\partial w^{(i)}_{jk}} = \sigma(z^{(i-1)}_{j}).
+$$
+
+As a result,
+$$
+\frac{\partial L_{W}}{\partial w^{(i)_{jk}}} =  \delta^{(i)}_{k}\sigma(z^{(i-1)}_{j}.
+$$
+
+The gradient of $W^{(i)}$ is therefore a matrix whose $jk$ entry is given by
+$$
+\frac{\partial L_{W}}{\partial w^{(i)}_{jk}}=\sigma(z^{(i-1)}_{j})\delta^{(i)}_{k}.
+$$
+This is sometimes called the outer product of the vectors $\sigma(z^{i-1})$ and
+$\delta^{(i)}$ or just the matrix product of the column vector $\delta^{(i)}$ and the
+row vector $\sigma^(z^{i-1})$.

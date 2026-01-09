@@ -373,4 +373,33 @@
   \node[anchor=west] at (0,-.4) {$\delta^{(n)}_{j} = \dfrac{\partial \mathcal{L}}{\partial z^{(n)}_{j}}$};
 \end{tikzpicture}
 
+\vfill\eject
+
+\begin{tikzpicture}[scale=1.5]
+  % Define vertical lines for layers
+  \draw[dotted, gray] (0,-2) -- (0,2);
+  \draw[dotted, gray] (3,-2) -- (3,2);
+  
+  % Layer l-1 neurons
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (z21) at (0,0.8) {$\sigma$};
+  \node[left=2pt of z21] { $z_k^{(l-1)}$};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (top1) at (0,1.8) {};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (mid1) at (0,-0.5) {};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (bot1) at (0,-1.5) {};
+  
+  % Layer l neurons  
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (z1l) at (3,0.3) {};
+  \node[right=2pt of z1l] { $z_j^{(l)}$};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (top2) at (3,1.8) {};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (mid2) at (3,-0.8) {};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (bot2) at (3,-1.5) {};
+  
+  % Connection with weight
+  \draw[->, thick] (z21) --  node[above, pos=0.5] {$w_{kj}^{(l)}$} (z1l);
+  \draw[->, thick] (z21) --  node[above, pos=0.5] {$w_{k1}^{(l)}$} (top2);
+  \draw[->, thick] (z21) --  node[below, pos=0.5] {$w_{km}^{(l)}$} (bot2);
+  \draw[->, dashed] (z21) -- (mid2) ; 
+  
+\end{tikzpicture}
+
 \end{document}
