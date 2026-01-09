@@ -280,7 +280,7 @@ variables making up the $i^{th}$ layer.
 
 Of course, what we *really* want are the gradients with respect to the weights, and that requires one more use of the chain rule.  We see that
 $$
-\frac{\partial L_{W}}{\partial w^{(i)_{jk}}} = \sum \frac{\partial L_{W}}{\partial z^{(i)}_{k}}\frac{\partial z^{(i)}_{k}}{\partial w^{(i)}_{jk}}
+\frac{\partial L_{W}}{\partial w^{(i)}_{jk}} = \sum \frac{\partial L_{W}}{\partial z^{(i)}_{k}}\frac{\partial z^{(i)}_{k}}{\partial w^{(i)}_{jk}}
 $$
 and from @eq-z-computation we have
 
@@ -290,7 +290,7 @@ $$
 
 As a result,
 $$
-\frac{\partial L_{W}}{\partial w^{(i)_{jk}}} =  \delta^{(i)}_{k}\sigma(z^{(i-1)}_{j}).
+\frac{\partial L_{W}}{\partial w^{(i)}_{jk}} =  \delta^{(i)}_{k}\sigma(z^{(i-1)}_{j}).
 $$
 
 The gradient of $W^{(i)}$ is therefore a matrix whose $jk$ entry is given by
