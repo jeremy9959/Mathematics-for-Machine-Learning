@@ -290,7 +290,7 @@ $$
 
 As a result,
 $$
-\frac{\partial L_{W}}{\partial w^{(i)_{jk}}} =  \delta^{(i)}_{k}\sigma(z^{(i-1)}_{j}.
+\frac{\partial L_{W}}{\partial w^{(i)_{jk}}} =  \delta^{(i)}_{k}\sigma(z^{(i-1)}_{j}).
 $$
 
 The gradient of $W^{(i)}$ is therefore a matrix whose $jk$ entry is given by
@@ -299,4 +299,4 @@ $$
 $$
 This is sometimes called the outer product of the vectors $\sigma(z^{i-1})$ and
 $\delta^{(i)}$ or just the matrix product of the column vector $\delta^{(i)}$ and the
-row vector $\sigma^(z^{i-1})$.
+row vector $\sigma(z^{i-1})$.
