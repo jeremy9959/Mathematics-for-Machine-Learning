@@ -131,7 +131,7 @@ $$
 L_{W}=\frac{1}{M}\sum_{i=1}^{M} \|F_{W}(x^{[i]})-y^{[i]}\|^2.
 $$
 
-In the case of multi-class classification (with, say, $n$ classes), the loss function is usually the "cross entropy".  In this case the output vectors $y^{[i]}$ are $(y_{1}^{[i]},\ldots, y_{n}^{[i]})$ where the $y_j^{[i]}$ are all zero except for a $1$ in the $j^{\hbox{\rm th}}$ position where the proper class assignment is class $j$.  (This is called one-hot encoding).
+In the case of multi-class classification (with, say, $n$ classes), the loss function is usually the "cross entropy".  In this case the output vectors $y^{[i]}$ are $(y_{1}^{[i]},\ldots, y_{n}^{[i]})$ where the $y_j^{[i]}$ are all zero except for a $1$ in the $j$th position where the proper class assignment is class $j$.  (This is called one-hot encoding).
 The output layer of a classification network consists of $(z_{1},\ldots, z_{n})$ which are passed through the softmax function yielding
 $$
 (\frac{e^{z_1}}{H},\ldots, \frac{e^{z_{n}}}{H})
@@ -164,7 +164,7 @@ and we will discuss it in the next section.
 
 ## Backpropagation
 
-Our neural network is made up of $n$ layers, with the output of the final $n^{\hbox{\rm th}}$-layer serving as input to the loss function. The nodes at the $j^{\hbox{\rm th}}$ layer have values $z^{(j)}_{k}$. The idea behind backpropagation is, for each data point $(x^{[i]},y^{[i]})$,  to compute vectors
+Our neural network is made up of $n$ layers, with the output of the final $n$th layer serving as input to the loss function. The nodes at the $j$th layer have values $z^{(j)}_{k}$. The idea behind backpropagation is, for each data point $(x^{[i]},y^{[i]})$,  to compute vectors
 $$
 \delta^{(j)}_{k} = \frac{\partial L_{W}}{\partial z^{(j)}_{k}}
 $$
@@ -271,7 +271,7 @@ where the multiplication by the vector $(\sigma'(z^{(i-1)}_{j}))$ is done compon
 
 As we've seen, by a backward pass through the network we can compute the 
 $\delta^{(i)}$, which are essentially the gradients of $L_{W}$ with respect to the
-variables making up the $i^{\hbox{\rm th}}$ layer.
+variables making up the $i$th layer.
 
 Of course, what we *really* want are the gradients with respect to the weights, and that requires one more use of the chain rule.  We see that
 $$
