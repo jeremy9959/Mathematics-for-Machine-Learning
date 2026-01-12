@@ -64,9 +64,9 @@ example shown in @fig-feedforward.
 
 ![A Simple Network](img/feedforward.png){#fig-feedforward}
 
-The input layer has 3 components, which we can represent as a $1\times 3$ row vector with entries $(z_{1}^{0},z_{2}^{0},z_{3}^{0})$.  The middle "hidden layer" has two nodes.  The  6 weights
-$w_{ij}^{1}$ connecting node $z^{(0)}_{i}$ to  $z^{(1)}_{j}$
-form a $3\times 2$ matrix $W^{(1)}$, where
+The input layer has 3 components, which we can represent as a $1\times 3$ row vector with entries $(z_{1}^{(0)},z_{2}^{(0)},z_{3}^{(0)})$.  The middle "hidden layer" has two nodes.  The 6 weights
+$w_{ij}^{(1)}$ connecting node $z^{(0)}_{i}$ to  $z^{(1)}_{j}$
+form a $3\times 2$ matrix $W^{(1)}$ where
 $$
 z^{(1)}_{j} = \sum_{i=1}^{3} z^{(0)}_{i} w_{ij}^{(1)}.
 $$
@@ -75,16 +75,16 @@ The outputs of the hidden layer are obtained by applying the activation function
 $$
 a^{(1)}_{j} = \sigma(z^{(1)}_{j})
 $$
-for $j=1,2$.  Then these outputs form the inputs to the final layer, which has 3 outputs.  The weights $w_{jk}^{(2)}$ connecting node $a^{(1)}_{j}$ to output $z^{(2)}_{k}$ form a $2\times 3$ matrix $W^{(2)}$, where
+for $j=1,2$.  These activations are the inputs to the final layer, which has 3 nodes.  The weights $w_{jk}^{(2)}$ connecting the hidden layer to the output layer form a $2\times 3$ matrix $W^{(2)}$, where
 $$
 z^{(2)}_{k} = \sum_{j=1}^{2} a^{(1)}_{j} w_{jk}^{(2)}.
 $$
 
 The last step is to apply an output function to the vector $z^{(2)}$.
-While activation functions are typically applied element-wise, the output function is often something more complicated which uses all of
+While activation functions are typically applied element-wise, the output function often uses all of
 the values in the layer.
 
-Putting this together, the feed forward function $F$ looks like
+Putting this together, the feed-forward function $F$ looks like
 $$
 F(z^{(0)}) = S(\sigma(z^{(0)}W^{(1)})W^{(2)})
 $$
@@ -93,20 +93,18 @@ Here, the function $\sigma$ is applied element-wise to the vector $z^{(0)}W^{(1)
 
 #### Linear Regression as a Neural Network
 
-A simple linear regression problem takes an $N$-dimensional input vector $x$ (which we write as a $1\times N$ row vector) and produces an $M$ dimensional output vector $y$ (which we write as a $1\times M$ row vector) by multiplying by a weight matrix $W$ so that $y=xW$. 
+A simple linear regression problem takes an $N$-dimensional input vector $x$ (which we write as a $1\times N$ row vector) and produces an $M$-dimensional output vector $y$ (which we write as a $1\times M$ row vector) by multiplying by a weight matrix $W$ so that $y=xW$. 
 
-This is a neural network with no activation functions, just a single layer with weight matrix $W$ and output function the identity.
+This is a neural network with no activation function, just a single layer with weight matrix $W$ and the identity as the output function.
 
 ![Linear Regression as a Neural Network](img/linear_regression_network.png){#fig-linear-regression-network}
 
-Essentially this shows matrix multiplication as a very simple neural network with one layer and trivial activation and output functions.
-
 #### Logistic Regression as a Neural Network
 
-Although linear regression can be represented as a trivial neural network, logistic regression is a better first example.  Let's consider the problem of multi-class logistic regression, where the input vector is an $N$-dimensional row vector $x$ and the output is a probability distribution over $M$ classes, represented as an $M$-dimensional row vector $y$ with non-negative entries summing to one. 
+While linear regression can be represented as a trivial neural network, logistic regression is a more interesting example.  Consider the problem of multi-class logistic regression, where the input vector is an $N$-dimensional row vector $x$ and the output is a probability distribution over $M$ classes, represented as an $M$-dimensional row vector $y$ with non-negative entries summing to one. 
 
 From our earlier work, we know that this model relies on an $N\times M$ weight matrix, and the output of the logistic model
-is $F(x) = S(xW)$ where $S$ is the \emph{softmax} function defined by
+is $F(x) = S(xW)$, where $S$ is the softmax function defined by
 $$
 S(z)_{i} = \frac{e^{z_{i}}}{\sum_{j=1}^{M} e^{z_{j}}}.
 $$
@@ -117,7 +115,7 @@ The graphical representation of this neural network is shown in @fig-logistic-ne
 
 ## Loss functions and training
 
-Given a large collection of data  $(x^{[i]},y^{[i]})$, where $x$ is the input and $y$ the target output, the goal
+Given a large collection of data $(x^{[i]},y^{[i]})$, where $x$ is the input and $y$ the target output, the goal
 of training a neural network $F_{W}$ on this data is to adjust the weights $W$ in $F_{W}$ so that $F(x^{[i]})$ is "approximately" $y^{[i]}$.   To make sense of this, we need to quantify how close $F(x^{[i]})$ is to $y^{[i]}$ by means of a function $L_{W}$ called the "loss function."
 
 The choice of a loss function is based on the ultimate purpose of the neural network.  We have seen two widely used examples.  The first, which arises in linear regression, is the "mean squared error".  On a single data point
@@ -133,7 +131,7 @@ $$
 L_{W}=\frac{1}{M}\sum_{i=1}^{M} \|F_{W}(x^{[i]})-y^{[i]}\|^2.
 $$
 
-In the case of multi-class regression (with, say, $n$ classes), the loss function is usually the "cross entropy".  In this case the output vectors $y^{[i]}$ are $(y_{1}^{[i]},\ldots, y_{n}^{[i]})$ where the $y_{i}$ are all zero except for a $1$ in the $j^{th}$ position where the proper class assignment is class $j$.  (This is called one-hot encoding).
+In the case of multi-class classification (with, say, $n$ classes), the loss function is usually the "cross entropy".  In this case the output vectors $y^{[i]}$ are $(y_{1}^{[i]},\ldots, y_{n}^{[i]})$ where the $y_j^{[i]}$ are all zero except for a $1$ in the $j^{\hbox{\rm th}}$ position where the proper class assignment is class $j$.  (This is called one-hot encoding).
 The output layer of a classification network consists of $(z_{1},\ldots, z_{n})$ which are passed through the softmax function yielding
 $$
 (\frac{e^{z_1}}{H},\ldots, \frac{e^{z_{n}}}{H})
@@ -142,7 +140,7 @@ where $H=\sum_{j=1}^{n} e^{z_{j}}.$  If we write $p_{j}=e^{z_{j}}/H$, then the l
 $(x^{[i]},y^{[i]})$ is 
 
 $$
-L_{W}(x^{[i]},y^{[i]}) = \sum_{j=1}^{n} y^{[i]}_{j}\log(p_{j})
+L_{W}(x^{[i]},y^{[i]}) = -\sum_{j=1}^{n} y^{[i]}_{j}\log(p_{j})
 $$
 
 and the total loss would be 
@@ -151,14 +149,14 @@ $$
 L_{W} = \frac{1}{M}\sum_{i=1}^{M} L_{W}(x^{[i]},y^{[i]})
 $$
 
-It is important to recognized that the loss *is a function of the weights* of the network; the data $(x,y)$ are fixed.
+It is important to recognize that the loss *is a function of the weights* of the network; the data $(x,y)$ are fixed.
 
 The goal of training is to minimize $L_{W}$ by varying $W$.  From a mathematical point of view, we do this by gradient descent.  That is to say, for the fixed collection of data, we iteratively calculate $\partial L_{W}/\partial W^{(j)}_{kl}$ for all the weights $W^{(j)}_{kl}$ in the network,
 and then make a small adjustment 
 $$
-W^{(j)}_{kl} = W^{(j)}_{kl} - \lambda \frac{\partial L_{W}}{\partial W^{j}_{kl}}
+W^{(j)}_{kl} = W^{(j)}_{kl} - \lambda \frac{\partial L_{W}}{\partial W^{(j)}_{kl}}
 $$
-until the loss function changes by less then some threshold amount on each iteration.
+until the loss function changes by less than some threshold amount on each iteration.
 
 Computing the partial derivatives $\partial L_{W}/\partial W^{(j)}_{kl}$ is a miraculous application of the chain rule
 that exploits the architecture of the neural network.  The algorithm for this computation is called "backpropagation"
@@ -166,7 +164,7 @@ and we will discuss it in the next section.
 
 ## Backpropagation
 
-Our neural network is made up of $n$ layers, with the output of the final $n^{th}$-layer serving as input to the loss function. The nodes at the $j^{th}$ layer have values $z^{(j)}_{k}$. The idea behind backpropagation is, for each data point $(x^{([i])},y^{[i]})$,  to compute vectors
+Our neural network is made up of $n$ layers, with the output of the final $n^{\hbox{\rm th}}$-layer serving as input to the loss function. The nodes at the $j^{\hbox{\rm th}}$ layer have values $z^{(j)}_{k}$. The idea behind backpropagation is, for each data point $(x^{[i]},y^{[i]})$,  to compute vectors
 $$
 \delta^{(j)}_{k} = \frac{\partial L_{W}}{\partial z^{(j)}_{k}}
 $$
@@ -182,8 +180,8 @@ The term "backpropagation" comes from the fact that we compute the $\delta$ star
 ### Backpropagation: first step
 
 The first step of the backpropagation algorithm comes from the output layer of the neural network.  The elements of the last layer
-$z^{(n)}$ are fed directly into the loss function $L_{W}$ as shown in @fig-backprop-1
-and so 
+$z^{(n)}$ are fed directly into the loss function $L_{W}$ as shown in @fig-backprop-1.
+Therefore, 
 $$
 \delta^{(n)}_j = \frac{\partial L_{W}}{\partial z^{(n)}_{j}}
 $$
@@ -191,7 +189,7 @@ depends on the loss function $L_{W}$.  Let's look at the two cases we considered
 
 #### Mean Squared Error
 
-In this case, as we've seen, the loss function is given by the squared euclidean distance
+In this case, as we've seen, the loss function is given by the squared Euclidean distance
 between the output vector $z^{(n)}$ and the target vector $y^{[i]}$.
 $$
 L_{W}(x^{[i]},y^{[i]}) = \|z^{(n)}-y^{[i]}\|^2
@@ -201,8 +199,7 @@ $$
 \frac{\partial L_{W}}{\partial z^{(n)}_{j}} = 2(z_{j}^{(n)}-y_{j}^{[i]}).
 $$
 
-In other words, since we are going to adjust the scaling anyway when we do gradient
-descent,  we may as well set
+In other words, since we are going to adjust the scaling anyway when we do gradient descent, we can set
 $$
 \delta^{(n)} = z^{(n)}-y^{[i]}.
 $$
@@ -213,9 +210,9 @@ In the classification problem we saw that
 $$
 L_{W}(x^{[i]},y^{[i]}) = -\sum y^{[i]}_{j}\log\frac{e^{z^{(n)_{j}}}}{H}
 $$
-where $H=\sum_{j} e^{z^{(n)}_{j}}$.  Therefore
+where $H=\sum_{j} e^{z^{(n)}_{j}}$. Therefore
 $$
-\delta^{(n)}_{j} = \frac{\partial L_{W}}{z_{j}^{(n)}} = -y^{[i]}_{j}+\frac{\partial \log H}{\partial z_{j}^{(n)}}
+\delta^{(n)}_{j} = \frac{\partial L_{W}}{\partial z_{j}^{(n)}} = -y^{[i]}_{j}+\frac{\partial \log H}{\partial z_{j}^{(n)}}
 $$
 which gives
 $$
@@ -238,7 +235,7 @@ where $p$ is the vector of probabilities with entries $p_{j} = e^{z^{(n)}_{j}}/H
 
 ![Backpropagation -- interior](img/backprop-2.png){#fig-backprop-2}
 
-The continue the backpropagation steps, we are going to compute $\delta^{(i-1)}$ from $\delta^{()}$ for $i<n$ inductively.
+To continue the backpropagation steps, we are going to compute $\delta^{(i-1)}$ from $\delta^{(i)}$ for $i<n$ inductively.
 Again, the key is the chain rule:
 $$
 \delta^{(i-1)}_k = \frac{\partial L_{W}}{\partial z^{(i-1)}_{k}} = \sum_{t}\frac{\partial L_{W}}{\partial z^{(i)}_{t}}\frac{\partial z^{(i)}_{t}}{\partial z^{(i-1)}_{k}}
@@ -274,7 +271,7 @@ where the multiplication by the vector $(\sigma'(z^{(i-1)}_{j}))$ is done compon
 
 As we've seen, by a backward pass through the network we can compute the 
 $\delta^{(i)}$, which are essentially the gradients of $L_{W}$ with respect to the
-variables making up the $i^{th}$ layer.
+variables making up the $i^{\hbox{\rm th}}$ layer.
 
 Of course, what we *really* want are the gradients with respect to the weights, and that requires one more use of the chain rule.  We see that
 $$
@@ -295,9 +292,9 @@ The gradient $\nabla W^{(i)}$ of $W^{(i)}$ is therefore a matrix whose $jk$ entr
 $$
 \frac{\partial L_{W}}{\partial w^{(i)}_{jk}}=\sigma(z^{(i-1)}_{j})\delta^{(i)}_{k}.
 $$
-This is sometimes called the outer product of the vectors $\sigma(z^{i-1})$ and
+This is sometimes called the outer product of the vectors $\sigma(z^{(i-1)})$ and
 $\delta^{(i)}$ or just the matrix product of the column vector $\delta^{(i)}$ and the
-row vector $\sigma(z^{i-1})$ (in that order).
+row vector $\sigma(z^{(i-1)})$ (in that order).
 
 ### Training
 
@@ -308,12 +305,13 @@ the $\delta^{(i)}$ and $\nabla W^{(i)}$ to zero, and initialize the weights of t
 
 - make a forward pass through the network, computing and saving the inputs $z^{(i)}$ for each layer. 
 
-- make a backward pass through the network, computing the $\delta^{(i)}$ and the $\nabla W^{(i)}$ at each layer using the backpropagation formulae.  Accumulate $\delta_{*}^{(i)}$ and $\nabla W^{(i)}$.
+- make a backward pass through the network, computing the $\delta^{(i)}$ and the $\nabla W^{(i)}$ at each layer using the backpropagation formulae.  Accumulate the $\delta^{(i)}$ and $\nabla W^{(i)}$
+from each pass into variables $\delta^{(i)}_{*}$ and $\nabla W^{(i)}_{*}$.
 
 - periodically (after each iteration, after a fixed number of data points, or after a complete pass through the data), update the weights using your chosen version of gradient descent; the simplest approach is:
 $$
-W^{(i)} \leftarrow W^{(i)}-\lambda \nabla W^{(i)}
+W^{(i)} \leftarrow W^{(i)}-\lambda \nabla W^{(i)}_{*}
 $$
-for a learning rate $\lambda$.  Then reset all of the accumulators to zero.
+for a learning rate $\lambda$.  Then reset all of the accumulators $\delta^{(i)}_{*}$ and $\nabla W^{(i)}_{*}$ to zero.
 
 Once every data point in the dataset has been considered, you have completed one *training epoch*.  Repeat until the loss stops decreasing meaningfully.
