@@ -186,6 +186,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#backpropagation-first-step" id="toc-backpropagation-first-step" class="nav-link" data-scroll-target="#backpropagation-first-step"><span class="header-section-number">9.5.1</span> Backpropagation: first step</a></li>
   <li><a href="#backpropagation---inductive-steps" id="toc-backpropagation---inductive-steps" class="nav-link" data-scroll-target="#backpropagation---inductive-steps"><span class="header-section-number">9.5.2</span> Backpropagation - inductive steps</a></li>
   <li><a href="#backpropagation---putting-it-together" id="toc-backpropagation---putting-it-together" class="nav-link" data-scroll-target="#backpropagation---putting-it-together"><span class="header-section-number">9.5.3</span> Backpropagation - putting it together</a></li>
+  <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training"><span class="header-section-number">9.5.4</span> Training</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -214,26 +215,29 @@ $$\newcommand{\R}{\mathbb{R}}$$
 
 <section id="introduction" class="level2" data-number="9.1">
 <h2 data-number="9.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">9.1</span> Introduction</h2>
-<p>Many of the most impressive achievements in machine learning stem from the development of “artificial neural networks. The earliest ideas for building algorithms based on models of neurons go back to the 40’s, and peaked in the late 1950’s an early 1960’s with the development of the”perceptron”, which was an early example of what we now call a multi-layer neural net Hardware limitations, as well as a tendency for people to overstate the power of these early techniques, led to the abandonmen of these ideas for nearly 50 years until Geoffrey Hinton and others returned to them with the benefit of the dramatic improvement in computer power, specialized hardware such as GPUs, and a number of crucial improvements to algorithms for optimization. Since then neural networks have shown an amazin ability to “learn” and have overcome challenges in image recognition and other classic problems in artificial intelligence culminating in the invention of the attention mechanism, the transformer, and the LLM.</p>
+<p>Many of the most impressive achievements in machine learning stem from the development of “artificial neural networks.” The earliest ideas for building algorithms based on models of neurons go back to the 1940s and peaked in the late 1950s and early 1960s with the development of the “perceptron,” an early example of what we now call a multi-layer neural net. Hardware limitations, along with a tendency to overstate the power of these early techniques, led to the abandonment of these ideas for nearly 50 years until Geoffrey Hinton and others returned to them, supported by dramatic improvements in computing power, specialized hardware such as GPUs, and several crucial advances in optimization algorithms. Since then neural networks have demonstrated an amazing ability to “learn” and have overcome challenges in image recognition and other classic problems in artificial intelligence, culminating in the invention of the attention mechanism, the transformer, and the modern LLM.</p>
 </section>
 <section id="basics-of-neural-networks" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="basics-of-neural-networks"><span class="header-section-number">9.2</span> Basics of Neural Networks</h2>
 <p>At its heart, a neural network is a function <span class="math inline">\(F\)</span> that is built out of two simple components:</p>
-<pre><code>- linear maps (matrices)
-- simple non-linear maps (activation functions).</code></pre>
+<ul>
+<li>linear maps (matrices)</li>
+<li>simple non-linear maps (activation functions).</li>
+</ul>
 <p>The function <span class="math inline">\(F\)</span> is the composition of these types of functions so that <span class="math inline">\(F(x) = \cdots \sigma_2\circ M_2\circ\sigma_1\circ M_1\)</span>.</p>
-<p>The underlying idea for building a neural network to solve a particular problem is to construct the function <span class="math inline">\(F\)</span> with the matrices having random entries to start, then taking a large set of data <span class="math inline">\((x_i,y_i)\)</span> where the goal is to adjust <span class="math inline">\(F\)</span> so that <span class="math inline">\(F(x_i)\)</span> is as close to <span class="math inline">\(y_i\)</span> as possible (this is called “training”).</p>
-<p>So for example if the goal is to build a neural network that recognizes pictures of cats, one starts with a big library of images (a training set) <span class="math inline">\(x_i\)</span> and labels <span class="math inline">\(y_i\)</span> “cat” (or 1) and “not-cat” (or zero). Then one tries to build a function <span class="math inline">\(F\)</span> that attaches a probability to an image between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span> measuring how sure the function is that the picture is, or is not, a cat. To do this, one starts with an <span class="math inline">\(F\)</span> with random initial parameters (weights) in the matrices making up <span class="math inline">\(F\)</span>, and then computes <span class="math inline">\(F(x_i)\)</span> and compares it to <span class="math inline">\(y_i\)</span>. Using an optimization algorithm one adjusts the weights until <span class="math inline">\(F(x_i)\)</span> is close to <span class="math inline">\(1\)</span> when <span class="math inline">\(y_i\)</span> is one, and close to zero when <span class="math inline">\(y_i\)</span> is zero. Eventually one gets a function which, hopefully, can recognize images that were not in its training set and attach high probabilities to pictures of cats and low probabilities to pictures of not-cats.</p>
-<p>In fact, both linear and logistic regression fit into this framework and are very simple examples of neural networks. In the case of linear regression, we have “training data” <span class="math inline">\((x_i,y_i)\)</span> and our goal is to find a matrix <span class="math inline">\(M\)</span> so that the function <span class="math inline">\(Y=MX\)</span> is a good approximation to a function giving <span class="math inline">\(y_i=Mx_i\)</span>; the error is measured by the mean-squared error and we can find <span class="math inline">\(M\)</span> either analytically or by gradient descent. In this case the neural network is purely linear, with no non-linear maps involved.</p>
-<p>In the case of (simple) logistic regression, we have a collection of data <span class="math inline">\((x_i,y_i)\)</span> where now <span class="math inline">\(y_i\)</span> is <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span> and the <span class="math inline">\(x_i\)</span> are vectors of length <span class="math inline">\(n\)</span>. Here we use the logistic function <span class="math inline">\(\sigma\)</span> together with a vector <span class="math inline">\(w\)</span> of length <span class="math inline">\(n\)</span> of weights and consider <span class="math inline">\(F(x_i) = \sigma(w\cdot x)\)</span>. The error we measure is the (negative of the ) log-likelihood of the data given the probabilities <span class="math inline">\(F(x_i)\)</span>, which works out to</p>
+<p>The structure of the different layers, the shape of the matrices <span class="math inline">\(M_{i}\)</span>, and the choice of non-linear transition functions make up the <em>architecture</em> of the neural network.</p>
+<p>Suppose we want to build a neural network that recognizes pictures of cats. We begin with a large collection of images (a training set) <span class="math inline">\(x_i\)</span> and labels <span class="math inline">\(y_i\)</span> indicating whether <span class="math inline">\(x_i\)</span> is a “cat” (1) or “not-cat” (0). Our goal is to learn a function <span class="math inline">\(F\)</span> that assigns to each image a probability between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span> measuring how likely it is that the picture is a cat.</p>
+<p>To do this, we choose an architecture for our neural network <span class="math inline">\(F\)</span> and initialize its weight matrices randomly. Then we compute <span class="math inline">\(F(x_i)\)</span> and compare it to <span class="math inline">\(y_i\)</span>. Using an optimization algorithm, we adjust the weights until <span class="math inline">\(F(x_i)\)</span> is close to <span class="math inline">\(1\)</span> when <span class="math inline">\(y_i = 1\)</span> and close to <span class="math inline">\(0\)</span> when <span class="math inline">\(y_i = 0\)</span>. Eventually, we obtain a function that, hopefully, can recognize images that were not in its training set, assigning high probabilities to pictures of cats and low probabilities to pictures of non-cats.</p>
+<p>In fact, both linear and logistic regression fit into this framework and are very simple examples of neural networks. In the case of linear regression, we have training data <span class="math inline">\((x_i,y_i)\)</span> and our goal is to find a matrix <span class="math inline">\(M\)</span> so that the function <span class="math inline">\(Y=MX\)</span> is a good approximation to the relationship <span class="math inline">\(y_i\approx Mx_i\)</span>. The error is measured by the mean squared error, and we can find <span class="math inline">\(M\)</span> either analytically or by gradient descent. In this case the neural network is purely linear, with no nonlinear maps involved.</p>
+<p>In the case of (simple) logistic regression, we have a collection of data <span class="math inline">\((x_i,y_i)\)</span> where <span class="math inline">\(y_i\)</span> is <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span> and the <span class="math inline">\(x_i\)</span> are vectors of length <span class="math inline">\(n\)</span>. Here we use the logistic function <span class="math inline">\(\sigma\)</span> together with a weight vector <span class="math inline">\(w\in\mathbb{R}^n\)</span> and consider <span class="math inline">\(F(x_i) = \sigma(w\cdot x_i)\)</span>. The error we measure is the negative log-likelihood of the data given the probabilities <span class="math inline">\(F(x_i)\)</span>, which works out to</p>
 <p><span class="math display">\[
-L = -\sum y_{i}\log F(x_i) + (1-y_i)\log(1-F(x_i))
+L = -\sum_i \big(y_{i}\log F(x_i) + (1-y_i)\log(1-F(x_i))\big)
 \]</span></p>
 <p>and we find <span class="math inline">\(w\)</span> by iteratively minimizing this <span class="math inline">\(L\)</span>.</p>
 </section>
 <section id="graphical-representation-of-neural-networks" class="level2" data-number="9.3">
 <h2 data-number="9.3" class="anchored" data-anchor-id="graphical-representation-of-neural-networks"><span class="header-section-number">9.3</span> Graphical Representation of Neural Networks</h2>
-<p>It is traditional, when working with neural networks, to take advantage of a graphical representation for the structure of the network. <a href="#fig-neuron">Figure&nbsp;<span>9.1</span></a> shows the fundamental element of such a graphical representation – a single “neuron.” Here, the inputs <span class="math inline">\(x_{i}\)</span> flow in to the neuron along the arrows from the left, where they are multipied by the weights <span class="math inline">\(w_{i}\)</span>. Then these values <span class="math inline">\(x_{i}w_{i}\)</span> are summed, yielding <span class="math inline">\(z=\sum x_{i}w_{i}\)</span> and then the nonlinear “activation” function <span class="math inline">\(\sigma\)</span> is applied; the result is <span class="math inline">\(a=\sigma(z)\)</span>.</p>
+<p>It is traditional, when working with neural networks, to take advantage of a graphical representation of the structure of the network. <a href="#fig-neuron">Figure&nbsp;<span>9.1</span></a> shows the fundamental element of such a graphical representation—a single “neuron.” Here, the inputs <span class="math inline">\(x_{i}\)</span> flow into the neuron along the arrows from the left, where they are multiplied by the weights <span class="math inline">\(w_{i}\)</span>. Then these values <span class="math inline">\(x_{i}w_{i}\)</span> are summed, yielding <span class="math inline">\(z=\sum_{i} x_{i}w_{i}\)</span>, and the nonlinear “activation” function <span class="math inline">\(\sigma\)</span> is applied; the result is <span class="math inline">\(a=\sigma(z)\)</span>.</p>
 <div id="fig-neuron" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/neuron.png" class="img-fluid figure-img"></p>
@@ -254,35 +258,34 @@ L = -\sum y_{i}\log F(x_i) + (1-y_i)\log(1-F(x_i))
 <figcaption class="figure-caption">Figure&nbsp;9.3: A Simple Network</figcaption>
 </figure>
 </div>
-<p>The input layer has 3 components, which we can represent as a <span class="math inline">\(1\times 3\)</span> row vector with entries <span class="math inline">\((z_{1}^{0},z_{2}^{0},z_{3}^{0})\)</span>. The middle “hidden layer” has two nodes. The 6 weights <span class="math inline">\(w_{ij}^{1}\)</span> connecting node <span class="math inline">\(z^{(0)}_{i}\)</span> to <span class="math inline">\(z^{(1)}_{j}\)</span> form a <span class="math inline">\(3\times 2\)</span> matrix <span class="math inline">\(W^{(1)}\)</span>, where <span class="math display">\[
+<p>The input layer has 3 components, which we can represent as a <span class="math inline">\(1\times 3\)</span> row vector with entries <span class="math inline">\((z_{1}^{(0)},z_{2}^{(0)},z_{3}^{(0)})\)</span>. The middle “hidden layer” has two nodes. The 6 weights <span class="math inline">\(w_{ij}^{(1)}\)</span> connecting node <span class="math inline">\(z^{(0)}_{i}\)</span> to <span class="math inline">\(z^{(1)}_{j}\)</span> form a <span class="math inline">\(3\times 2\)</span> matrix <span class="math inline">\(W^{(1)}\)</span> where <span class="math display">\[
 z^{(1)}_{j} = \sum_{i=1}^{3} z^{(0)}_{i} w_{ij}^{(1)}.
 \]</span></p>
 <p>The outputs of the hidden layer are obtained by applying the activation function <span class="math inline">\(\sigma\)</span> to each of the <span class="math inline">\(z^{(1)}_{j}\)</span>: <span class="math display">\[
 a^{(1)}_{j} = \sigma(z^{(1)}_{j})
-\]</span> for <span class="math inline">\(j=1,2\)</span>. Then these outputs form the inputs to the final layer, which has 3 outputs. The weights <span class="math inline">\(w_{jk}^{(2)}\)</span> connecting node <span class="math inline">\(a^{(1)}_{j}\)</span> to output <span class="math inline">\(z^{(2)}_{k}\)</span> form a <span class="math inline">\(2\times 3\)</span> matrix <span class="math inline">\(W^{(2)}\)</span>, where <span class="math display">\[
+\]</span> for <span class="math inline">\(j=1,2\)</span>. These activations are the inputs to the final layer, which has 3 nodes. The weights <span class="math inline">\(w_{jk}^{(2)}\)</span> connecting the hidden layer to the output layer form a <span class="math inline">\(2\times 3\)</span> matrix <span class="math inline">\(W^{(2)}\)</span>, where <span class="math display">\[
 z^{(2)}_{k} = \sum_{j=1}^{2} a^{(1)}_{j} w_{jk}^{(2)}.
 \]</span></p>
-<p>The last step is to apply an output function to the vector <span class="math inline">\(z^{(2)}\)</span>. While activation functions are typically applied element-wise, the output function is often something more complicated which uses all of the values in the layer.</p>
-<p>Putting this together, the feed forward function <span class="math inline">\(F\)</span> looks like <span class="math display">\[
+<p>The last step is to apply an output function to the vector <span class="math inline">\(z^{(2)}\)</span>. While activation functions are typically applied element-wise, the output function often uses all of the values in the layer.</p>
+<p>Putting this together, the feed-forward function <span class="math inline">\(F\)</span> looks like <span class="math display">\[
 F(z^{(0)}) = S(\sigma(z^{(0)}W^{(1)})W^{(2)})
 \]</span></p>
 <p>Here, the function <span class="math inline">\(\sigma\)</span> is applied element-wise to the vector <span class="math inline">\(z^{(0)}W^{(1)}\)</span>, while the output function <span class="math inline">\(S\)</span> is applied to the entire vector <span class="math inline">\(z^{(2)}\)</span>.</p>
 <section id="linear-regression-as-a-neural-network" class="level4" data-number="9.3.0.1">
 <h4 data-number="9.3.0.1" class="anchored" data-anchor-id="linear-regression-as-a-neural-network"><span class="header-section-number">9.3.0.1</span> Linear Regression as a Neural Network</h4>
-<p>A simple linear regression problem takes an <span class="math inline">\(N\)</span>-dimensional input vector <span class="math inline">\(x\)</span> (which we write as a <span class="math inline">\(1\times N\)</span> row vector) and produces an <span class="math inline">\(M\)</span> dimensional output vector <span class="math inline">\(y\)</span> (which we write as a <span class="math inline">\(1\times M\)</span> row vector) by multiplying by a weight matrix <span class="math inline">\(W\)</span> so that <span class="math inline">\(y=xW\)</span>.</p>
-<p>This is a neural network with no activation functions, just a single layer with weight matrix <span class="math inline">\(W\)</span> and output function the identity.</p>
+<p>A simple linear regression problem takes an <span class="math inline">\(N\)</span>-dimensional input vector <span class="math inline">\(x\)</span> (which we write as a <span class="math inline">\(1\times N\)</span> row vector) and produces an <span class="math inline">\(M\)</span>-dimensional output vector <span class="math inline">\(y\)</span> (which we write as a <span class="math inline">\(1\times M\)</span> row vector) by multiplying by a weight matrix <span class="math inline">\(W\)</span> so that <span class="math inline">\(y=xW\)</span>.</p>
+<p>This is a neural network with no activation function, just a single layer with weight matrix <span class="math inline">\(W\)</span> and the identity as the output function.</p>
 <div id="fig-linear-regression-network" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/linear_regression_network.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Figure&nbsp;9.4: Linear Regression as a Neural Network</figcaption>
 </figure>
 </div>
-<p>Essentially this shows matrix multiplication as a very simple neural network with one layer and trivial activation and output functions.</p>
 </section>
 <section id="logistic-regression-as-a-neural-network" class="level4" data-number="9.3.0.2">
 <h4 data-number="9.3.0.2" class="anchored" data-anchor-id="logistic-regression-as-a-neural-network"><span class="header-section-number">9.3.0.2</span> Logistic Regression as a Neural Network</h4>
-<p>Although linear regression can be represented as a trivial neural network, logistic regression is a better first example. Let’s consider the problem of multi-class logistic regression, where the input vector is an <span class="math inline">\(N\)</span>-dimensional row vector <span class="math inline">\(x\)</span> and the output is a probability distribution over <span class="math inline">\(M\)</span> classes, represented as an <span class="math inline">\(M\)</span>-dimensional row vector <span class="math inline">\(y\)</span> with non-negative entries summing to one.</p>
-<p>From our earlier work, we know that this model relies on an <span class="math inline">\(N\times M\)</span> weight matrix, and the output of the logistic model is <span class="math inline">\(F(x) = S(xW)\)</span> where <span class="math inline">\(S\)</span> is the function defined by <span class="math display">\[
+<p>While linear regression can be represented as a trivial neural network, logistic regression is a more interesting example. Consider the problem of multi-class logistic regression, where the input vector is an <span class="math inline">\(N\)</span>-dimensional row vector <span class="math inline">\(x\)</span> and the output is a probability distribution over <span class="math inline">\(M\)</span> classes, represented as an <span class="math inline">\(M\)</span>-dimensional row vector <span class="math inline">\(y\)</span> with non-negative entries summing to one.</p>
+<p>From our earlier work, we know that this model relies on an <span class="math inline">\(N\times M\)</span> weight matrix, and the output of the logistic model is <span class="math inline">\(F(x) = S(xW)\)</span>, where <span class="math inline">\(S\)</span> is the softmax function defined by <span class="math display">\[
 S(z)_{i} = \frac{e^{z_{i}}}{\sum_{j=1}^{M} e^{z_{j}}}.
 \]</span></p>
 <p>The graphical representation of this neural network is shown in <a href="#fig-logistic-network">Figure&nbsp;<span>9.5</span></a>.</p>
@@ -305,42 +308,42 @@ L_{W}(F_{W}(x^{[i]}),y^{[i]}) =  \|F_{W}(x^{[i]})-y^{[i]}\|^2
 <p><span class="math display">\[
 L_{W}=\frac{1}{M}\sum_{i=1}^{M} \|F_{W}(x^{[i]})-y^{[i]}\|^2.
 \]</span></p>
-<p>In the case of multi-class regression (with, say, <span class="math inline">\(n\)</span> classes), the loss function is usually the “cross entropy”. In this case the output vectors <span class="math inline">\(y^{[i]}\)</span> are <span class="math inline">\((y_{1}^{[i]},\ldots, y_{n}^{[i]})\)</span> where the <span class="math inline">\(y_{i}\)</span> are all zero except for a <span class="math inline">\(1\)</span> in the <span class="math inline">\(j^{th}\)</span> position where the proper class assignment is class <span class="math inline">\(j\)</span>. (This is called one-hot encoding). The output layer of a classification network consists of <span class="math inline">\((z_{1},\ldots, z_{n})\)</span> which are passed through the softmax function yielding <span class="math display">\[
+<p>In the case of multi-class classification (with, say, <span class="math inline">\(n\)</span> classes), the loss function is usually the “cross entropy”. In this case the output vectors <span class="math inline">\(y^{[i]}\)</span> are <span class="math inline">\((y_{1}^{[i]},\ldots, y_{n}^{[i]})\)</span> where the <span class="math inline">\(y_j^{[i]}\)</span> are all zero except for a <span class="math inline">\(1\)</span> in the <span class="math inline">\(j\)</span>th position where the proper class assignment is class <span class="math inline">\(j\)</span>. (This is called one-hot encoding). The output layer of a classification network consists of <span class="math inline">\((z_{1},\ldots, z_{n})\)</span> which are passed through the softmax function yielding <span class="math display">\[
 (\frac{e^{z_1}}{H},\ldots, \frac{e^{z_{n}}}{H})
 \]</span> where <span class="math inline">\(H=\sum_{j=1}^{n} e^{z_{j}}.\)</span> If we write <span class="math inline">\(p_{j}=e^{z_{j}}/H\)</span>, then the loss for a single data point <span class="math inline">\((x^{[i]},y^{[i]})\)</span> is</p>
 <p><span class="math display">\[
-L_{W}(x^{[i]},y^{[i]}) = \sum_{j=1}^{n} y^{[i]}_{j}\log(p_{j})
+L_{W}(x^{[i]},y^{[i]}) = -\sum_{j=1}^{n} y^{[i]}_{j}\log(p_{j})
 \]</span></p>
 <p>and the total loss would be</p>
 <p><span class="math display">\[
 L_{W} = \frac{1}{M}\sum_{i=1}^{M} L_{W}(x^{[i]},y^{[i]})
 \]</span></p>
-<p>It is important to recognized that the loss <em>is a function of the weights</em> of the network; the data <span class="math inline">\((x,y)\)</span> are fixed.</p>
+<p>It is important to recognize that the loss <em>is a function of the weights</em> of the network; the data <span class="math inline">\((x,y)\)</span> are fixed.</p>
 <p>The goal of training is to minimize <span class="math inline">\(L_{W}\)</span> by varying <span class="math inline">\(W\)</span>. From a mathematical point of view, we do this by gradient descent. That is to say, for the fixed collection of data, we iteratively calculate <span class="math inline">\(\partial L_{W}/\partial W^{(j)}_{kl}\)</span> for all the weights <span class="math inline">\(W^{(j)}_{kl}\)</span> in the network, and then make a small adjustment <span class="math display">\[
-W^{(j)}_{kl} = W^{(j)}_{kl} - \lambda \frac{\partial L_{W}}{\partial W^{j}_{kl}}
-\]</span> until the loss function changes by less then some threshold amount on each iteration.</p>
+W^{(j)}_{kl} = W^{(j)}_{kl} - \lambda \frac{\partial L_{W}}{\partial W^{(j)}_{kl}}
+\]</span> until the loss function changes by less than some threshold amount on each iteration.</p>
 <p>Computing the partial derivatives <span class="math inline">\(\partial L_{W}/\partial W^{(j)}_{kl}\)</span> is a miraculous application of the chain rule that exploits the architecture of the neural network. The algorithm for this computation is called “backpropagation” and we will discuss it in the next section.</p>
 </section>
 <section id="backpropagation" class="level2" data-number="9.5">
 <h2 data-number="9.5" class="anchored" data-anchor-id="backpropagation"><span class="header-section-number">9.5</span> Backpropagation</h2>
-<p>Our neural network is made up of <span class="math inline">\(n\)</span> layers, with the output of the final <span class="math inline">\(n^{th}\)</span>-layer serving as input to the loss function. The nodes at the <span class="math inline">\(j^{th}\)</span> layer have values <span class="math inline">\(z^{(j)}_{k}\)</span>. The idea behind backpropagation is, for each data point <span class="math inline">\((x^{([i])},y^{[i]})\)</span>, to compute vectors <span class="math display">\[
+<p>Our neural network is made up of <span class="math inline">\(n\)</span> layers, with the output of the final <span class="math inline">\(n\)</span>th layer serving as input to the loss function. The nodes at the <span class="math inline">\(j\)</span>th layer have values <span class="math inline">\(z^{(j)}_{k}\)</span>. The idea behind backpropagation is, for each data point <span class="math inline">\((x^{[i]},y^{[i]})\)</span>, to compute vectors <span class="math display">\[
 \delta^{(j)}_{k} = \frac{\partial L_{W}}{\partial z^{(j)}_{k}}
 \]</span> inductively starting with <span class="math inline">\(j=n\)</span> and working backwards. From these <span class="math inline">\(\delta^{(j)}\)</span> we can then compute the partials <span class="math inline">\(\partial L_{W}/\partial W^{(j)}_{rs}\)</span>.</p>
 <p>Since the total loss is accumulated as a sum over the data points, we can sum the <span class="math inline">\(\delta^{(j)}_{k}\)</span> obtained from successive data points to compute the gradient of the loss over all the data or over some portion of the data, and use these accumulated gradients to adjust the weights.</p>
 <p>The term “backpropagation” comes from the fact that we compute the <span class="math inline">\(\delta\)</span> starting at the output end of the network and working backwards toward the input end, in contrast with the inference or forward pass which goes from the input to the output.</p>
 <section id="backpropagation-first-step" class="level3" data-number="9.5.1">
 <h3 data-number="9.5.1" class="anchored" data-anchor-id="backpropagation-first-step"><span class="header-section-number">9.5.1</span> Backpropagation: first step</h3>
-<p>The first step of the backpropagation algorithm comes from the output layer of the neural network. The elements of the last layer <span class="math inline">\(z^{(n)}\)</span> are fed directly into the loss function <span class="math inline">\(L_{W}\)</span> as shown in <a href="#fig-backprop-1">Figure&nbsp;<span>9.6</span></a> and so <span class="math display">\[
+<p>The first step of the backpropagation algorithm comes from the output layer of the neural network. The elements of the last layer <span class="math inline">\(z^{(n)}\)</span> are fed directly into the loss function <span class="math inline">\(L_{W}\)</span> as shown in <a href="#fig-backprop-1">Figure&nbsp;<span>9.6</span></a>. Therefore, <span class="math display">\[
 \delta^{(n)}_j = \frac{\partial L_{W}}{\partial z^{(n)}_{j}}
 \]</span> depends on the loss function <span class="math inline">\(L_{W}\)</span>. Let’s look at the two cases we considered above separately.</p>
 <section id="mean-squared-error" class="level4" data-number="9.5.1.1">
 <h4 data-number="9.5.1.1" class="anchored" data-anchor-id="mean-squared-error"><span class="header-section-number">9.5.1.1</span> Mean Squared Error</h4>
-<p>In this case, as we’ve seen, the loss function is given by the squared euclidean distance between the output vector <span class="math inline">\(z^{(n)}\)</span> and the target vector <span class="math inline">\(y^{[i]}\)</span>. <span class="math display">\[
+<p>In this case, as we’ve seen, the loss function is given by the squared Euclidean distance between the output vector <span class="math inline">\(z^{(n)}\)</span> and the target vector <span class="math inline">\(y^{[i]}\)</span>. <span class="math display">\[
 L_{W}(x^{[i]},y^{[i]}) = \|z^{(n)}-y^{[i]}\|^2
 \]</span> and therefore the derivative is just <span class="math display">\[
 \frac{\partial L_{W}}{\partial z^{(n)}_{j}} = 2(z_{j}^{(n)}-y_{j}^{[i]}).
 \]</span></p>
-<p>In other words, since we are going to adjust the scaling anyway when we do gradient descent, we may as well set <span class="math display">\[
+<p>In other words, since we are going to adjust the scaling anyway when we do gradient descent, we can set <span class="math display">\[
 \delta^{(n)} = z^{(n)}-y^{[i]}.
 \]</span></p>
 </section>
@@ -349,7 +352,7 @@ L_{W}(x^{[i]},y^{[i]}) = \|z^{(n)}-y^{[i]}\|^2
 <p>In the classification problem we saw that <span class="math display">\[
 L_{W}(x^{[i]},y^{[i]}) = -\sum y^{[i]}_{j}\log\frac{e^{z^{(n)_{j}}}}{H}
 \]</span> where <span class="math inline">\(H=\sum_{j} e^{z^{(n)}_{j}}\)</span>. Therefore <span class="math display">\[
-\delta^{(n)}_{j} = \frac{\partial L_{W}}{z_{j}^{(n)}} = -y^{[i]}_{j}+\partial{\partial \log H}{\partial z_{j}^{(n)}}
+\delta^{(n)}_{j} = \frac{\partial L_{W}}{\partial z_{j}^{(n)}} = -y^{[i]}_{j}+\frac{\partial \log H}{\partial z_{j}^{(n)}}
 \]</span> which gives <span class="math display">\[
 \delta^{(n)}_{j} = -y_{j}^{[i]}+p_{j}
 \]</span> where <span class="math display">\[
@@ -374,7 +377,7 @@ p_{j}=\frac{e^{z_{j}^{(n)}}}{H}
 <figcaption class="figure-caption">Figure&nbsp;9.7: Backpropagation – interior</figcaption>
 </figure>
 </div>
-<p>The continue the backpropagation steps, we are going to compute <span class="math inline">\(\delta^{(i-1)}\)</span> from <span class="math inline">\(\delta^{()}\)</span> for <span class="math inline">\(i&lt;n\)</span> inductively. Again, the key is the chain rule: <span class="math display">\[
+<p>To continue the backpropagation steps, we are going to compute <span class="math inline">\(\delta^{(i-1)}\)</span> from <span class="math inline">\(\delta^{(i)}\)</span> for <span class="math inline">\(i&lt;n\)</span> inductively. Again, the key is the chain rule: <span class="math display">\[
 \delta^{(i-1)}_k = \frac{\partial L_{W}}{\partial z^{(i-1)}_{k}} = \sum_{t}\frac{\partial L_{W}}{\partial z^{(i)}_{t}}\frac{\partial z^{(i)}_{t}}{\partial z^{(i-1)}_{k}}
 \]</span></p>
 <p>The structure of the neural network tells us that <span id="eq-z-computation"><span class="math display">\[
@@ -395,7 +398,7 @@ z_{t}^{(i)} = \sum_{j} \sigma(z_{j}^{(i-1)})w_{jt}^{(i)}.
 </section>
 <section id="backpropagation---putting-it-together" class="level3" data-number="9.5.3">
 <h3 data-number="9.5.3" class="anchored" data-anchor-id="backpropagation---putting-it-together"><span class="header-section-number">9.5.3</span> Backpropagation - putting it together</h3>
-<p>As we’ve seen, by a backward pass through the network we can compute the <span class="math inline">\(\delta^{(i)}\)</span>, which are essentially the gradients of <span class="math inline">\(L_{W}\)</span> with respect to the variables making up the <span class="math inline">\(i^{th}\)</span> layer.</p>
+<p>As we’ve seen, by a backward pass through the network we can compute the <span class="math inline">\(\delta^{(i)}\)</span>, which are essentially the gradients of <span class="math inline">\(L_{W}\)</span> with respect to the variables making up the <span class="math inline">\(i\)</span>th layer.</p>
 <p>Of course, what we <em>really</em> want are the gradients with respect to the weights, and that requires one more use of the chain rule. We see that <span class="math display">\[
 \frac{\partial L_{W}}{\partial w^{(i)}_{jk}} = \sum \frac{\partial L_{W}}{\partial z^{(i)}_{k}}\frac{\partial z^{(i)}_{k}}{\partial w^{(i)}_{jk}}
 \]</span> and from <a href="#eq-z-computation">Equation&nbsp;<span>9.1</span></a> we have</p>
@@ -405,9 +408,22 @@ z_{t}^{(i)} = \sum_{j} \sigma(z_{j}^{(i-1)})w_{jt}^{(i)}.
 <p>As a result, <span class="math display">\[
 \frac{\partial L_{W}}{\partial w^{(i)}_{jk}} =  \delta^{(i)}_{k}\sigma(z^{(i-1)}_{j}).
 \]</span></p>
-<p>The gradient of <span class="math inline">\(W^{(i)}\)</span> is therefore a matrix whose <span class="math inline">\(jk\)</span> entry is given by <span class="math display">\[
+<p>The gradient <span class="math inline">\(\nabla W^{(i)}\)</span> of <span class="math inline">\(W^{(i)}\)</span> is therefore a matrix whose <span class="math inline">\(jk\)</span> entry is given by <span class="math display">\[
 \frac{\partial L_{W}}{\partial w^{(i)}_{jk}}=\sigma(z^{(i-1)}_{j})\delta^{(i)}_{k}.
-\]</span> This is sometimes called the outer product of the vectors <span class="math inline">\(\sigma(z^{i-1})\)</span> and <span class="math inline">\(\delta^{(i)}\)</span> or just the matrix product of the column vector <span class="math inline">\(\delta^{(i)}\)</span> and the row vector <span class="math inline">\(\sigma(z^{i-1})\)</span>.</p>
+\]</span> This is sometimes called the outer product of the vectors <span class="math inline">\(\sigma(z^{(i-1)})\)</span> and <span class="math inline">\(\delta^{(i)}\)</span> or just the matrix product of the column vector <span class="math inline">\(\delta^{(i)}\)</span> and the row vector <span class="math inline">\(\sigma(z^{(i-1)})\)</span> (in that order).</p>
+</section>
+<section id="training" class="level3" data-number="9.5.4">
+<h3 data-number="9.5.4" class="anchored" data-anchor-id="training"><span class="header-section-number">9.5.4</span> Training</h3>
+<p>The training process for a neural network uses successive forward (inference) passes and backward (backpropagation) passes to iteratively move the weights of the network in a way that reduces the loss function.</p>
+<p>More specifically, begin by setting all the <span class="math inline">\(\delta^{(i)}\)</span> and <span class="math inline">\(\nabla W^{(i)}\)</span> to zero, and initialize the weights of the network randomly. Then, for each <span class="math inline">\((x,y)\)</span> in the dataset:</p>
+<ul>
+<li><p>make a forward pass through the network, computing and saving the inputs <span class="math inline">\(z^{(i)}\)</span> for each layer.</p></li>
+<li><p>make a backward pass through the network, computing the <span class="math inline">\(\delta^{(i)}\)</span> and the <span class="math inline">\(\nabla W^{(i)}\)</span> at each layer using the backpropagation formulae. Accumulate the <span class="math inline">\(\delta^{(i)}\)</span> and <span class="math inline">\(\nabla W^{(i)}\)</span> from each pass into variables <span class="math inline">\(\delta^{(i)}_{*}\)</span> and <span class="math inline">\(\nabla W^{(i)}_{*}\)</span>.</p></li>
+<li><p>periodically (after each iteration, after a fixed number of data points, or after a complete pass through the data), update the weights using your chosen version of gradient descent; the simplest approach is: <span class="math display">\[
+W^{(i)} \leftarrow W^{(i)}-\lambda \nabla W^{(i)}_{*}
+\]</span> for a learning rate <span class="math inline">\(\lambda\)</span>. Then reset all of the accumulators <span class="math inline">\(\delta^{(i)}_{*}\)</span> and <span class="math inline">\(\nabla W^{(i)}_{*}\)</span> to zero.</p></li>
+</ul>
+<p>Once every data point in the dataset has been considered, you have completed one <em>training epoch</em>. Repeat until the loss stops decreasing meaningfully.</p>
 
 
 </section>
