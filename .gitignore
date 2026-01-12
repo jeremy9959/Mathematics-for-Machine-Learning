@@ -8,4 +8,6 @@ index.fdb_latexmk
 *.log
 *.toc
 
+.vscode/
+
 
