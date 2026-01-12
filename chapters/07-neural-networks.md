@@ -2,45 +2,43 @@
 
 ## Introduction
 
-Many of the most impressive achievements in machine learning stem from the development of "artificial neural networks.
-The earliest ideas for building algorithms based on models of neurons go back to the 40's, and peaked in the late 1950's an
-early 1960's with the development of the "perceptron", which was an early example of what we now call a multi-layer neural net
-Hardware limitations, as well as a tendency for people to overstate the power of these early techniques, led to the abandonmen
-of these ideas for nearly 50 years until Geoffrey Hinton and others returned to them with the benefit of the dramatic improvement
-in computer power, specialized hardware such as GPUs, and a number of crucial improvements to algorithms for optimization.  Since then neural networks have shown an amazin
-ability to "learn" and have overcome challenges in image recognition and other classic problems in artificial intelligence
-culminating in the invention of the attention mechanism, the transformer, and the LLM.
+Many of the most impressive achievements in machine learning stem from the development of "artificial neural networks."
+The earliest ideas for building algorithms based on models of neurons go back to the 1940s and peaked in the late 1950s and
+early 1960s with the development of the "perceptron," an early example of what we now call a multi-layer neural net.
+Hardware limitations, along with a tendency to overstate the power of these early techniques, led to the abandonment
+of these ideas for nearly 50 years until Geoffrey Hinton and others returned to them, supported by dramatic improvements
+in computing power, specialized hardware such as GPUs, and several crucial advances in optimization algorithms. Since then neural networks have demonstrated an amazing
+ability to "learn" and have overcome challenges in image recognition and other classic problems in artificial intelligence,
+culminating in the invention of the attention mechanism, the transformer, and the modern LLM.
 
 ## Basics of Neural Networks
 
 At its heart, a neural network is a function $F$ that is built out of two simple components:
     
-    - linear maps (matrices)
-    - simple non-linear maps (activation functions).
+- linear maps (matrices)
+- simple non-linear maps (activation functions).
 
 The function $F$ is the composition of these types of functions so that $F(x) = \cdots \sigma_2\circ M_2\circ\sigma_1\circ M_1$.
 
-The underlying idea for building a neural network to solve a particular problem is to construct the function $F$ with the matrices having
-random entries to start, then taking a large set of data $(x_i,y_i)$ where the goal is to adjust $F$ so that $F(x_i)$ is as close to $y_i$
-as possible (this is called "training").
+The structure of the different layers, the shape of the matrices $M_{i}$, and the choice of non-linear transition functions make up the *architecture* of the neural network. 
 
-So for example if the goal is to build a neural network that recognizes pictures of cats, one starts with a big library of images (a training set) $x_i$ and labels $y_i$
-"cat" (or 1) and "not-cat" (or zero).  Then one tries to build a function $F$ that attaches a probability to an image between $0$ and $1$ measuring
-how sure the function is that the picture is, or is not, a cat.  To do this, one starts with an $F$ with random initial parameters (weights) in the matrices making up $F$,
-and then computes $F(x_i)$ and compares it to $y_i$.  Using an optimization algorithm one adjusts the weights until $F(x_i)$ is close to $1$ when $y_i$ is one,
-and close to zero when $y_i$ is zero.  Eventually one gets a function which, hopefully, can recognize images that were not in its training set and attach high probabilities
-to pictures of cats and low probabilities to pictures of not-cats.
+Suppose we want to build a neural network that recognizes pictures of cats. We begin with a large collection of images (a training set) $x_i$ and labels $y_i$ indicating whether $x_i$ is a
+"cat" (1) or "not-cat" (0). Our goal is to learn a function $F$ that assigns to each image a probability between $0$ and $1$ measuring how likely it is that the picture is a cat.
 
-In fact, both linear and logistic regression fit into this framework and are very simple examples of neural networks.  In the case of linear regression,
-we have "training data" $(x_i,y_i)$ and our goal is to find a matrix $M$ so that the function $Y=MX$ is a good approximation to a function giving $y_i=Mx_i$;
-the error is measured by the mean-squared error and we can find $M$ either analytically or by gradient descent.  In this case the neural network is purely linear,
-with no non-linear maps involved. 
+To do this, we choose an architecture for our neural network $F$ and initialize its weight matrices randomly. Then we compute $F(x_i)$ and compare it to $y_i$. Using an optimization algorithm, we adjust the weights until $F(x_i)$ is close to $1$ when $y_i = 1$
+and close to $0$ when $y_i = 0$. Eventually, we obtain a function that, hopefully, can recognize images that were not in its training set, assigning high probabilities
+to pictures of cats and low probabilities to pictures of non-cats.
 
-In the case of (simple) logistic regression, we have a collection of data $(x_i,y_i)$ where now $y_i$ is $0$ or $1$ and the $x_i$ are vectors of length $n$.  Here we use the logistic function $\sigma$ together with a vector $w$ of length $n$ of weights and consider $F(x_i) = \sigma(w\cdot x)$.  The error we measure is the (negative of the ) log-likelihood of the data given the probabilities $F(x_i)$,
+In fact, both linear and logistic regression fit into this framework and are very simple examples of neural networks. In the case of linear regression,
+we have training data $(x_i,y_i)$ and our goal is to find a matrix $M$ so that the function $Y=MX$ is a good approximation to the relationship $y_i\approx Mx_i$.
+The error is measured by the mean squared error, and we can find $M$ either analytically or by gradient descent. In this case the neural network is purely linear,
+with no nonlinear maps involved. 
+
+In the case of (simple) logistic regression, we have a collection of data $(x_i,y_i)$ where $y_i$ is $0$ or $1$ and the $x_i$ are vectors of length $n$. Here we use the logistic function $\sigma$ together with a weight vector $w\in\mathbb{R}^n$ and consider $F(x_i) = \sigma(w\cdot x_i)$. The error we measure is the negative log-likelihood of the data given the probabilities $F(x_i)$,
 which works out to 
 
 $$
-L = -\sum y_{i}\log F(x_i) + (1-y_i)\log(1-F(x_i))
+L = -\sum_i \big(y_{i}\log F(x_i) + (1-y_i)\log(1-F(x_i))\big)
 $$
 
 and we find $w$ by iteratively minimizing this $L$.
@@ -48,9 +46,9 @@ and we find $w$ by iteratively minimizing this $L$.
 ## Graphical Representation of Neural Networks
 
 It is traditional, when working with neural networks, to take advantage of a graphical
-representation for the structure of the network.  @fig-neuron shows the fundamental
-element of such a graphical representation -- a single "neuron."  Here, the inputs $x_{i}$
-flow in to the neuron along the arrows from the left, where they are multipied by the weights $w_{i}$.  Then these values $x_{i}w_{i}$ are summed, yielding $z=\sum x_{i}w_{i}$ and then the  nonlinear "activation"
+representation of the structure of the network. @fig-neuron shows the fundamental
+element of such a graphical representation—a single "neuron." Here, the inputs $x_{i}$
+flow into the neuron along the arrows from the left, where they are multiplied by the weights $w_{i}$. Then these values $x_{i}w_{i}$ are summed, yielding $z=\sum_{i} x_{i}w_{i}$, and the nonlinear "activation"
 function $\sigma$ is applied; the result is $a=\sigma(z)$.
 
 ![A single neuron](img/neuron.png){#fig-neuron}
@@ -217,7 +215,7 @@ L_{W}(x^{[i]},y^{[i]}) = -\sum y^{[i]}_{j}\log\frac{e^{z^{(n)_{j}}}}{H}
 $$
 where $H=\sum_{j} e^{z^{(n)}_{j}}$.  Therefore
 $$
-\delta^{(n)}_{j} = \frac{\partial L_{W}}{z_{j}^{(n)}} = -y^{[i]}_{j}+\partial{\partial \log H}{\partial z_{j}^{(n)}}
+\delta^{(n)}_{j} = \frac{\partial L_{W}}{z_{j}^{(n)}} = -y^{[i]}_{j}+\frac{\partial \log H}{\partial z_{j}^{(n)}}
 $$
 which gives
 $$
@@ -293,10 +291,29 @@ $$
 \frac{\partial L_{W}}{\partial w^{(i)}_{jk}} =  \delta^{(i)}_{k}\sigma(z^{(i-1)}_{j}).
 $$
 
-The gradient of $W^{(i)}$ is therefore a matrix whose $jk$ entry is given by
+The gradient $\nabla W^{(i)}$ of $W^{(i)}$ is therefore a matrix whose $jk$ entry is given by
 $$
 \frac{\partial L_{W}}{\partial w^{(i)}_{jk}}=\sigma(z^{(i-1)}_{j})\delta^{(i)}_{k}.
 $$
 This is sometimes called the outer product of the vectors $\sigma(z^{i-1})$ and
 $\delta^{(i)}$ or just the matrix product of the column vector $\delta^{(i)}$ and the
-row vector $\sigma(z^{i-1})$.
+row vector $\sigma(z^{i-1})$ (in that order).
+
+### Training
+
+The training process for a neural network uses successive forward (inference) passes and backward (backpropagation) passes to iteratively move the weights of the network in a way that reduces the loss function.
+
+More specifically, begin by setting all
+the $\delta^{(i)}$ and $\nabla W^{(i)}$ to zero, and initialize the weights of the network randomly. Then, for each $(x,y)$ in the dataset:
+
+- make a forward pass through the network, computing and saving the inputs $z^{(i)}$ for each layer. 
+
+- make a backward pass through the network, computing the $\delta^{(i)}$ and the $\nabla W^{(i)}$ at each layer using the backpropagation formulae.  Accumulate $\delta_{*}^{(i)}$ and $\nabla W^{(i)}$.
+
+- periodically (after each iteration, after a fixed number of data points, or after a complete pass through the data), update the weights using your chosen version of gradient descent; the simplest approach is:
+$$
+W^{(i)} \leftarrow W^{(i)}-\lambda \nabla W^{(i)}
+$$
+for a learning rate $\lambda$.  Then reset all of the accumulators to zero.
+
+Once every data point in the dataset has been considered, you have completed one *training epoch*.  Repeat until the loss stops decreasing meaningfully.
