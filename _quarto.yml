@@ -4,20 +4,22 @@ project:
 book:
   title: "Lectures on Machine Learning"
   author: "Jeremy Teitelbaum"
-  date: "12/1/2022"
+  date: "1/1/2026"
   license: "CC BY-SA"
   page-footer:
     center: |
-      &copy; 2021. This work is licensed by Jeremy Teitelbaum under the [Creative Commons Attribution-ShareAlike License](http://creativecommons.org/licenses/by-sa/4.0).
+      &copy; 2026. This work is licensed by Jeremy Teitelbaum under the [Creative Commons Attribution-ShareAlike License](http://creativecommons.org/licenses/by-sa/4.0).
   chapters:
     - index.qmd
     - chapters/01-linear-regression.md
     - chapters/02-pca.md
     - chapters/03-probability.md
+    - chapters/03-1-Bayesian-Inference.md
     - chapters/04-naive-bayes.md
     - chapters/05-1-gradient-descent.md
     - chapters/05-logistic-regression.md
     - chapters/06-svm.md
+    - chapters/07-neural-networks.md
     - chapters/20-references.md
 #  appendices:
 #    - notebooks/RegressionLab.ipynb

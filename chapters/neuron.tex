@@ -1,0 +1,405 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\begin{document}
+
+\vfill
+\begin{center}
+
+
+\begin{tikzpicture}[>=stealth,thick]
+
+% Neuron node with sigma
+\node[circle,draw,minimum size=1.7cm] (neuron) {$\sigma$};
+
+% ---- Input arrows ----
+% x1
+\node[left] at (-4,1.5) {$x_1$};
+\draw[->] (-4,1.5) -- (neuron.150);
+
+% x2
+\node[left] at (-4,0.8) {$x_2$};
+\draw[->] (-4,0.8) -- (neuron.165);
+
+% Ellipsis
+\node at (-4,0) {$\vdots$};
+
+% x_{n-1}
+\node[left] at (-4,-0.8) {$x_{n-1}$};
+\draw[->] (-4,-0.8) -- (neuron.195);
+
+% x_n
+\node[left] at (-4,-1.5) {$x_n$};
+\draw[->] (-4,-1.5) -- (neuron.210);
+\node at (2,.25) {$a=\sigma(z)$};
+
+% ---- Weights (positioned as requested) ----
+\node at (-2.5,1.2) {$w_1$};          % above first arrow
+\node at (-2.5,.7) {$w_2$};         % between first and second
+
+\node at (-2.5,-0.35) {$w_{n-1}$};     % just above third arrow
+\node at (-2.5,-.85) {$w_n$};        % between third and fourth
+
+% ---- Output ----
+\draw[->] (neuron) -- (4,0);
+\node at (2,-1) {the $w_{i}$ are the \emph{weights}};
+\node at (2,-1.5) {$z=\sum_{i=1}^{n} x_{i}w_{i}$ is the input};
+\node at (2, -2.0) {$a=\sigma(z)$ is the activation or output};
+
+\node at (-1,-3.0) {$\sigma(x) = \frac{1}{1+e^{-x}}$ or $\sigma(t)=\tanh(x)$ or $\sigma(t)=\begin{cases} t & t\ge 0 \\ 0 & t<0\end{cases}$ or others};
+
+
+\end{tikzpicture}
+\end{center}
+\vfill
+
+\begin{tikzpicture}[>=stealth,thick]
+
+% ------------------------------------------------------------------
+% Layer labels at the top
+% ------------------------------------------------------------------
+\node at (-2,3) {$\boldsymbol{z}^{(i)}$};
+\node at ( 2,3) {$\boldsymbol{z}^{(i+1)}$};
+
+% ------------------------------------------------------------------
+% Neurons (layer i on the left, layer i+1 on the right)
+% ------------------------------------------------------------------
+\node[circle,draw,minimum size=0.9cm] (L1) at (-2, 2.0) {};
+\node[circle,draw,minimum size=0.9cm] (L2) at (-2, 0.0) {};
+\node[circle,draw,minimum size=0.9cm] (L3) at (-2,-2.0) {};
+
+\node[circle,draw,minimum size=0.9cm] (R1) at ( 2, 1) {};
+\node[circle,draw,minimum size=0.9cm] (R2) at ( 2,-1) {};
+
+% ------------------------------------------------------------------
+% Dashed connections from the rest of the network (left side)
+% ------------------------------------------------------------------
+\draw[dashed,->] (-4, 1.5) -- (L1);
+\draw[dashed,->] (-4, 0.5) -- (L2);
+\draw[dashed,->] (-4,-0.5) -- (L3);
+\draw[dashed,->] (L2) -- (R2);
+\draw[dashed,->] (L3) -- (R1) ; 
+
+% ------------------------------------------------------------------
+% Solid connections between the two layers with weight labels
+% ------------------------------------------------------------------
+\draw[->] (L1) -- (R1)
+  node[pos=.55,above] {$w_{11}^{(i+1)}$};
+
+\draw[->] (L2) -- (R1)
+  node[pos=.6,above,sloped] {$w_{21}^{(i+1)}$};
+
+\draw[->] (L1) -- (R2)
+  node[pos=.3,below,sloped] {$w_{12}^{(i+1)}$};
+
+\draw[->] (L3) -- (R2)
+  node[midway,above] {$w_{32}^{(i+1)}$};
+
+% ------------------------------------------------------------------
+% Dashed outgoing connections to later layers (right side)
+% ------------------------------------------------------------------
+\draw[dashed] (R1) -- ( 4, 1.0);
+\draw[dashed] (R2) -- ( 4,-1.0);
+
+% ------------------------------------------------------------------
+% Formulas underneath
+% ------------------------------------------------------------------
+\node at (0,-3)
+  {$z_\ell^{(i+1)} = \displaystyle\sum_{j=1}^{n^{(i)}} a_j^{(i)}\,w_{j\ell}^{(i+1)}$};
+
+\node at (0,-4)
+  {$a_\ell^{(i+1)} = \sigma\!\bigl(z_\ell^{(i+1)}\bigr)$};
+
+\end{tikzpicture}
+
+% Preamble:
+% \usepackage{tikz}
+\vfill\eject
+
+\begin{tikzpicture}[
+  x=1cm,y=1cm,
+  >=stealth,
+  neuron/.style={circle,draw,very thick,minimum size=6mm,inner sep=0pt},
+  conn/.style={- ,very thick},
+  outarrow/.style={->,very thick},
+]
+
+% --- Nodes (3-2-3) ---
+% input layer
+\node[neuron] (i1) at (0, 2) {};
+\node[neuron] (i2) at (0, 1) {};
+\node[neuron] (i3) at (0, 0) {};
+
+% hidden layer
+\node[neuron] (h1) at (3, 1.5) {};
+\node[neuron] (h2) at (3, 0.5) {};
+
+% output layer
+\node[neuron] (o1) at (6, 1.8) {};
+\node[neuron] (o2) at (6, 1.0) {};
+\node[neuron] (o3) at (6, 0.2) {};
+
+% --- Connections (fully connected) ---
+\foreach \i in {i1,i2,i3}{
+  \foreach \h in {h1,h2}{
+    \draw[conn,->] (\i) -- (\h);
+  }
+}
+\foreach \h in {h1,h2}{
+  \foreach \o in {o1,o2,o3}{
+    \draw[conn,->] (\h) -- (\o);
+  }
+}
+
+% --- Output arrows ---
+\node (S) at (7.5,1.0) {$S$};
+\draw[outarrow] (o1) -- (S);
+\draw[outarrow] (o2) -- (S);
+\draw[outarrow] (o3) -- (S);
+
+\draw[conn,->] (S.east) -- ++(1.1,0); % starts at the right edge of the S node
+
+% --- Dashed grouping around outputs + circled bottom output ---
+\node[draw,dashed,rounded corners=10pt,fit=(o1)(o2)(o3),inner sep=6mm] (outbox) {};
+%\node[draw,circle,fit=(o3),inner sep=4mm] (circled) {};
+
+% --- Labels above layers ---
+\node[align=center] at (0, 3.1) {$z^{(0)}$\\{\small (input)}};
+\node[align=center] at (3, 3.1) {$z^{(1)}$\\{\small (hidden)}};
+\node[align=center] at (6, 3.1) {$z^{(2)}$\\{\small (output)}};
+
+% --- Weight labels ---
+\node at (1.6, -0.35) {$w^{(1)}$};
+\node at (4.4, -0.35) {$w^{(2)}$};
+
+% --- Matrix-shape notes (bottom) ---
+\node[anchor=west] at (0.0, -2.2) {$z^{(0)}$};
+\node[anchor=west] at (2.1, -2.2) {${1\times 3}$ matrix};
+
+\node[anchor=west] at (0.0, -3.0) {$w^{(1)}$};
+\node[anchor=west] at (2.1, -3.0) {${3\times 2}$ matrix};
+
+\node[anchor=west] at (0.0, -3.8) {$w^{(2)}$};
+\node[anchor=west] at (2.1, -3.8) {${2\times 3}$ matrix};
+
+\end{tikzpicture}
+
+\vfill\eject
+
+% Preamble:
+% \usepackage{tikz}
+
+\begin{tikzpicture}[
+  x=1cm,y=1cm,
+  >=stealth,
+  neuron/.style={circle,draw,very thick,minimum size=7mm,inner sep=0pt},
+  conn/.style={->,thick},
+]
+
+% --- Labels ---
+\node[align=left] at (0,3.1) {${N}$\\inputs};
+\node[align=left] at (7.2,3.1) {${M}$\\outputs\\$\sigma(x)=x$};
+
+% --- Inputs (left) ---
+\node[neuron] (in1) at (0, 2.0) {};
+\node[neuron] (in2) at (0, 1.2) {};
+\node at (0, 0.45) {$\vdots$};
+\node[neuron] (inN) at (0,-1.6) {};
+
+% --- Outputs (right) ---
+\node[neuron] (out1) at (7.0, 1.2) {};
+\node[neuron] (out2) at (7.0, 0.0) {};
+\node at (7.0, -.8) {$\vdots$};
+\node[neuron] (outM) at (7.0,-1.6) {};
+
+% --- Fully-connected (shown nodes) linear map ---
+\foreach \i in {in1,in2,inN}{
+  \foreach \o in {out1,out2,outM}{
+    \draw[conn] (\i) -- (\o);
+  }
+}
+
+% Optional: label the linear map
+\node at (3.5, -2.2) {$\boldsymbol{W}$};
+
+% --- Output arrows ---
+\draw[conn] (out1) -- ++(1.3,0);
+\draw[conn] (out2) -- ++(1.3,0);
+\draw[conn] (outM) -- ++(1.3,0);
+
+\end{tikzpicture}
+
+\vfill\eject
+\begin{tikzpicture}[
+  x=1cm,y=1cm,
+  >=stealth,
+  neuron/.style={circle,draw,very thick,minimum size=7mm,inner sep=0pt},
+  conn/.style={->,thick},
+]
+
+% --- Labels ---
+\node[align=left] at (0,3.1) {${N}$\\inputs};
+\node[align=left] at (7.2,3.1) {${M}$\\outputs\\ (logits)};
+
+% --- Inputs (left) ---
+\node[neuron] (in1) at (0, 2.0) {};
+\node[neuron] (in2) at (0, 1.2) {};
+\node at (0, 0.45) {$\vdots$};
+\node[neuron] (inN) at (0,-1.6) {};
+
+% --- Outputs (right) ---
+\node[neuron] (out1) at (7.0, 1.2) {};
+\node[neuron] (out2) at (7.0, 0.0) {};
+\node at (7.0, -.8) {$\vdots$};
+\node[neuron] (outM) at (7.0,-1.6) {};
+
+% --- Fully-connected (shown nodes) linear map ---
+\foreach \i in {in1,in2,inN}{
+  \foreach \o in {out1,out2,outM}{
+    \draw[conn] (\i) -- (\o);
+  }
+}
+
+% Optional: label the linear map
+\node at (3.5, -2.2) {$\boldsymbol{W}$};
+
+% --- Output arrows ---
+\node[rotate=-90] (S) at (9.0,0) {softmax};
+% Oval around S (no extra TikZ libraries required)
+\draw (S) ellipse (0.6 and 2.2);
+
+% Connection points on the oval boundary (matched to the y-levels of the outputs)
+\coordinate (Sleft1)  at (8.497, 1.2);
+\coordinate (Sright1) at (9.503, 1.2);
+\coordinate (Sleft2)  at (8.4,   0.0);
+\coordinate (Sright2) at (9.6,   0.0);
+\coordinate (SleftM)  at (8.588,-1.6);
+\coordinate (SrightM) at (9.412,-1.6);
+
+% Incoming arrows (to the oval)
+\draw[conn] (out1) -- (Sleft1);
+\draw[conn] (out2) -- (Sleft2);
+\draw[conn] (outM) -- (SleftM);
+
+% Outgoing arrows (leaving the oval)
+\draw[conn] (Sright1) -- ++(1.3,0);
+\draw[conn] (Sright2) -- ++(1.3,0);
+\draw[conn] (SrightM) -- ++(1.3,0);
+
+
+\end{tikzpicture}
+
+\vfill\eject
+
+% ------------------------------------------------------------
+% Two-layer dense neural network (input -> hidden -> output)
+% ------------------------------------------------------------
+\begin{tikzpicture}[
+  x=1cm,y=1cm,
+  >=stealth,
+  neuron/.style={circle,draw,thick,minimum size=7mm,inner sep=0pt},
+  conn/.style={->,thick},
+]
+
+% Layer x-positions
+\def\xin{0}
+\def\xhid{3}
+\def\xout{6}
+
+% --- Nodes ---
+% Input layer (4)
+\node[neuron] (i1) at (\xin,  1.8) {};
+\node[neuron] (i2) at (\xin,  0.6) {};
+\node[neuron] (i3) at (\xin, -0.6) {};
+\node[neuron] (i4) at (\xin, -1.8) {};
+
+% Hidden layer (3)
+\node[neuron] (h1) at (\xhid,  1.2) {};
+\node[neuron] (h2) at (\xhid,  0.0) {};
+\node[neuron] (h3) at (\xhid, -1.2) {};
+
+% Output layer (2)
+\node[neuron] (o1) at (\xout,  0.7) {};
+\node[neuron] (o2) at (\xout, -0.7) {};
+
+% --- Fully-connected edges ---
+\foreach \i in {i1,i2,i3,i4}{
+  \foreach \h in {h1,h2,h3}{
+    \draw[conn] (\i) -- (\h);
+  }
+}
+\foreach \h in {h1,h2,h3}{
+  \foreach \o in {o1,o2}{
+    \draw[conn] (\h) -- (\o);
+  }
+}
+
+% --- Output arrows ---
+\draw[conn] (o1) -- ++(1.1,0);
+\draw[conn] (o2) -- ++(1.1,0);
+
+% --- Labels ---
+\node[align=center] at (\xin,  2.8) {Input\\$\boldsymbol{x}$};
+\node[align=center] at (\xhid, 2.8) {Hidden\\$\boldsymbol{a}^{(1)}$};
+\node[align=center] at (\xout, 2.8) {Output\\$\boldsymbol{a}^{(2)}$};
+\node at (1.5, -2.6) {$W^{(1)}$};
+\node at (4.5, -2.6) {$W^{(2)}$};
+
+\end{tikzpicture}
+\vfill\eject
+
+\begin{tikzpicture}[scale=1.5, transform shape, neuron/.style={circle,draw,minimum size=8pt,inner sep=0pt}, >=stealth]
+  % Title
+
+
+
+  % Output layer nodes
+  \node[neuron] (o_top) at (0,2.4) {};
+  \node at (0,2.0) {$\vdots$};
+  \node[neuron] (o_mid) at (0,1.6) {};
+  \node at (0,1.2) {$\vdots$};
+  \node[neuron] (o_j)   at (0,0.8) {};
+
+  % Loss node and arrow
+  \node (loss) at (3.2,1.6) {$\mathcal{L}$};
+  \draw[->] (o_top) -- (loss) ;
+  \draw[->] (o_j) -- (loss) ;
+  \draw[->] (o_mid) -- (loss) node[pos=.25,above] {output};
+
+  % Labels for z_j^(n) and delta
+  \node[anchor=west] at (-.2,3.0) {$z^{(n)}_{j}$};
+  \node[anchor=west] at (0,-.4) {$\delta^{(n)}_{j} = \dfrac{\partial \mathcal{L}}{\partial z^{(n)}_{j}}$};
+\end{tikzpicture}
+
+\vfill\eject
+
+\begin{tikzpicture}[scale=1.5]
+  % Define vertical lines for layers
+  \draw[dotted, gray] (0,-2) -- (0,2);
+  \draw[dotted, gray] (3,-2) -- (3,2);
+  
+  % Layer l-1 neurons
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (z21) at (0,0.8) {$\sigma$};
+  \node[left=2pt of z21] { $z_k^{(l-1)}$};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (top1) at (0,1.8) {};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (mid1) at (0,-0.5) {};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (bot1) at (0,-1.5) {};
+  
+  % Layer l neurons  
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (z1l) at (3,0.3) {};
+  \node[right=2pt of z1l] { $z_j^{(l)}$};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (top2) at (3,1.8) {};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (mid2) at (3,-0.8) {};
+  \node[circle, draw, minimum size=12pt, inner sep=0pt] (bot2) at (3,-1.5) {};
+  
+  % Connection with weight
+  \draw[->, thick] (z21) --  node[above, pos=0.5] {$w_{kj}^{(l)}$} (z1l);
+  \draw[->, thick] (z21) --  node[above, pos=0.5] {$w_{k1}^{(l)}$} (top2);
+  \draw[->, thick] (z21) --  node[below, pos=0.5] {$w_{km}^{(l)}$} (bot2);
+  \draw[->, dashed] (z21) -- (mid2) ; 
+  
+\end{tikzpicture}
+
+\end{document}

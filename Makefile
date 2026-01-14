@@ -1,13 +1,12 @@
-CONTROLS = metadata.yml Makefile
+CONTROLS = Makefile
 CHAPTERS = $(shell find chapters/ -type f -name '*.md' | sort)
 #FILTERS = --filter pandoc-xnos 
 #OPTIONS = -N --standalone --mathjax --toc --top-level-division=chapter
-METADATA = --metadata-file metadata.yml
-OUTPUT = -o build.pdf
+OUTPUT = --to pdf --output index.pdf
 
-book: build.pdf
-	
-build.pdf : $(CHAPTERS) $(CONTROLS)
-	cat $(CHAPTERS) | quarto render $(METADATA) $(OUTPUT)
+book: index.pdf
+
+index.pdf : index.qmd $(CHAPTERS) $(CONTROLS)
+	quarto render index.qmd $(OUTPUT)
 
 
