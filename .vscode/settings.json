@@ -1,3 +1,10 @@
 {
-    "makefile.configureOnOpen": false
+    "makefile.configureOnOpen": false,
+    "files.associations": {
+        "*.md": "quarto"
+    },
+    "[quarto]": {
+        "editor.defaultFormatter": null,
+        "editor.formatOnSave": false
+    }
 }
