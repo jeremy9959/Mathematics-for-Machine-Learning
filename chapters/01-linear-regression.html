@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -66,7 +66,13 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -75,6 +81,7 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -84,6 +91,33 @@ div.csl-indent {
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 </head>
 
 <body class="nav-sidebar floating">
@@ -92,12 +126,12 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-linear-regression.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Linear Regression</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-linear-regression.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Linear Regression</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -107,7 +141,7 @@ div.csl-indent {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Lectures on Machine Learning</a> 
@@ -189,7 +223,7 @@ div.csl-indent {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -240,30 +274,40 @@ $$\newcommand{\R}{\mathbb{R}}$$
   </div>
   
 
+
 </header>
+
 
 <section id="sec-Intro" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="sec-Intro"><span class="header-section-number">1.1</span> Introduction</h2>
 <p>Suppose that we are trying to study two quantities <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> that we suspect are related – at least approximately – by a linear equation <span class="math inline">\(y=ax+b\)</span>. Sometimes this linear relationship is predicted by theoretical considerations, and sometimes it is just an empirical hypothesis.</p>
-<p>For example, if we are trying to determine the velocity of an object travelling towards us at constant speed, and we measure measure the distances <span class="math inline">\(d_1, d_2, \ldots, d_n\)</span> between us and the object at a series of times <span class="math inline">\(t_1, t_2, \ldots, t_n\)</span>, then since “distance equals rate times time” we have a theoretical foundation for the assumption that <span class="math inline">\(d=rt+b\)</span> for some constants <span class="math inline">\(r\)</span> and <span class="math inline">\(b\)</span>. On the other hand, because of unavoidable experimental errors, we can’t expect that this relationship will hold exactly for the observed data; instead, we likely get a graph like that shown in <a href="#fig-dvt">Figure&nbsp;<span>1.1</span></a>. We’ve drawn a line on the plot that seems to capture the true slope (and hence velocity) of the object.</p>
-<div id="fig-dvt" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="img/distance-vs-time.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.1: Physics Experiment</figcaption>
+<p>For example, if we are trying to determine the velocity of an object travelling towards us at constant speed, and we measure measure the distances <span class="math inline">\(d_1, d_2, \ldots, d_n\)</span> between us and the object at a series of times <span class="math inline">\(t_1, t_2, \ldots, t_n\)</span>, then since “distance equals rate times time” we have a theoretical foundation for the assumption that <span class="math inline">\(d=rt+b\)</span> for some constants <span class="math inline">\(r\)</span> and <span class="math inline">\(b\)</span>. On the other hand, because of unavoidable experimental errors, we can’t expect that this relationship will hold exactly for the observed data; instead, we likely get a graph like that shown in <a href="#fig-dvt" class="quarto-xref">Figure&nbsp;<span>1.1</span></a>. We’ve drawn a line on the plot that seems to capture the true slope (and hence velocity) of the object.</p>
+<div id="fig-dvt" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dvt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/distance-vs-time.png" class="img-fluid figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dvt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.1: Physics Experiment
+</figcaption>
 </figure>
 </div>
-<p>On the other hand, we might look at a graph such as <a href="#fig-mpg-vs-displacement">Figure&nbsp;<span>1.2</span></a>, which plots the gas mileage of various car models against their engine size (displacement), and observe a general trend in which bigger engines get lower mileage. In this situation we could ask for the best line of the form <span class="math inline">\(y=mx+b\)</span> that captures this relationship and use that to make general conclusions without necessarily having an underlying theory.</p>
-<div id="fig-mpg-vs-displacement" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="img/mpg-vs-displacement.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.2: MPG vs Displacement ( <span class="citation" data-cites="irvine">[<a href="20-references.html#ref-irvine" role="doc-biblioref">1</a>]</span> )</figcaption>
+<p>On the other hand, we might look at a graph such as <a href="#fig-mpg-vs-displacement" class="quarto-xref">Figure&nbsp;<span>1.2</span></a>, which plots the gas mileage of various car models against their engine size (displacement), and observe a general trend in which bigger engines get lower mileage. In this situation we could ask for the best line of the form <span class="math inline">\(y=mx+b\)</span> that captures this relationship and use that to make general conclusions without necessarily having an underlying theory.</p>
+<div id="fig-mpg-vs-displacement" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mpg-vs-displacement-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/mpg-vs-displacement.png" class="img-fluid figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mpg-vs-displacement-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.2: MPG vs Displacement ( <span class="citation" data-cites="irvine">[<a href="20-references.html#ref-irvine" role="doc-biblioref">1</a>]</span> )
+</figcaption>
 </figure>
 </div>
 </section>
 <section id="sec-Calculus" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="sec-Calculus"><span class="header-section-number">1.2</span> Least Squares (via Calculus)</h2>
 <p>In either of the two cases above, the question we face is to determine the line <span class="math inline">\(y=mx+b\)</span> that “best fits” the data <span class="math inline">\(\{(x_i,y_i)_{i=1}^{N}\}\)</span>. The classic approach is to determine the equation of a line <span class="math inline">\(y=mx+b\)</span> that minimizes the “mean squared error”:</p>
-<p><span class="math display">\[ MSE(m,b) = \frac{1}{N}\sum_{i=1}^{N} (y_i-mx_i-b)^2 \]</span></p>
+<p><span class="math display">\[ MSE(m,b) = \frac{1}{N}\sum\_{i=1}^{N} (y_i-mx_i-b)^2 \]</span></p>
 <p>It’s worth emphasizing that the <span class="math inline">\(MSE\)</span> is a function of two variables – the slope <span class="math inline">\(m\)</span> and the intercept <span class="math inline">\(b\)</span> – and that the data points <span class="math inline">\(\{(x_i,y_i)\}\)</span> are constants for these purposes. Furthermore, it’s a quadratic function in those two variables. Since our goal is to find <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> that minimize the <span class="math inline">\(MSE\)</span>, we have a Calculus problem that we can solve by taking partial derivatives and setting them to zero.</p>
 <p>To simplify the notation, let’s abbreviate <span class="math inline">\(MSE\)</span> by <span class="math inline">\(E\)</span>.</p>
 <p><span class="math display">\[
@@ -289,7 +333,7 @@ b} &amp;= \frac{1}{N}\sum_{1}^{N}-2(y_i-mx_i-b) \\
 <section id="sec-CalcExercises" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="sec-CalcExercises"><span class="header-section-number">1.2.1</span> Exercises</h3>
 <ol type="1">
-<li><p>Verify that <a href="#eq-LSAnswer">Equation&nbsp;<span>1.2</span></a> is in fact the solution to the system in <a href="#eq-LS">Equation&nbsp;<span>1.1</span></a> .</p></li>
+<li><p>Verify that <a href="#eq-LSAnswer" class="quarto-xref">Equation&nbsp;<span>1.2</span></a> is in fact the solution to the system in <a href="#eq-LS" class="quarto-xref">Equation&nbsp;<span>1.1</span></a> .</p></li>
 <li><p>Suppose that <span class="math inline">\(S_{xx}-\overline{x}^2=0\)</span>. What does that mean about the <span class="math inline">\(x_i\)</span>? Does it make sense that the problem of finding the “line of best fit” fails in this case?</p></li>
 </ol>
 </section>
@@ -302,37 +346,43 @@ x_n\end{matrix}\right] \mathrm{\ and\ } Y = \left[\begin{matrix}
 y_1\cr y_2\cr \vdots\cr y_n\end{matrix}\right]
 \]</span></p>
 <p>Let’s also introduce one other vector</p>
-<p><span class="math display">\[ E = \left[\begin{matrix} 1 \cr 1 \cr \vdots \cr
-1\end{matrix}\right].  
+<p><span class="math display">\[
+E = \left[\begin{matrix} 1 \cr 1 \cr \vdots \cr
+1\end{matrix}\right].
 \]</span></p>
-<p>First, let’s assume that <span class="math inline">\(E\)</span> and <span class="math inline">\(X\)</span> are linearly independent. If not, then <span class="math inline">\(X\)</span> is a constant vector (why?) which we already know is a problem from <a href="#sec-Calculus"><span>Section&nbsp;1.2</span></a>, Exercise 2. Therefore <span class="math inline">\(E\)</span> and <span class="math inline">\(X\)</span> span a plane in <span class="math inline">\(\mathbf{R}^{N}\)</span>.</p>
-<div id="fig-perp" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="img/distance-to-plane.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.3: Distance to A Plane</figcaption>
+<p>First, let’s assume that <span class="math inline">\(E\)</span> and <span class="math inline">\(X\)</span> are linearly independent. If not, then <span class="math inline">\(X\)</span> is a constant vector (why?) which we already know is a problem from <a href="#sec-Calculus" class="quarto-xref"><span>Section 1.2</span></a>, Exercise 2. Therefore <span class="math inline">\(E\)</span> and <span class="math inline">\(X\)</span> span a plane in <span class="math inline">\(\mathbf{R}^{N}\)</span>.</p>
+<div id="fig-perp" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-perp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/distance-to-plane.png" class="img-fluid figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-perp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.3: Distance to A Plane
+</figcaption>
 </figure>
 </div>
 <p>Now if our data points <span class="math inline">\((x_i,y_i)\)</span> all <em>did</em> lie on a line <span class="math inline">\(y=mx+b\)</span>, then the three vectors <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span>, and <span class="math inline">\(E\)</span> would be linearly dependent:</p>
-<p><span class="math display">\[ Y = mX + bE.  \]</span></p>
+<p><span class="math display">\[ Y = mX + bE. \]</span></p>
 <p>Since our data is only approximately linear, that’s not the case. So instead we look for an approximate solution. One way to phrase that is to ask:</p>
 <p><em>What is the point <span class="math inline">\(\hat{Y}\)</span> in the plane <span class="math inline">\(H\)</span> spanned by <span class="math inline">\(X\)</span> and <span class="math inline">\(E\)</span> in <span class="math inline">\(\mathbf{R}^{N}\)</span> which is closest to <span class="math inline">\(Y\)</span>?</em></p>
 <p>If we knew this point <span class="math inline">\(\hat{Y}\)</span>, then since it lies in <span class="math inline">\(H\)</span> we would have <span class="math inline">\(\hat{Y}=mX+bE\)</span> and the coefficients <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> would be a candidate for defining a line of best fit <span class="math inline">\(y=mx+b\)</span>. Finding the point in a plane closest to another point in <span class="math inline">\(\mathbf{R}^{N}\)</span> is a geometry problem that we can solve.</p>
 <p><strong>Proposition:</strong> The point <span class="math inline">\(\hat{Y}\)</span> in the plane spanned by <span class="math inline">\(X\)</span> and <span class="math inline">\(E\)</span> is the point such that the vector <span class="math inline">\(Y-\hat{Y}\)</span> is perpendicular to <span class="math inline">\(H\)</span>.</p>
-<p><strong>Proof:</strong> See <a href="#fig-perp">Figure&nbsp;<span>1.3</span></a> for an illustration – perhaps you are already convinced by this, but let’s be careful. <span class="math inline">\(\hat{Y}=mX+bE\)</span> such that <span class="math display">\[ D = \|Y-\hat{Y}\|^2 = \|Y-mX-bE\|^2 \]</span> is minimal. Using some vector calculus, we have <span class="math display">\[ \frac{\partial D}{\partial m} =
+<p><strong>Proof:</strong> See <a href="#fig-perp" class="quarto-xref">Figure&nbsp;<span>1.3</span></a> for an illustration – perhaps you are already convinced by this, but let’s be careful. <span class="math inline">\(\hat{Y}=mX+bE\)</span> such that <span class="math display">\[ D = \|Y-\hat{Y}\|^2 = \|Y-mX-bE\|^2 \]</span> is minimal. Using some vector calculus, we have <span class="math display">\[ \frac{\partial D}{\partial m} =
 \frac{\partial}{\partial m} (Y-mX-bE)\cdot (Y-mX-bE) =
 -2(Y-mX-bE)\cdot X \]</span> and <span class="math display">\[ \frac{\partial D}{\partial b} =
 \frac{\partial}{\partial b} (Y-mX-bE)\cdot (Y-mX-bE) =
--2(Y-mX-bE)\cdot E.  \]</span></p>
+-2(Y-mX-bE)\cdot E. \]</span></p>
 <p>So both derivatives are zero exactly when <span class="math inline">\(\hat{Y}=(Y-mX-bE)\)</span> is orthogonal to both <span class="math inline">\(X\)</span> and <span class="math inline">\(E\)</span>, and therefore every vector in <span class="math inline">\(H\)</span>.</p>
 <p>We also obtain equations for <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> just as in our first look at this problem.</p>
-<p><span id="eq-LSAnswer2"><span class="math display">\[ \begin{aligned} m(X\cdot E) &amp;+ b(E\cdot E) &amp;= (Y\cdot E) \cr
+<p><span id="eq-LSAnswer2"><span class="math display">\[
+\begin{aligned} m(X\cdot E) &amp;+ b(E\cdot E) &amp;= (Y\cdot E) \cr
 m(X\cdot X) &amp;+ b(E\cdot X) &amp;= (Y\cdot X) \cr \end{aligned}
 \tag{1.3}\]</span></span></p>
-<p>We leave it is an exercise below to check that these are the same equations that we obtained in <a href="#eq-LSAnswer">Equation&nbsp;<span>1.2</span></a>.</p>
+<p>We leave it is an exercise below to check that these are the same equations that we obtained in <a href="#eq-LSAnswer" class="quarto-xref">Equation&nbsp;<span>1.2</span></a>.</p>
 <section id="exercises" class="level3" data-number="1.3.1">
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="exercises"><span class="header-section-number">1.3.1</span> Exercises</h3>
 <ol type="1">
-<li>Verify that <a href="#eq-LSAnswer">Equation&nbsp;<span>1.2</span></a> and <a href="#eq-LSAnswer2">Equation&nbsp;<span>1.3</span></a> are equivalent.</li>
+<li>Verify that <a href="#eq-LSAnswer" class="quarto-xref">Equation&nbsp;<span>1.2</span></a> and <a href="#eq-LSAnswer2" class="quarto-xref">Equation&nbsp;<span>1.3</span></a> are equivalent.</li>
 </ol>
 </section>
 </section>
@@ -364,28 +414,34 @@ y=m_1 d + m_2 w + m_3 a +b
 x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2k} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots
 \\ x_{N1} &amp; x_{k2} &amp; \cdots &amp; x_{Nk} \\ \end{matrix}\right)
 \]</span></p>
-<p>and the measured dependent variables <span class="math inline">\(Y\)</span> are a column vector <span class="math display">\[ Y =
+<p>and the measured dependent variables <span class="math inline">\(Y\)</span> are a column vector</p>
+<p><span class="math display">\[
+Y =
 \left[\begin{matrix} y_1 \\ y_2 \\ \vdots \\ y_N\end{matrix}\right].
 \]</span></p>
-<p>If <span class="math inline">\(m_1,\ldots, m_k\)</span> are “slopes” associated with these properties in <a href="#eq-multivariate">Equation&nbsp;<span>1.4</span></a>, and <span class="math inline">\(b\)</span> is the “intercept”, then the predicted value <span class="math inline">\(\hat{Y}\)</span> is given by a matrix equation</p>
+<p>If <span class="math inline">\(m_1,\ldots, m_k\)</span> are “slopes” associated with these properties in <a href="#eq-multivariate" class="quarto-xref">Equation&nbsp;<span>1.4</span></a>, and <span class="math inline">\(b\)</span> is the “intercept”, then the predicted value <span class="math inline">\(\hat{Y}\)</span> is given by a matrix equation</p>
 <p><span class="math display">\[
 \hat{Y} = X\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\
 m_k\end{matrix}\right]+\left[\begin{matrix} 1 \\ 1 \\ \cdots \\
 1\end{matrix}\right]b
 \]</span></p>
 <p>and our goal is to choose these parameters <span class="math inline">\(m_i\)</span> and <span class="math inline">\(b\)</span> to make the mean squared error:</p>
-<p><span class="math display">\[ MSE(m_1,\ldots, m_k,b) = \|Y-\hat{Y}\|^2 = \sum_{i=1}^{N} (y_i -
+<p><span class="math display">\[
+MSE(m_1,\ldots, m_k,b) = \|Y-\hat{Y}\|^2 = \sum_{i=1}^{N} (y_i -
 \sum_{j=1}^{k} x_{ij}m_j -b )^2.
 \]</span></p>
 <p>Here we are summing over the <span class="math inline">\(N\)</span> different car models, and for each model taking the squared difference between the true mileage <span class="math inline">\(y_i\)</span> and the “predicted” mileage <span class="math inline">\(\sum_{j=1}^{k} x_{ij}m_j +b\)</span>. We wish to minimize this MSE.</p>
 <p>Let’s make one more simplification. The intercept variable <span class="math inline">\(b\)</span> is annoying because it requires separate treatment from the <span class="math inline">\(m_i\)</span>. But we can use a trick to eliminate the need for special treatment. Let’s add a new feature to our data matrix (a new column) that has the constant value <span class="math inline">\(1\)</span>.</p>
-<p><span class="math display">\[ X = \left(\begin{matrix} x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1k} &amp; 1\\
+<p><span class="math display">\[
+X = \left(\begin{matrix} x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1k} &amp; 1\\
 x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2k} &amp; 1\\ \vdots &amp; \vdots &amp; \ddots &amp;
 \vdots &amp; 1\\ x_{N1} &amp; x_{k2} &amp; \cdots &amp; x_{Nk} &amp; 1\\
 \end{matrix}\right)
 \]</span></p>
-<p>Now our data matrix <span class="math inline">\(X\)</span> is <span class="math inline">\(N\times(k+1)\)</span> and we can put our “intercept” <span class="math inline">\(b=m_{k+1}\)</span> into our vector of “slopes” <span class="math inline">\(m_1, \ldots, m_k,m_{k+1}\)</span>:</p>
-<p><span class="math display">\[ \hat{Y} = X\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
+<p>Now our data matrix <span class="math inline">\(X\)</span> is <span class="math inline">\(N\times(k+1)\)</span> and we can put our “intercept” <span class="math inline">\(b=m_{k+1}\)</span> into our vector of “slopes” <span class="math inline">\(m_1, \ldots,
+m_k,m_{k+1}\)</span>:</p>
+<p><span class="math display">\[
+\hat{Y} = X\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
 m_{k+1}\end{matrix}\right]
 \]</span></p>
 <p>and our MSE becomes</p>
@@ -393,38 +449,40 @@ m_{k+1}\end{matrix}\right]
 MSE(M) = \|Y - XM\|^2
 \]</span></p>
 <p>where</p>
-<p><span class="math display">\[ M=\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
+<p><span class="math display">\[
+M=\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
 m_{k+1}\end{matrix}\right].
 \]</span></p>
-<p><strong>Remark:</strong> Later on (see {<a href="#sec-centered"><span>Section&nbsp;1.6</span></a>}) we will see that if we “center” our features about their mean, by subtracting the average value of each column of <span class="math inline">\(X\)</span> from that column; and we also subtract the average value of <span class="math inline">\(Y\)</span> from the entries of <span class="math inline">\(Y\)</span>, then the <span class="math inline">\(b\)</span> that emerges from the least squares fit is zero. As a result, instead of adding a column of <span class="math inline">\(1\)</span>’s, you can change coordinates to center each feature about its mean, and keep your <span class="math inline">\(X\)</span> matrix <span class="math inline">\(N\times k\)</span>.</p>
+<p><strong>Remark:</strong> Later on (see {<a href="#sec-centered" class="quarto-xref"><span>Section 1.6</span></a>}) we will see that if we “center” our features about their mean, by subtracting the average value of each column of <span class="math inline">\(X\)</span> from that column; and we also subtract the average value of <span class="math inline">\(Y\)</span> from the entries of <span class="math inline">\(Y\)</span>, then the <span class="math inline">\(b\)</span> that emerges from the least squares fit is zero. As a result, instead of adding a column of <span class="math inline">\(1\)</span>’s, you can change coordinates to center each feature about its mean, and keep your <span class="math inline">\(X\)</span> matrix <span class="math inline">\(N\times k\)</span>.</p>
 <p>The Calculus approach to minimizing the <span class="math inline">\(MSE\)</span> is to take its partial derivatives with respect to the <span class="math inline">\(m_{i}\)</span> and set them to zero. Let’s first work out the derivatives in a nice form for later.</p>
 <p><strong>Proposition:</strong> The gradient of <span class="math inline">\(MSE(M)=E\)</span> is given by</p>
 <p><span id="eq-gradient"><span class="math display">\[
-\nabla E = \left[\begin{matrix} \df{M_1}E \\ \df{M_2}E \\ \vdots \\
-\df{m_{M+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
+\nabla E = \left[\begin{matrix} \frac{\partial}{\partial M_1}E \\ \frac{\partial}{\partial M_2}E \\ \vdots \\
+\frac{\partial}{\partial m_{k+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
 X^{\intercal}XM
 \tag{1.5}\]</span></span></p>
 <p>where <span class="math inline">\(X^{\intercal}\)</span> is the transpose of <span class="math inline">\(X\)</span>.</p>
-<p><strong>Proof:</strong> First, remember that the <span class="math inline">\(ij\)</span> entry of <span class="math inline">\(X^{\intercal}\)</span> is the <span class="math inline">\(ji\)</span> entry of <span class="math inline">\(X\)</span>. Also, we will use the notation <span class="math inline">\(X[j,:]\)</span> to mean the <span class="math inline">\(j^{th}\)</span> row of <span class="math inline">\(X\)</span> and <span class="math inline">\(X[:,i]\)</span> to mean the <span class="math inline">\(i^{th}\)</span> column of <span class="math inline">\(X\)</span>. (This is copied from the Python programming language; the ‘:’ means that index runs over all possibilities).</p>
-<p>Since <span class="math display">\[ E = \sum_{j=1}^{N} (Y_j-\sum_{s=1}^{k+1} X_{js}M_{s})^2 \]</span> we compute: <span id="eq-gradient2"><span class="math display">\[\begin{aligned} \df{M_t}E &amp;= -2\sum_{j=1}^{N}
-X_{jt}(Y_{j}-\sum_{s=1}^{k+1} X_{js}M_{s}) \\ &amp;= -2(\sum_{j=1}^{N}
-Y_{j}X_{jt} - \sum_{j=1}^{N}\sum_{s=1}^{k+1} X_{jt}X_{js}M_{s}) \\ &amp;=
--2(\sum_{j=1}^{N} X^{\intercal}_{tj}Y_{j}
--\sum_{j=1}^{N}\sum_{s=1}^{k+1} X^{\intercal}_{tj}X_{js}M_{s}) \\ &amp;=
--2(X^{\intercal}[t,:]Y - \sum_{s=1}^{k+1}\sum_{j=1}^{N}
-X^{\intercal}_{tj}X_{js}M_{s}) \\ &amp;= -2(X^{\intercal}[t,:]Y -
-\sum_{s=1}^{k+1} (X^{\intercal}X)_{ts}M_{s}) \\ &amp;=
--2(X^{\intercal}[t,:]Y - (X^{\intercal}X)[t,:]M)\\
-\end{aligned} \tag{1.6}\]</span></span></p>
-<p>Stacking up the different rows to make <span class="math inline">\(E\)</span> yields the desired formula.</p>
+<p><strong>Proof:</strong></p>
+<p>Since <span class="math display">\[
+E =\sum_{j=1}^{N} (Y_j-\sum_{s=1}^{k+1} X_{js}M_{s})^2
+\]</span></p>
+<p>we can use the chain rule to compute:</p>
+<p><span id="eq-gradient2"><span class="math display">\[
+\frac{\partial}{\partial M_t}E = -2\sum_{j=1}^{N}
+X_{jt}(Y_{j}-\sum_{s=1}^{k+1} X_{js}M_{s})
+\tag{1.6}\]</span></span></p>
+<p>If we look closely at this expression, we can see that it is the dot product of the <span class="math inline">\(t^{th}\)</span> column of the <span class="math inline">\(N\times (k+1)\)</span> matrix <span class="math inline">\(X\)</span> with the <span class="math inline">\(N\)</span>-dimensional column vector <span class="math inline">\((Y-XM)\)</span>. Given the structure of the gradient as a column vector, this means <span class="math display">\[
+\nabla E = -2X^{\intercal}(Y-XM)=-2X^{\intercal}Y+2X^{\intercal}XM
+\]</span> as claimed.</p>
 <p><strong>Proposition:</strong> Assume that <span class="math inline">\(D=X^{\intercal}X\)</span> is invertible (notice that it is a <span class="math inline">\((k+1)\times(k+1)\)</span> square matrix so this makes sense). The solution <span class="math inline">\(M\)</span> to the multivariate least squares problem is <span id="eq-Msolution"><span class="math display">\[ M =
-D^{-1}X^{\intercal}Y  \tag{1.7}\]</span></span> and the “predicted value” <span class="math inline">\(\hat{Y}\)</span> for <span class="math inline">\(Y\)</span> is <span id="eq-projection"><span class="math display">\[
+D^{-1}X^{\intercal}Y  \tag{1.7}\]</span></span> and the “predicted value” <span class="math inline">\(\hat{Y}\)</span> for <span class="math inline">\(Y\)</span> is</p>
+<p><span id="eq-projection"><span class="math display">\[
 \hat{Y} = XD^{-1}X^{\intercal}Y.
 \tag{1.8}\]</span></span></p>
 </section>
 <section id="the-multivariate-case-geometry" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="the-multivariate-case-geometry"><span class="header-section-number">1.5</span> The Multivariate Case (Geometry)</h2>
-<p>Let’s look more closely at the equation obtained by setting the gradient of the error, <a href="#eq-gradient">Equation&nbsp;<span>1.5</span></a>, to zero. Remember that <span class="math inline">\(M\)</span> is the unknown vector in this equation, everything else is known:</p>
+<p>Let’s look more closely at the equation obtained by setting the gradient of the error, <a href="#eq-gradient" class="quarto-xref">Equation&nbsp;<span>1.5</span></a>, to zero. Remember that <span class="math inline">\(M\)</span> is the unknown vector in this equation, everything else is known:</p>
 <p><span class="math display">\[ X^{\intercal}Y = X^{\intercal}XM \]</span></p>
 <p>Here is how to think about this:</p>
 <ol type="1">
@@ -438,7 +496,7 @@ D^{-1}X^{\intercal}Y  \tag{1.7}\]</span></span> and the “predicted value” <s
 <p><strong>Proposition:</strong> Just as in the simple one-dimensional case, the predicted value <span class="math inline">\(\hat{Y}\)</span> of the least squares problem is the point in <span class="math inline">\(H\)</span> closest to <span class="math inline">\(Y\)</span> – or in other words the point <span class="math inline">\(\hat{Y}\)</span> in <span class="math inline">\(H\)</span> such that <span class="math inline">\(Y-\hat{Y}\)</span> is perpendicular to <span class="math inline">\(H\)</span>.</p>
 <section id="orthogonal-projection" class="level3" data-number="1.5.1">
 <h3 data-number="1.5.1" class="anchored" data-anchor-id="orthogonal-projection"><span class="header-section-number">1.5.1</span> Orthogonal Projection</h3>
-<p>Recall that we introduced the notation <span class="math inline">\(D=X^{\intercal}X\)</span>, and let’s assume, for now, that <span class="math inline">\(D\)</span> is an invertible matrix. We have the formula (see <a href="#eq-projection">Equation&nbsp;<span>1.8</span></a>): <span class="math display">\[ \hat{Y} = XD^{-1}X^{\intercal}Y.  \]</span> <strong>Proposition:</strong> The matrix <span class="math inline">\(P=XD^{-1}X^{\intercal}\)</span> is an <span class="math inline">\(N\times N\)</span> matrix called the orthogonal projection operator onto the subspace <span class="math inline">\(H\)</span> spanned by the columns of <span class="math inline">\(X\)</span>. It has the following properties:</p>
+<p>Recall that we introduced the notation <span class="math inline">\(D=X^{\intercal}X\)</span>, and let’s assume, for now, that <span class="math inline">\(D\)</span> is an invertible matrix. We have the formula (see <a href="#eq-projection" class="quarto-xref">Equation&nbsp;<span>1.8</span></a>): <span class="math display">\[ \hat{Y} = XD^{-1}X^{\intercal}Y.  \]</span> <strong>Proposition:</strong> The matrix <span class="math inline">\(P=XD^{-1}X^{\intercal}\)</span> is an <span class="math inline">\(N\times N\)</span> matrix called the orthogonal projection operator onto the subspace <span class="math inline">\(H\)</span> spanned by the columns of <span class="math inline">\(X\)</span>. It has the following properties:</p>
 <ul>
 <li><span class="math inline">\(PY\)</span> belongs to the subspace <span class="math inline">\(H\)</span> for any <span class="math inline">\(Y\in\mathbf{R}^{N}\)</span>.</li>
 <li><span class="math inline">\((Y-PY)\)</span> is orthogonal to <span class="math inline">\(H\)</span>.</li>
@@ -449,8 +507,9 @@ D^{-1}X^{\intercal}Y  \tag{1.7}\]</span></span> and the “predicted value” <s
 X^{\intercal}Y
 \]</span></p>
 <p>since <span class="math inline">\(X^{\intercal}X=D\)</span>. This equation means that <span class="math inline">\(X^{\intercal}(Y-PY)=0\)</span> which tells us that <span class="math inline">\(Y-PY\)</span> has dot product zero with a basis for <span class="math inline">\(H\)</span>. Finally,</p>
-<p><span class="math display">\[ PP = XD^{-1}X^{\intercal}XD^{-1}X^{\intercal} =
-XD^{-1}X^{\intercal}=P.  
+<p><span class="math display">\[
+PP = XD^{-1}X^{\intercal}XD^{-1}X^{\intercal} =
+XD^{-1}X^{\intercal}=P.
 \]</span></p>
 <p>It should be clear from the above discussion that the matrix <span class="math inline">\(D=X^{\intercal}X\)</span> plays an important role in the study of this problem. In particular it must be invertible or our analysis above breaks down. In the next section we will look more closely at this matrix and what information it encodes about our data.</p>
 </section>
@@ -464,28 +523,28 @@ D_{ij}=X[:,i]\cdot X[:,j] \]</span> of the <span class="math inline">\(i^{th}\)<
 <p>A crucial point in our construction above relied on the matrix <span class="math inline">\(D\)</span> being invertible. The following Lemma shows that <span class="math inline">\(D\)</span> fails to be invertible only when the different features (the columns of <span class="math inline">\(X\)</span>) are linearly dependent.</p>
 <p><strong>Lemma:</strong> <span class="math inline">\(D\)</span> is not invertible if and only if the columns of <span class="math inline">\(X\)</span> are linearly dependent.</p>
 <p><strong>Proof:</strong> If the columns of <span class="math inline">\(X\)</span> are linearly dependent, then there is a nonzero vector <span class="math inline">\(m\)</span> so that <span class="math inline">\(Xm=0\)</span>. In that case clearly <span class="math inline">\(Dm=X^{\intercal}Xm=0\)</span> so <span class="math inline">\(D\)</span> is not invertible. Suppose <span class="math inline">\(D\)</span> is not invertible. Then there is a nonzero vector <span class="math inline">\(m\)</span> with <span class="math inline">\(Dm=X^{\intercal}Xm=0\)</span>. This means that the vector <span class="math inline">\(Xm\)</span> is orthogonal to all of the columns of <span class="math inline">\(X\)</span>. Since <span class="math inline">\(Xm\)</span> belongs to the span <span class="math inline">\(H\)</span> of the columns of <span class="math inline">\(X\)</span>, if it is orthogonal to <span class="math inline">\(H\)</span> it must be zero.</p>
-<p>In fact, the matrix <span class="math inline">\(D\)</span> captures some important statistical measures of our data, but to see this clearly we need to make a slight change of basis. First recall that <span class="math inline">\(X[:,k+1]\)</span> is our column of all <span class="math inline">\(1\)</span>, added to handle the intercept. As a result, the dot product <span class="math inline">\(X[:,i]\cdot X[:,k+1]\)</span> is the sum of the entries in the <span class="math inline">\(i^{th}\)</span> column, and so if we let <span class="math inline">\(\mu_{i}\)</span> denote the average value of the entries in column <span class="math inline">\(i\)</span>, we have <span class="math display">\[ \mu_{i} = \frac{1}{N}(X[:,i]\cdot
+<p>In fact, the matrix <span class="math inline">\(D\)</span> captures some important statistical measures of our data, but to see this clearly we need to make a slight change of basis. First recall that <span class="math inline">\(X[:,k+1]\)</span> is our column of all <span class="math inline">\(1\)</span>, added to handle the intercept. As a result, the dot product <span class="math inline">\(X[:,i]\cdot X[:,k+1]\)</span> is the sum of the entries in the <span class="math inline">\(i^{th}\)</span> column, and so if we let <span class="math inline">\(\mu_{i}\)</span> denote the average value of the entries in column <span class="math inline">\(i\)</span>, we have <span class="math display">\[ \mu\_{i} = \frac{1}{N}(X[:,i]\cdot
 X[:,k+1]) \]</span></p>
-<p>Now change the matrix <span class="math inline">\(X\)</span> by elementary column operations to obtain a new data matrix <span class="math inline">\(X_{0}\)</span> by setting <span class="math display">\[ X_{0}[:,i] =
+<p>Now change the matrix <span class="math inline">\(X\)</span> by elementary column operations to obtain a new data matrix <span class="math inline">\(X_{0}\)</span> by setting <span class="math display">\[ X*{0}[:,i] =
 X[:,i]-\frac{1}{N}(X[:,i]\cdot X[:,k+1])X[:,k+1] =
-X[:,i]-\mu_{i}X[:,k+1] \]</span> for <span class="math inline">\(i=1,\ldots, k\)</span>.</p>
+X[:,i]-\mu*{i}X[:,k+1] \]</span> for <span class="math inline">\(i=1,\ldots, k\)</span>.</p>
 <p>In terms of the original data, we are changing the measurement scale of the data so that each feature has average value zero, and the subspace <span class="math inline">\(H\)</span> spanned by the columns of <span class="math inline">\(X_{0}\)</span> is the same as that spanned by the columns of <span class="math inline">\(X\)</span>. Using <span class="math inline">\(X_{0}\)</span> instead of <span class="math inline">\(X\)</span> for our least squares problem, we get</p>
-<p><span class="math display">\[ \hat{Y} = X_{0}D_{0}^{-1}X_{0}^{\intercal}Y \]</span></p>
+<p><span class="math display">\[ \hat{Y} = X*{0}D*{0}^{-1}X\_{0}^{\intercal}Y \]</span></p>
 <p>and</p>
-<p><span class="math display">\[ M_{0} = D_{0}^{-1}X_{0}^{\intercal}Y \]</span></p>
+<p><span class="math display">\[ M*{0} = D*{0}^{-1}X\_{0}^{\intercal}Y \]</span></p>
 <p>where <span class="math inline">\(D_{0}=X_{0}^{\intercal}X_{0}.\)</span></p>
-<p><strong>Proposition:</strong> The matrix <span class="math inline">\(D_{0}\)</span> has a block form. Its upper left block is a <span class="math inline">\(k\times k\)</span> symmetric block with entries <span class="math display">\[ (D_{0})_{ij} =
-(X[:,i]-\mu_{i}X[:,k+1])\cdot(X[:,j]-\mu_{j}X[:,k+1]) \]</span> Its <span class="math inline">\((k+1)^{st}\)</span> row and column are all zero, except for the <span class="math inline">\((k+1),(k+1)\)</span> entry, which is <span class="math inline">\(N\)</span>.</p>
-<p><strong>Proof:</strong> This follows from the fact that the last row and column entries are (for <span class="math inline">\(i\not=k+1\)</span>): <span class="math display">\[ (X[:,i]-\mu_{i}X[:,k+1])\cdot
-X[:,k+1] = (X[:,i]\cdot X[:,k+1])-N\mu_{i} = 0 \]</span> and for <span class="math inline">\(i=k+1\)</span> we have <span class="math inline">\(X[:,k+1]\cdot X[:,k+1]=N\)</span> since that column is just <span class="math inline">\(N\)</span> <span class="math inline">\(1\)</span>’s.</p>
+<p><strong>Proposition:</strong> The matrix <span class="math inline">\(D_{0}\)</span> has a block form. Its upper left block is a <span class="math inline">\(k\times k\)</span> symmetric block with entries <span class="math display">\[ (D*{0})*{ij} =
+(X[:,i]-\mu*{i}X[:,k+1])\cdot(X[:,j]-\mu*{j}X[:,k+1]) \]</span> Its <span class="math inline">\((k+1)^{st}\)</span> row and column are all zero, except for the <span class="math inline">\((k+1),(k+1)\)</span> entry, which is <span class="math inline">\(N\)</span>.</p>
+<p><strong>Proof:</strong> This follows from the fact that the last row and column entries are (for <span class="math inline">\(i\not=k+1\)</span>): <span class="math display">\[ (X[:,i]-\mu*{i}X[:,k+1])\cdot
+X[:,k+1] = (X[:,i]\cdot X[:,k+1])-N\mu*{i} = 0 \]</span> and for <span class="math inline">\(i=k+1\)</span> we have <span class="math inline">\(X[:,k+1]\cdot X[:,k+1]=N\)</span> since that column is just <span class="math inline">\(N\)</span> <span class="math inline">\(1\)</span>’s.</p>
 <p><strong>Proposition:</strong> If the <span class="math inline">\(x\)</span> coordinates (the features) are centered so that they have mean zero, then the intercept <span class="math inline">\(b\)</span> is <span class="math display">\[ \overline{Y} =
-\frac{1}{N}\sum y_{i}.  \]</span></p>
-<p><strong>Proof:</strong> By centering the coordinates, we replace the matrix <span class="math inline">\(X\)</span> by <span class="math inline">\(X_{0}\)</span> and <span class="math inline">\(D\)</span> by <span class="math inline">\(D_{0}\)</span>. and we are trying to minimize <span class="math inline">\(\|Y-X_{0}M_{0}\|^2\)</span>. Use the formula from <a href="#eq-Msolution">Equation&nbsp;<span>1.7</span></a> to see that <span class="math display">\[ M_{0} = D_{0}^{-1}X_{0}^{\intercal}Y.  \]</span> The <span class="math inline">\(b\)</span> value we are interested in is the last entry <span class="math inline">\(m_{k+1}\)</span> in <span class="math inline">\(M_{0}\)</span>. From the block form of <span class="math inline">\(D_{0}\)</span>, we know that <span class="math inline">\(D_{0}^{-1}\)</span> has bottom row and last column zero except for <span class="math inline">\(1/N\)</span> in position <span class="math inline">\((k+1)\times(k+1)\)</span>. Also <span class="math inline">\(X_{0}^{\intercal}\)</span> has last row consisting entirely of <span class="math inline">\(1\)</span>. So the bottom entry of <span class="math inline">\(X_{0}^{\intercal}Y\)</span> is <span class="math inline">\(\sum_{i=1}^{N} y_{i}\)</span>, and the bottom entry <span class="math inline">\(b\)</span> of <span class="math inline">\(D_{0}^{-1}X_{0}^{\intercal}Y\)</span> is <span class="math display">\[ \mu_{Y} =
-\frac{1}{N}\sum_{i=1}^{N} y_{i}.  \]</span> as claimed.</p>
+\frac{1}{N}\sum y\_{i}. \]</span></p>
+<p><strong>Proof:</strong> By centering the coordinates, we replace the matrix <span class="math inline">\(X\)</span> by <span class="math inline">\(X_{0}\)</span> and <span class="math inline">\(D\)</span> by <span class="math inline">\(D_{0}\)</span>. and we are trying to minimize <span class="math inline">\(\|Y-X_{0}M_{0}\|^2\)</span>. Use the formula from <a href="#eq-Msolution" class="quarto-xref">Equation&nbsp;<span>1.7</span></a> to see that <span class="math display">\[ M*{0} = D*{0}^{-1}X*{0}^{\intercal}Y. \]</span> The <span class="math inline">\(b\)</span> value we are interested in is the last entry <span class="math inline">\(m*{k+1}\)</span> in <span class="math inline">\(M_{0}\)</span>. From the block form of <span class="math inline">\(D_{0}\)</span>, we know that <span class="math inline">\(D_{0}^{-1}\)</span> has bottom row and last column zero except for <span class="math inline">\(1/N\)</span> in position <span class="math inline">\((k+1)\times(k+1)\)</span>. Also <span class="math inline">\(X_{0}^{\intercal}\)</span> has last row consisting entirely of <span class="math inline">\(1\)</span>. So the bottom entry of <span class="math inline">\(X_{0}^{\intercal}Y\)</span> is <span class="math inline">\(\sum_{i=1}^{N} y_{i}\)</span>, and the bottom entry <span class="math inline">\(b\)</span> of <span class="math inline">\(D_{0}^{-1}X_{0}^{\intercal}Y\)</span> is <span class="math display">\[ \mu*{Y} =
+\frac{1}{N}\sum*{i=1}^{N} y\_{i}. \]</span> as claimed.</p>
 <p><strong>Corollary:</strong> If we make a further change of coordinates to define <span class="math display">\[
 Y_{0} = Y - \mu_{Y}\left[\begin{matrix} 1 \\ 1 \\ \vdots \\
 1\end{matrix}\right] \]</span> then the associated <span class="math inline">\(b\)</span> is zero. As a result we can forget about the extra column of <span class="math inline">\(1's\)</span> that we added to <span class="math inline">\(X\)</span> to account for it and reduce the dimension of our entire problem by <span class="math inline">\(1\)</span>.</p>
-<p>Just to recap, if we center our data so that <span class="math inline">\(\mu_{Y}=0\)</span> and <span class="math inline">\(\mu_{i}=0\)</span> for <span class="math inline">\(i=1,\ldots, k\)</span>, then the least squares problem reduces to minimizing <span class="math display">\[ E(M) = \|Y-XM\|^2 \]</span> where <span class="math inline">\(X\)</span> is the <span class="math inline">\(N\times k\)</span> matrix with <span class="math inline">\(j^{th}\)</span> row <span class="math inline">\((x_{j1},x_{j2},\ldots, x_{jk})\)</span> for <span class="math inline">\(j=1,\ldots, N\)</span> and the solutions are as given in <a href="#eq-Msolution">Equation&nbsp;<span>1.7</span></a> and <a href="#eq-projection">Equation&nbsp;<span>1.8</span></a>.</p>
+<p>Just to recap, if we center our data so that <span class="math inline">\(\mu_{Y}=0\)</span> and <span class="math inline">\(\mu_{i}=0\)</span> for <span class="math inline">\(i=1,\ldots, k\)</span>, then the least squares problem reduces to minimizing <span class="math display">\[ E(M) = \|Y-XM\|^2 \]</span> where <span class="math inline">\(X\)</span> is the <span class="math inline">\(N\times k\)</span> matrix with <span class="math inline">\(j^{th}\)</span> row <span class="math inline">\((x_{j1},x_{j2},\ldots, x_{jk})\)</span> for <span class="math inline">\(j=1,\ldots, N\)</span> and the solutions are as given in <a href="#eq-Msolution" class="quarto-xref">Equation&nbsp;<span>1.7</span></a> and <a href="#eq-projection" class="quarto-xref">Equation&nbsp;<span>1.8</span></a>.</p>
 </section>
 <section id="caveats-about-linear-regression" class="level2" data-number="1.7">
 <h2 data-number="1.7" class="anchored" data-anchor-id="caveats-about-linear-regression"><span class="header-section-number">1.7</span> Caveats about Linear Regression</h2>
@@ -502,11 +561,15 @@ Y_{0} = Y - \mu_{Y}\left[\begin{matrix} 1 \\ 1 \\ \vdots \\
 <h3 data-number="1.7.2" class="anchored" data-anchor-id="simpsons-effect"><span class="header-section-number">1.7.2</span> Simpson’s Effect</h3>
 <p>Simpson’s effect is a famous phenomenon that illustrates that linear regression can be very misleading in some circumstances. It is often a product of “pooling” results from multiple experiments. Suppose, for example, that we are studying the relationship between a certain measure of blood chemistry and an individual’s weight gain or less on a particular diet. We do our experiments in three labs, the blue, green, and red labs. Each lab obtains similar results – higher levels of the blood marker correspond to greater weight gain, with a regression line of slope around 1. However, because of differences in the population that each lab is studying, some populations are more susceptible to weight gain and so the red lab sees a mean increase of almost 9 lbs while the blue lab sees a weight gain of only 3 lbs on average.</p>
 <p>The three groups of scientists pool their results to get a larger sample size and do a new regression. Surprise! Now the regression line has slope <span class="math inline">\(-1.6\)</span> and increasing amounts of the marker seem to lead to <em>less</em> weight gain!</p>
-<p>This is called Simpson’s effect, or Simpson’s paradox, and it shows that unknown factors (confounding factors) may cause linear regression to yield misleading results. This is particularly true when data from experiments conducted under different conditions is combined; in this case, the differences in experimental setting, called <em>batch effects</em>, can throw off the analysis very dramatically. See <a href="#fig-simpsons">Figure&nbsp;<span>1.4</span></a> .</p>
-<div id="fig-simpsons" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="img/SimpsonsEffect.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.4: Simpson’s Effect</figcaption>
+<p>This is called Simpson’s effect, or Simpson’s paradox, and it shows that unknown factors (confounding factors) may cause linear regression to yield misleading results. This is particularly true when data from experiments conducted under different conditions is combined; in this case, the differences in experimental setting, called <em>batch effects</em>, can throw off the analysis very dramatically. See <a href="#fig-simpsons" class="quarto-xref">Figure&nbsp;<span>1.4</span></a> .</p>
+<div id="fig-simpsons" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-simpsons-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/SimpsonsEffect.png" class="img-fluid figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-simpsons-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.4: Simpson’s Effect
+</figcaption>
 </figure>
 </div>
 </section>
@@ -605,10 +668,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -618,8 +680,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -632,6 +703,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -675,6 +865,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -700,6 +891,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -761,12 +978,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../index.html" class="pagination-link">
+      <a href="../index.html" class="pagination-link  aria-label=" preface"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/02-pca.html" class="pagination-link">
+      <a href="../chapters/02-pca.html" class="pagination-link" aria-label="<span class='chapter-number'>2</span>&nbsp; <span class='chapter-title'>Principal Component Analysis</span>">
         <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -777,12 +994,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       &nbsp;
     </div>   
-    <div class="nav-footer-center">© 2026. This work is licensed by Jeremy Teitelbaum under the <a href="http://creativecommons.org/licenses/by-sa/4.0">Creative Commons Attribution-ShareAlike License</a>.</div>
+    <div class="nav-footer-center">
+<p>© 2026. This work is licensed by Jeremy Teitelbaum under the <a href="http://creativecommons.org/licenses/by-sa/4.0">Creative Commons Attribution-ShareAlike License</a>.</p>
+</div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
   </div>
 </footer>
+
 
 
 
