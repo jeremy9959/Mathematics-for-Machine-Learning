@@ -119,10 +119,10 @@ $$
 
 From this simple example we can see the power and also the pitfalls of this method.  Suppose we choose
 $x_0=.5$, $\nu=.01$, and do $30$ iterations of the main loop in our algorithm.  The result is shown in 
-@fig-grad_descent_local_minimum .
+@fig-grad-descent-local-minimum .
 
 
-![Gradient descent to a local minimum](img/grad_descent_local_minimum.png){#fig-grad_descent_local_minimum}
+![Gradient descent to a local minimum](img/grad_descent_local_minimum.png){#fig-grad-descent-local-minimum}
 
 As we hope, the red dots quickly descend to the bottom of the "valley" at the point $x=1$.  However,
 this valley is only a *local minimum* of the function; the true minimum is at $x=-2$.  Gradient descent can't see that far away point and so we don't find the true minimum of the function.  One way to 
@@ -151,8 +151,8 @@ One problem with this approach is the need to invert the matrix $D$, which is a 
 via gradient descent, using the computation of the gradient in @eq-gradient:
 
 $$ 
-\nabla E = \left[\begin{matrix} \df{M_1}E \\ \df{M_2}E \\ \vdots \\
-\df{m_{M+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
+\nabla E = \left[\begin{matrix} \frac{\partial}{\partial M_1}E \\ \frac{\partial}{\partial M_2}E \\ \vdots \\
+\frac{\partial}{\partial m_{M+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
 X^{\intercal}XM 
 $$
 

@@ -47,7 +47,7 @@ $$
 $$
 is called the *logistic function* and yields an S-shaped curve. 
 
-![Logistic Curve](img/logistic_curve.png){#fig-logistic_curve width=50%}
+![Logistic Curve](img/logistic_curve.png){#fig-logistic-curve width=50%}
 
 To put the logistic model in perspective, let's choose some explicit parameters and look at what data arising from such a model
 would look like.  Imagine therefore that $a=\log 2$ and $b=0$, so that the probability of the event we are interested occurring is given by the
@@ -64,13 +64,13 @@ Bernoulli trials with probability $p(x)$.  For example, we might find that our e
 
 In applications, our goal is to choose the parameters of a logistic model to accurately predict the likelihood of the event under study occurring as a function
 of the measured parameter.  Let's imagine that we collected the data that we generated above, without knowing that it's source was a logistic model.  So
-@tbl-logistic_data shows the number of times the event occurred, for each of the measured values of the $x$ parameter.
+@tbl-logistic-data shows the number of times the event occurred, for each of the measured values of the $x$ parameter.
 
 |$x$ |-3 | -2 | -1 | 0 | 1 | 2 | 3 |
 |---|---|---|---|---|---|---|---|
 |Occurrences (out of 100)|10  |18 | 38 | 50 | 69 | 78 | 86|
 
-: Sample Data {#tbl-logistic_data}
+: Sample Data {#tbl-logistic-data}
 
 Our objective now is to find a logistic model which best explains this data. Concretely, we need to estimate the coefficients $a$ and $b$ that yield 
 $$
@@ -83,7 +83,7 @@ this prior and obtain a posterior distribution on $a$ and $b$.  For this first l
 notion of "best" and ask what is the most likely choice of $a$ and $b$ to yield this data.
 
 To apply the maximum likelihood approach, we need to ask "for (fixed, but unknown) values of $a$ and $b$, what is the likelihood that a logistic model
-with those parameters would yield the data we have collected?" Each column in @tbl-logistic_data represents $100$ Bernoulli trials with a fixed probability
+with those parameters would yield the data we have collected?" Each column in @tbl-logistic-data represents $100$ Bernoulli trials with a fixed probability
 $p(x)$.  So, for example,  the chance $q$ of obtaining $10$ positive results with $x=-3$ is given by
 $$
 q(-3)=C p(-3)^{10}(1-p(-3))^{90}
@@ -104,8 +104,8 @@ where $C''$ is yet another constant.  Since our ultimate goal is to maximize thi
 
 ### Another point of view on logistic regression
 
-In @tbl-logistic_data we summarize the results of our experiments in groups by the value of the $x$ parameter.  We can think of the data somewhat differently,
-by instead considering each event separately, corresponding to a parameter value $x$ and an outcome $0$ or $1$.  From this point of view the data summarized in @tbl-logistic_data
+In @tbl-logistic-data we summarize the results of our experiments in groups by the value of the $x$ parameter.  We can think of the data somewhat differently,
+by instead considering each event separately, corresponding to a parameter value $x$ and an outcome $0$ or $1$.  From this point of view the data summarized in @tbl-logistic-data
 would correspond to a vector with  $700$ rows.  The first $100$ rows (corresponding to the first column of the table) would have first entry $-3$, the next $100$ would have $-2$, or so on.
 So our parameter values form a  vector $X$. Meanwhile, the outcomes form a vector $Y$ with entries $0$ or $1$. 
 
@@ -261,7 +261,7 @@ to the weights $m_{s}$.
 ### Gradient Descent on our synthetic data
 
 Now we can apply gradient descent to find a maximum likelihood logistic model 
-for the sample data that we generated from the logistic model and reported in @tbl-logistic_data.
+for the sample data that we generated from the logistic model and reported in @tbl-logistic-data.
 With the probability given as
 $$
 p(x) = \frac{1}{1+e^{-ax-b}}
