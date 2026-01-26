@@ -35,15 +35,15 @@ necessarily having an underlying theory.
 ## Least Squares (via Calculus) {#sec-Calculus}
 
 In either of the two cases above, the question we face is to determine
-the line $y=mx+b$ that "best fits" the data $\{(x_i,y_i)\}_{i=1}^{N}$.
+the line $y=mx+b$ that "best fits" the data $\{(x_i,Y_i)\}_{i=1}^{N}$.
 The classic approach is to determine the equation of a line $y=mx+b$
 that minimizes the "mean squared error":
 
-$$ MSE(m,b) = \frac{1}{N}\sum_{i=1}^{N} (y_i-mx_i-b)^2 $$
+$$ MSE(m,b) = \frac{1}{N}\sum_{i=1}^{N} (Y_i-mx_i-b)^2 $$
 
 It's worth emphasizing that the $MSE$ is a function of two variables
 -- the slope $m$ and the intercept $b$ -- and that the data points
-$\{(x_i,y_i)\}$ are constants for these purposes. Furthermore, it's a
+$\{(x_i,Y_i)\}$ are constants for these purposes. Furthermore, it's a
 quadratic function in those two variables. Since our goal is to find
 $m$ and $b$ that minimize the $MSE$, we have a Calculus problem that
 we can solve by taking partial derivatives and setting them to zero.
@@ -52,8 +52,8 @@ To simplify the notation, let's abbreviate $MSE$ by $E$.
 
 $$
 \begin{aligned} \frac{\partial E}{\partial m} &=
--\frac{1}{N}\sum_{i=1}^{N} 2x_i(y_i-mx_i-b) \\ \frac{\partial E}{\partial
-b} &= -\frac{1}{N}\sum_{i=1}^{N} 2(y_i-mx_i-b) \\
+-\frac{1}{N}\sum_{i=1}^{N} 2x_i(Y_i-mx_i-b) \\ \frac{\partial E}{\partial
+b} &= -\frac{1}{N}\sum_{i=1}^{N} 2(Y_i-mx_i-b) \\
 \end{aligned}
 $$
 
@@ -63,22 +63,22 @@ the $\frac{1}{N}$ because it is illuminating in the final result):
 
 $$
 \begin{aligned} \frac{1}{N}(\sum_{i=1}^{N} x_i^2)m &+&
-\frac{1}{N}(\sum_{i=1}^{N} x_i)b &=& \frac{1}{N}\sum_{i=1}^{N} x_i y_i
+\frac{1}{N}(\sum_{i=1}^{N} x_i)b &=& \frac{1}{N}\sum_{i=1}^{N} x_i Y_i
 \\ \frac{1}{N}(\sum_{i=1}^{N} x_i)m &+& b &=&
-\frac{1}{N}\sum_{i=1}^{N} y_{i} \\ \end{aligned}
+\frac{1}{N}\sum_{i=1}^{N} Y_{i} \\ \end{aligned}
 $$ {#eq-LS}
 
 In these equations, notice that $\frac{1}{N}\sum_{i=1}^{N} x_i$ is the
 average (or mean) value of the $x_i$.  Let's call this $\overline{x}$.
-Similarly, $\frac{1}{N}\sum_{i=1}^{N} y_{i}$ is the mean of the $y_i$,
-and we'll call it $\overline{y}$.  If we further simplify the notation
+Similarly, $\frac{1}{N}\sum_{i=1}^{N} Y_{i}$ is the mean of the $Y_i$,
+and we'll call it $\overline{Y}$.  If we further simplify the notation
 and write $S_{xx}$ for $\frac{1}{N}\sum_{i=1}^{N} x_i^2$ and $S_{xy}$
-for $\frac{1}{N}\sum_{i=1}^{N}x_iy_i$ then we can write down a
+for $\frac{1}{N}\sum_{i=1}^{N}x_iY_i$ then we can write down a
 solution to this system using Cramer's rule:
 
 $$ \begin{aligned} m &=
-\frac{S_{xy}-\overline{x}\overline{y}}{S_{xx}-\overline{x}^2} \\ b &=
-\frac{S_{xx}\overline{y}-S_{xy}\overline{x}}{S_{xx}-\overline{x}^2} \\
+\frac{S_{xy}-\overline{x}\overline{Y}}{S_{xx}-\overline{x}^2} \\ b &=
+\frac{S_{xx}\overline{Y}-S_{xy}\overline{x}}{S_{xx}-\overline{x}^2} \\
 \end{aligned}
 $$ {#eq-LSAnswer}
 
@@ -96,7 +96,7 @@ of best fit" fails in this case?
 ## Least Squares (via Geometry) {#sec-LinAlg}
 
 In our discussion above, we thought about our data as consisting of
-$N$ pairs $(x_i,y_i)$ corresponding to $N$ points in the $xy$-plane
+$N$ pairs $(x_i,Y_i)$ corresponding to $N$ points in the $xy$-plane
 $\mathbf{R}^2$.  Now let's turn that picture "on its side", and
 instead think of our data as consisting of *two* points in
 $\mathbf{R}^{N}$:
@@ -121,7 +121,7 @@ plane in $\mathbf{R}^{N}$.
 ![Distance to A Plane](img/distance-to-plane.png){#fig-perp
 width=50%}
 
-Now if our data points $(x_i,y_i)$ all _did_ lie on a line $y=mx+b$,
+Now if our data points $(x_i,Y_i)$ all _did_ lie on a line $y=mx+b$,
 then the three vectors $X$, $Y$, and $E$ would be linearly dependent:
 
 $$ Y = mX + bE. $$
@@ -187,7 +187,7 @@ different mileage for the same engine size.
 
 Suppose we wish to use engine displacement, vehicle weight, and
 acceleration all together to predict mileage.  Instead of looking at
-points $(x_i,y_i)$ where $x_i$ is the displacement of the $i^{\text{th}}$ car
+points $(x_i,Y_i)$ where $x_i$ is the displacement of the $i^{\text{th}}$ car
 model and we try to predict a value $y$ from a corresponding $x$ as
 $y=mx+b$ -- let's look at a situation in which our measured value $y$
 depends on multiple variables -- say displacement $d$, weight $w$, and
@@ -196,7 +196,7 @@ linear equation
 
 
 $$
-y=m_1 d + m_2 w + m_3 a +b
+y=M_1 d + M_2 w + M_3 a +b
 $${#eq-multivariate}
 
 But to handle this situation more generally we need to adopt a
@@ -236,31 +236,31 @@ Y =
 \left[\begin{matrix} y_1 \\ y_2 \\ \vdots \\ y_N\end{matrix}\right].
 $$
 
-If $m_1,\ldots, m_k$ are "slopes" associated with these properties in
+If $M_1,\ldots, M_k$ are "slopes" associated with these properties in
 @eq-multivariate, and $b$ is the "intercept", then the predicted
 value $\hat{Y}$ is given by a matrix equation
 
 $$
-\hat{Y} = X\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\
-m_k\end{matrix}\right]+\left[\begin{matrix} 1 \\ 1 \\ \cdots \\
+\hat{Y} = X\left[\begin{matrix} M_1 \\ M_2 \\ \cdots \\
+M_k\end{matrix}\right]+\left[\begin{matrix} 1 \\ 1 \\ \cdots \\
 1\end{matrix}\right]b
 $$
 
-and our goal is to choose these parameters $m_i$ and $b$ to make the
+and our goal is to choose these parameters $M_i$ and $b$ to make the
 mean squared error:
 
 $$
-MSE(m_1,\ldots, m_k,b) = \|Y-\hat{Y}\|^2 = \sum_{i=1}^{N} (y_i -
-\sum_{j=1}^{k} x_{ij}m_j -b )^2.
+MSE(M_1,\ldots, M_k,b) = \|Y-\hat{Y}\|^2 = \sum_{i=1}^{N} (Y_i -
+\sum_{j=1}^{k} x_{ij}M_j -b )^2.
 $$
 
 Here we are summing over the $N$ different car models, and for each
-model taking the squared difference between the true mileage $y_i$ and
-the "predicted" mileage $\sum_{j=1}^{k} x_{ij}m_j +b$. We wish to
+model taking the squared difference between the true mileage $Y_i$ and
+the "predicted" mileage $\sum_{j=1}^{k} x_{ij}M_j +b$. We wish to
 minimize this MSE.
 
 Let's make one more simplification. The intercept variable $b$ is
-annoying because it requires separate treatment from the $m_i$. But
+annoying because it requires separate treatment from the $M_i$. But
 we can use a trick to eliminate the need for special treatment. Let's
 add a new feature to our data matrix (a new column) that has the
 constant value $1$.
@@ -273,12 +273,12 @@ x_{21} & x_{22} & \cdots & x_{2k} & 1\\ \vdots & \vdots & \ddots &
 $$
 
 Now our data matrix $X$ is $N\times(k+1)$ and we can put our
-"intercept" $b=m_{k+1}$ into our vector of "slopes" $m_1, \ldots,
-m_k,m_{k+1}$:
+"intercept" $b=M_{k+1}$ into our vector of "slopes" $M_1, \ldots,
+M_k,M_{k+1}$:
 
 $$
-\hat{Y} = X\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
-m_{k+1}\end{matrix}\right]
+\hat{Y} = X\left[\begin{matrix} M_1 \\ M_2 \\ \cdots \\ M_k \\
+M_{k+1}\end{matrix}\right]
 $$
 
 and our MSE becomes
@@ -290,8 +290,8 @@ $$
 where
 
 $$
-M=\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
-m_{k+1}\end{matrix}\right].
+M=\left[\begin{matrix} M_1 \\ M_2 \\ \cdots \\ M_k \\
+M_{k+1}\end{matrix}\right].
 $$
 
 **Remark:** Later on (see {@sec-centered}) we will see that if we
@@ -303,14 +303,14 @@ adding a column of $1$'s, you can change coordinates to center each
 feature about its mean, and keep your $X$ matrix $N\times k$.
 
 The Calculus approach to minimizing the $MSE$ is to take its partial
-derivatives with respect to the $m_{i}$ and set them to zero. Let's
+derivatives with respect to the $M_{i}$ and set them to zero. Let's
 first work out the derivatives in a nice form for later.
 
 **Proposition:** The gradient of $MSE(M)=E$ is given by
 
 $$
-\nabla E = \left[\begin{matrix} \frac{\partial}{\partial m_1}E \\ \frac{\partial}{\partial m_2}E \\ \vdots \\
-\frac{\partial}{\partial m_{k+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
+\nabla E = \left[\begin{matrix} \frac{\partial}{\partial M_1}E \\ \frac{\partial}{\partial M_2}E \\ \vdots \\
+\frac{\partial}{\partial M_{k+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
 X^{\intercal}XM
 $${#eq-gradient}
 
@@ -429,7 +429,7 @@ matrix and what information it encodes about our data.
 In our discussion above, we introduced an artificial column of ones into our data matrix. This accounts
 for the intercept (or "bias term") $b$ in the linear equation
 $$
-y = m_1 x_1 + \cdots + m_k x_k + b.
+y = M_1 x_1 + \cdots + M_k x_k + b.
 $$
 
 An alternative to this approach is to make a simple change of coordinates in our data so that the fitted
@@ -446,22 +446,22 @@ $$
 E\cdot (Y-XM)=0.
 $$
 
-But $E\cdot Y=\sum_{i=1}^{N} y_{i}$ is the sum of the target values.  Furthermore, since $XM$ is the
+But $E\cdot Y=\sum_{i=1}^{N} Y_{i}$ is the sum of the target values.  Furthermore, since $XM$ is the
 vector $\hat{Y}$ of predicted values, $E\cdot XM$ is the sum of the predicted values.  Dividing by $N$,
 we see that, at the least squares solution point, the mean of $Y$ equals the mean of $\hat{Y}$.   
 
-Averaging the component equations for $\hat{y}_i$ gives
+Averaging the component equations for $\hat{Y}_i$ gives
 $$
-\hat{y}_{i} = x_{i1}m_1 + x_{i2}m_{2} + \cdots + x_{ik}m_k + b 
+\hat{Y}_{i} = x_{i1}M_1 + x_{i2}M_{2} + \cdots + x_{ik}M_k + b 
 $$
 and dividing by $N$ tells us that
 $$
-\overline{\hat{Y}} = \overline{x}_{1}m_1 + \overline{x}_{2}m_2 + \cdots + \overline{x}_{k}m_k + b 
+\overline{\hat{Y}} = \overline{x}_{1}M_1 + \overline{x}_{2}M_2 + \cdots + \overline{x}_{k}M_k + b 
 $$
 where $\overline{x}_{i}$ is the mean of the $i^{\text{th}}$ feature. As a result, we see that the bias $b$
 is
 $$
-b=\overline{Y}-\sum_{i=1}^{k}\overline{x}_{i}m_{i}
+b=\overline{Y}-\sum_{i=1}^{k}\overline{x}_{i}M_{i}
 $$
 
 We can exploit this by a "trick".  Before we start our analysis, we can change coordinates for both the features
