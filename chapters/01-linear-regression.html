@@ -261,27 +261,27 @@ $$\newcommand{\R}{\mathbb{R}}$$
 </section>
 <section id="sec-Calculus" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="sec-Calculus"><span class="header-section-number">1.2</span> Least Squares (via Calculus)</h2>
-<p>In either of the two cases above, the question we face is to determine the line <span class="math inline">\(y=mx+b\)</span> that “best fits” the data <span class="math inline">\(\{(x_i,y_i)\}_{i=1}^{N}\)</span>. The classic approach is to determine the equation of a line <span class="math inline">\(y=mx+b\)</span> that minimizes the “mean squared error”:</p>
-<p><span class="math display">\[ MSE(m,b) = \frac{1}{N}\sum_{i=1}^{N} (y_i-mx_i-b)^2 \]</span></p>
-<p>It’s worth emphasizing that the <span class="math inline">\(MSE\)</span> is a function of two variables – the slope <span class="math inline">\(m\)</span> and the intercept <span class="math inline">\(b\)</span> – and that the data points <span class="math inline">\(\{(x_i,y_i)\}\)</span> are constants for these purposes. Furthermore, it’s a quadratic function in those two variables. Since our goal is to find <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> that minimize the <span class="math inline">\(MSE\)</span>, we have a Calculus problem that we can solve by taking partial derivatives and setting them to zero.</p>
+<p>In either of the two cases above, the question we face is to determine the line <span class="math inline">\(y=mx+b\)</span> that “best fits” the data <span class="math inline">\(\{(x_i,Y_i)\}_{i=1}^{N}\)</span>. The classic approach is to determine the equation of a line <span class="math inline">\(y=mx+b\)</span> that minimizes the “mean squared error”:</p>
+<p><span class="math display">\[ MSE(m,b) = \frac{1}{N}\sum_{i=1}^{N} (Y_i-mx_i-b)^2 \]</span></p>
+<p>It’s worth emphasizing that the <span class="math inline">\(MSE\)</span> is a function of two variables – the slope <span class="math inline">\(m\)</span> and the intercept <span class="math inline">\(b\)</span> – and that the data points <span class="math inline">\(\{(x_i,Y_i)\}\)</span> are constants for these purposes. Furthermore, it’s a quadratic function in those two variables. Since our goal is to find <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> that minimize the <span class="math inline">\(MSE\)</span>, we have a Calculus problem that we can solve by taking partial derivatives and setting them to zero.</p>
 <p>To simplify the notation, let’s abbreviate <span class="math inline">\(MSE\)</span> by <span class="math inline">\(E\)</span>.</p>
 <p><span class="math display">\[
 \begin{aligned} \frac{\partial E}{\partial m} &amp;=
--\frac{1}{N}\sum_{i=1}^{N} 2x_i(y_i-mx_i-b) \\ \frac{\partial E}{\partial
-b} &amp;= -\frac{1}{N}\sum_{i=1}^{N} 2(y_i-mx_i-b) \\
+-\frac{1}{N}\sum_{i=1}^{N} 2x_i(Y_i-mx_i-b) \\ \frac{\partial E}{\partial
+b} &amp;= -\frac{1}{N}\sum_{i=1}^{N} 2(Y_i-mx_i-b) \\
 \end{aligned}
 \]</span></p>
 <p>We set these two partial derivatives to zero, so we can drop the <span class="math inline">\(-2\)</span> and regroup the sums to obtain two equations in two unknowns (we keep the <span class="math inline">\(\frac{1}{N}\)</span> because it is illuminating in the final result):</p>
 <p><span id="eq-LS"><span class="math display">\[
 \begin{aligned} \frac{1}{N}(\sum_{i=1}^{N} x_i^2)m &amp;+&amp;
-\frac{1}{N}(\sum_{i=1}^{N} x_i)b &amp;=&amp; \frac{1}{N}\sum_{i=1}^{N} x_i y_i
+\frac{1}{N}(\sum_{i=1}^{N} x_i)b &amp;=&amp; \frac{1}{N}\sum_{i=1}^{N} x_i Y_i
 \\ \frac{1}{N}(\sum_{i=1}^{N} x_i)m &amp;+&amp; b &amp;=&amp;
-\frac{1}{N}\sum_{i=1}^{N} y_{i} \\ \end{aligned}
+\frac{1}{N}\sum_{i=1}^{N} Y_{i} \\ \end{aligned}
 \tag{1.1}\]</span></span></p>
-<p>In these equations, notice that <span class="math inline">\(\frac{1}{N}\sum_{i=1}^{N} x_i\)</span> is the average (or mean) value of the <span class="math inline">\(x_i\)</span>. Let’s call this <span class="math inline">\(\overline{x}\)</span>. Similarly, <span class="math inline">\(\frac{1}{N}\sum_{i=1}^{N} y_{i}\)</span> is the mean of the <span class="math inline">\(y_i\)</span>, and we’ll call it <span class="math inline">\(\overline{y}\)</span>. If we further simplify the notation and write <span class="math inline">\(S_{xx}\)</span> for <span class="math inline">\(\frac{1}{N}\sum_{i=1}^{N} x_i^2\)</span> and <span class="math inline">\(S_{xy}\)</span> for <span class="math inline">\(\frac{1}{N}\sum_{i=1}^{N}x_iy_i\)</span> then we can write down a solution to this system using Cramer’s rule:</p>
+<p>In these equations, notice that <span class="math inline">\(\frac{1}{N}\sum_{i=1}^{N} x_i\)</span> is the average (or mean) value of the <span class="math inline">\(x_i\)</span>. Let’s call this <span class="math inline">\(\overline{x}\)</span>. Similarly, <span class="math inline">\(\frac{1}{N}\sum_{i=1}^{N} Y_{i}\)</span> is the mean of the <span class="math inline">\(Y_i\)</span>, and we’ll call it <span class="math inline">\(\overline{Y}\)</span>. If we further simplify the notation and write <span class="math inline">\(S_{xx}\)</span> for <span class="math inline">\(\frac{1}{N}\sum_{i=1}^{N} x_i^2\)</span> and <span class="math inline">\(S_{xy}\)</span> for <span class="math inline">\(\frac{1}{N}\sum_{i=1}^{N}x_iY_i\)</span> then we can write down a solution to this system using Cramer’s rule:</p>
 <p><span id="eq-LSAnswer"><span class="math display">\[ \begin{aligned} m &amp;=
-\frac{S_{xy}-\overline{x}\overline{y}}{S_{xx}-\overline{x}^2} \\ b &amp;=
-\frac{S_{xx}\overline{y}-S_{xy}\overline{x}}{S_{xx}-\overline{x}^2} \\
+\frac{S_{xy}-\overline{x}\overline{Y}}{S_{xx}-\overline{x}^2} \\ b &amp;=
+\frac{S_{xx}\overline{Y}-S_{xy}\overline{x}}{S_{xx}-\overline{x}^2} \\
 \end{aligned}
 \tag{1.2}\]</span></span></p>
 <p>where we must have <span class="math inline">\(S_{xx}-\overline{x}^2\neq 0\)</span>.</p>
@@ -295,7 +295,7 @@ b} &amp;= -\frac{1}{N}\sum_{i=1}^{N} 2(y_i-mx_i-b) \\
 </section>
 <section id="sec-LinAlg" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="sec-LinAlg"><span class="header-section-number">1.3</span> Least Squares (via Geometry)</h2>
-<p>In our discussion above, we thought about our data as consisting of <span class="math inline">\(N\)</span> pairs <span class="math inline">\((x_i,y_i)\)</span> corresponding to <span class="math inline">\(N\)</span> points in the <span class="math inline">\(xy\)</span>-plane <span class="math inline">\(\mathbf{R}^2\)</span>. Now let’s turn that picture “on its side”, and instead think of our data as consisting of <em>two</em> points in <span class="math inline">\(\mathbf{R}^{N}\)</span>:</p>
+<p>In our discussion above, we thought about our data as consisting of <span class="math inline">\(N\)</span> pairs <span class="math inline">\((x_i,Y_i)\)</span> corresponding to <span class="math inline">\(N\)</span> points in the <span class="math inline">\(xy\)</span>-plane <span class="math inline">\(\mathbf{R}^2\)</span>. Now let’s turn that picture “on its side”, and instead think of our data as consisting of <em>two</em> points in <span class="math inline">\(\mathbf{R}^{N}\)</span>:</p>
 <p><span class="math display">\[ X=\left[\begin{matrix} x_1\cr x_2\cr \vdots\cr
 x_N\end{matrix}\right] \mathrm{\ and\ } Y = \left[\begin{matrix}
 y_1\cr y_2\cr \vdots\cr y_N\end{matrix}\right]
@@ -312,7 +312,7 @@ E = \left[\begin{matrix} 1 \cr 1 \cr \vdots \cr
 <figcaption class="figure-caption">Figure&nbsp;1.3: Distance to A Plane</figcaption>
 </figure>
 </div>
-<p>Now if our data points <span class="math inline">\((x_i,y_i)\)</span> all <em>did</em> lie on a line <span class="math inline">\(y=mx+b\)</span>, then the three vectors <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span>, and <span class="math inline">\(E\)</span> would be linearly dependent:</p>
+<p>Now if our data points <span class="math inline">\((x_i,Y_i)\)</span> all <em>did</em> lie on a line <span class="math inline">\(y=mx+b\)</span>, then the three vectors <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span>, and <span class="math inline">\(E\)</span> would be linearly dependent:</p>
 <p><span class="math display">\[ Y = mX + bE. \]</span></p>
 <p>Since our data is only approximately linear, that’s not the case. So instead we look for an approximate solution. One way to phrase that is to ask:</p>
 <p><em>What is the point <span class="math inline">\(\hat{Y}\)</span> in the plane <span class="math inline">\(H\)</span> spanned by <span class="math inline">\(X\)</span> and <span class="math inline">\(E\)</span> in <span class="math inline">\(\mathbf{R}^{N}\)</span> which is closest to <span class="math inline">\(Y\)</span>?</em></p>
@@ -344,9 +344,9 @@ m(X\cdot X) &amp;+ b(E\cdot X) &amp;= (Y\cdot X) \cr \end{aligned}
 <li>a car that is heavy compared to its engine size may get worse mileage</li>
 <li>a sports car with a drive train that gives fast acceleration as compared to a car with a transmission designed for long trips may have different mileage for the same engine size.</li>
 </ul>
-<p>Suppose we wish to use engine displacement, vehicle weight, and acceleration all together to predict mileage. Instead of looking at points <span class="math inline">\((x_i,y_i)\)</span> where <span class="math inline">\(x_i\)</span> is the displacement of the <span class="math inline">\(i^{\text{th}}\)</span> car model and we try to predict a value <span class="math inline">\(y\)</span> from a corresponding <span class="math inline">\(x\)</span> as <span class="math inline">\(y=mx+b\)</span> – let’s look at a situation in which our measured value <span class="math inline">\(y\)</span> depends on multiple variables – say displacement <span class="math inline">\(d\)</span>, weight <span class="math inline">\(w\)</span>, and acceleration <span class="math inline">\(a\)</span> with <span class="math inline">\(k=3\)</span> – and we are trying to find the best linear equation</p>
+<p>Suppose we wish to use engine displacement, vehicle weight, and acceleration all together to predict mileage. Instead of looking at points <span class="math inline">\((x_i,Y_i)\)</span> where <span class="math inline">\(x_i\)</span> is the displacement of the <span class="math inline">\(i^{\text{th}}\)</span> car model and we try to predict a value <span class="math inline">\(y\)</span> from a corresponding <span class="math inline">\(x\)</span> as <span class="math inline">\(y=mx+b\)</span> – let’s look at a situation in which our measured value <span class="math inline">\(y\)</span> depends on multiple variables – say displacement <span class="math inline">\(d\)</span>, weight <span class="math inline">\(w\)</span>, and acceleration <span class="math inline">\(a\)</span> with <span class="math inline">\(k=3\)</span> – and we are trying to find the best linear equation</p>
 <p><span id="eq-multivariate"><span class="math display">\[
-y=m_1 d + m_2 w + m_3 a +b
+y=M_1 d + M_2 w + M_3 a +b
 \tag{1.4}\]</span></span></p>
 <p>But to handle this situation more generally we need to adopt a convention that will allow us to use indexed variables instead of <span class="math inline">\(d\)</span>, <span class="math inline">\(w\)</span>, and <span class="math inline">\(a\)</span>. We will use the <em>tidy</em> data convention.</p>
 <p><strong>Tidy Data:</strong> A dataset is tidy if it consists of values <span class="math inline">\(x_{ij}\)</span> for <span class="math inline">\(i=1,\ldots,N\)</span> and <span class="math inline">\(j=1,\ldots, k\)</span> so that:</p>
@@ -370,29 +370,29 @@ x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2k} \\ \vdots &amp; \vdots &amp; \ddot
 Y =
 \left[\begin{matrix} y_1 \\ y_2 \\ \vdots \\ y_N\end{matrix}\right].
 \]</span></p>
-<p>If <span class="math inline">\(m_1,\ldots, m_k\)</span> are “slopes” associated with these properties in <a href="#eq-multivariate">Equation&nbsp;<span>1.4</span></a>, and <span class="math inline">\(b\)</span> is the “intercept”, then the predicted value <span class="math inline">\(\hat{Y}\)</span> is given by a matrix equation</p>
+<p>If <span class="math inline">\(M_1,\ldots, M_k\)</span> are “slopes” associated with these properties in <a href="#eq-multivariate">Equation&nbsp;<span>1.4</span></a>, and <span class="math inline">\(b\)</span> is the “intercept”, then the predicted value <span class="math inline">\(\hat{Y}\)</span> is given by a matrix equation</p>
 <p><span class="math display">\[
-\hat{Y} = X\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\
-m_k\end{matrix}\right]+\left[\begin{matrix} 1 \\ 1 \\ \cdots \\
+\hat{Y} = X\left[\begin{matrix} M_1 \\ M_2 \\ \cdots \\
+M_k\end{matrix}\right]+\left[\begin{matrix} 1 \\ 1 \\ \cdots \\
 1\end{matrix}\right]b
 \]</span></p>
-<p>and our goal is to choose these parameters <span class="math inline">\(m_i\)</span> and <span class="math inline">\(b\)</span> to make the mean squared error:</p>
+<p>and our goal is to choose these parameters <span class="math inline">\(M_i\)</span> and <span class="math inline">\(b\)</span> to make the mean squared error:</p>
 <p><span class="math display">\[
-MSE(m_1,\ldots, m_k,b) = \|Y-\hat{Y}\|^2 = \sum_{i=1}^{N} (y_i -
-\sum_{j=1}^{k} x_{ij}m_j -b )^2.
+MSE(M_1,\ldots, M_k,b) = \|Y-\hat{Y}\|^2 = \sum_{i=1}^{N} (Y_i -
+\sum_{j=1}^{k} x_{ij}M_j -b )^2.
 \]</span></p>
-<p>Here we are summing over the <span class="math inline">\(N\)</span> different car models, and for each model taking the squared difference between the true mileage <span class="math inline">\(y_i\)</span> and the “predicted” mileage <span class="math inline">\(\sum_{j=1}^{k} x_{ij}m_j +b\)</span>. We wish to minimize this MSE.</p>
-<p>Let’s make one more simplification. The intercept variable <span class="math inline">\(b\)</span> is annoying because it requires separate treatment from the <span class="math inline">\(m_i\)</span>. But we can use a trick to eliminate the need for special treatment. Let’s add a new feature to our data matrix (a new column) that has the constant value <span class="math inline">\(1\)</span>.</p>
+<p>Here we are summing over the <span class="math inline">\(N\)</span> different car models, and for each model taking the squared difference between the true mileage <span class="math inline">\(Y_i\)</span> and the “predicted” mileage <span class="math inline">\(\sum_{j=1}^{k} x_{ij}M_j +b\)</span>. We wish to minimize this MSE.</p>
+<p>Let’s make one more simplification. The intercept variable <span class="math inline">\(b\)</span> is annoying because it requires separate treatment from the <span class="math inline">\(M_i\)</span>. But we can use a trick to eliminate the need for special treatment. Let’s add a new feature to our data matrix (a new column) that has the constant value <span class="math inline">\(1\)</span>.</p>
 <p><span class="math display">\[
 X = \left(\begin{matrix} x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1k} &amp; 1\\
 x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2k} &amp; 1\\ \vdots &amp; \vdots &amp; \ddots &amp;
 \vdots &amp; 1\\ x_{N1} &amp; x_{N2} &amp; \cdots &amp; x_{Nk} &amp; 1\\
 \end{matrix}\right)
 \]</span></p>
-<p>Now our data matrix <span class="math inline">\(X\)</span> is <span class="math inline">\(N\times(k+1)\)</span> and we can put our “intercept” <span class="math inline">\(b=m_{k+1}\)</span> into our vector of “slopes” <span class="math inline">\(m_1, \ldots, m_k,m_{k+1}\)</span>:</p>
+<p>Now our data matrix <span class="math inline">\(X\)</span> is <span class="math inline">\(N\times(k+1)\)</span> and we can put our “intercept” <span class="math inline">\(b=M_{k+1}\)</span> into our vector of “slopes” <span class="math inline">\(M_1, \ldots, M_k,M_{k+1}\)</span>:</p>
 <p><span class="math display">\[
-\hat{Y} = X\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
-m_{k+1}\end{matrix}\right]
+\hat{Y} = X\left[\begin{matrix} M_1 \\ M_2 \\ \cdots \\ M_k \\
+M_{k+1}\end{matrix}\right]
 \]</span></p>
 <p>and our MSE becomes</p>
 <p><span class="math display">\[
@@ -400,15 +400,15 @@ MSE(M) = \|Y - XM\|^2
 \]</span></p>
 <p>where</p>
 <p><span class="math display">\[
-M=\left[\begin{matrix} m_1 \\ m_2 \\ \cdots \\ m_k \\
-m_{k+1}\end{matrix}\right].
+M=\left[\begin{matrix} M_1 \\ M_2 \\ \cdots \\ M_k \\
+M_{k+1}\end{matrix}\right].
 \]</span></p>
 <p><strong>Remark:</strong> Later on (see {<a href="#sec-centered"><span>Section&nbsp;1.6</span></a>}) we will see that if we “center” our features about their mean, by subtracting the average value of each column of <span class="math inline">\(X\)</span> from that column; and we also subtract the average value of <span class="math inline">\(Y\)</span> from the entries of <span class="math inline">\(Y\)</span>, then the <span class="math inline">\(b\)</span> that emerges from the least squares fit is zero. As a result, instead of adding a column of <span class="math inline">\(1\)</span>’s, you can change coordinates to center each feature about its mean, and keep your <span class="math inline">\(X\)</span> matrix <span class="math inline">\(N\times k\)</span>.</p>
-<p>The Calculus approach to minimizing the <span class="math inline">\(MSE\)</span> is to take its partial derivatives with respect to the <span class="math inline">\(m_{i}\)</span> and set them to zero. Let’s first work out the derivatives in a nice form for later.</p>
+<p>The Calculus approach to minimizing the <span class="math inline">\(MSE\)</span> is to take its partial derivatives with respect to the <span class="math inline">\(M_{i}\)</span> and set them to zero. Let’s first work out the derivatives in a nice form for later.</p>
 <p><strong>Proposition:</strong> The gradient of <span class="math inline">\(MSE(M)=E\)</span> is given by</p>
 <p><span id="eq-gradient"><span class="math display">\[
-\nabla E = \left[\begin{matrix} \frac{\partial}{\partial m_1}E \\ \frac{\partial}{\partial m_2}E \\ \vdots \\
-\frac{\partial}{\partial m_{k+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
+\nabla E = \left[\begin{matrix} \frac{\partial}{\partial M_1}E \\ \frac{\partial}{\partial M_2}E \\ \vdots \\
+\frac{\partial}{\partial M_{k+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
 X^{\intercal}XM
 \tag{1.5}\]</span></span></p>
 <p>where <span class="math inline">\(X^{\intercal}\)</span> is the transpose of <span class="math inline">\(X\)</span>.</p>
@@ -468,7 +468,7 @@ XD^{-1}X^{\intercal}=P.
 <section id="sec-centered" class="level2" data-number="1.6">
 <h2 data-number="1.6" class="anchored" data-anchor-id="sec-centered"><span class="header-section-number">1.6</span> Centered coordinates</h2>
 <p>In our discussion above, we introduced an artificial column of ones into our data matrix. This accounts for the intercept (or “bias term”) <span class="math inline">\(b\)</span> in the linear equation <span class="math display">\[
-y = m_1 x_1 + \cdots + m_k x_k + b.
+y = M_1 x_1 + \cdots + M_k x_k + b.
 \]</span></p>
 <p>An alternative to this approach is to make a simple change of coordinates in our data so that the fitted bias becomes zero. Then we can ignore it and just work with <span class="math inline">\(k\)</span> features and weights.</p>
 <p>Remember the basic equation <span class="math display">\[
@@ -476,13 +476,13 @@ X^{\intercal}(Y-XM)=0
 \]</span> that determines the solution to the least squares problem. Looking at the last row of this equation, and using that the last column of <span class="math inline">\(X\)</span> is the <span class="math inline">\(N\)</span>-dimensional column vector <span class="math inline">\(E\)</span> consisting entirely of ones, we see that at the solution point, <span class="math display">\[
 E\cdot (Y-XM)=0.
 \]</span></p>
-<p>But <span class="math inline">\(E\cdot Y=\sum_{i=1}^{N} y_{i}\)</span> is the sum of the target values. Furthermore, since <span class="math inline">\(XM\)</span> is the vector <span class="math inline">\(\hat{Y}\)</span> of predicted values, <span class="math inline">\(E\cdot XM\)</span> is the sum of the predicted values. Dividing by <span class="math inline">\(N\)</span>, we see that, at the least squares solution point, the mean of <span class="math inline">\(Y\)</span> equals the mean of <span class="math inline">\(\hat{Y}\)</span>.</p>
-<p>Averaging the component equations for <span class="math inline">\(\hat{y}_i\)</span> gives <span class="math display">\[
-\hat{y}_{i} = x_{i1}m_1 + x_{i2}m_{2} + \cdots + x_{ik}m_k + b
+<p>But <span class="math inline">\(E\cdot Y=\sum_{i=1}^{N} Y_{i}\)</span> is the sum of the target values. Furthermore, since <span class="math inline">\(XM\)</span> is the vector <span class="math inline">\(\hat{Y}\)</span> of predicted values, <span class="math inline">\(E\cdot XM\)</span> is the sum of the predicted values. Dividing by <span class="math inline">\(N\)</span>, we see that, at the least squares solution point, the mean of <span class="math inline">\(Y\)</span> equals the mean of <span class="math inline">\(\hat{Y}\)</span>.</p>
+<p>Averaging the component equations for <span class="math inline">\(\hat{Y}_i\)</span> gives <span class="math display">\[
+\hat{Y}_{i} = x_{i1}M_1 + x_{i2}M_{2} + \cdots + x_{ik}M_k + b
 \]</span> and dividing by <span class="math inline">\(N\)</span> tells us that <span class="math display">\[
-\overline{\hat{Y}} = \overline{x}_{1}m_1 + \overline{x}_{2}m_2 + \cdots + \overline{x}_{k}m_k + b
+\overline{\hat{Y}} = \overline{x}_{1}M_1 + \overline{x}_{2}M_2 + \cdots + \overline{x}_{k}M_k + b
 \]</span> where <span class="math inline">\(\overline{x}_{i}\)</span> is the mean of the <span class="math inline">\(i^{\text{th}}\)</span> feature. As a result, we see that the bias <span class="math inline">\(b\)</span> is <span class="math display">\[
-b=\overline{Y}-\sum_{i=1}^{k}\overline{x}_{i}m_{i}
+b=\overline{Y}-\sum_{i=1}^{k}\overline{x}_{i}M_{i}
 \]</span></p>
 <p>We can exploit this by a “trick”. Before we start our analysis, we can change coordinates for both the features and the target so that the mean of the target data, and the mean of each feature, is zero. This amounts to a “shift” in the measurement scale of each feature, so it’s essentially harmless.</p>
 <p>If we begin with this shift, then we know <em>a priori</em> that the bias is zero, and so there’s no need to include it in our calculations and there’s no need to introduce a column of ones into our data matrix.</p>
