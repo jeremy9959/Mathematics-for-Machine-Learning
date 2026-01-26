@@ -491,7 +491,7 @@ $$
 since $D$ is symmetric, so in fact the two terms are the same
 Thus
 $$
-\df{u_{i}}F = 2\sum_{j=1}^{k} d_{ij}u_{j}
+\frac{\partial}{\partial u_i}F = 2\sum_{j=1}^{k} d_{ij}u_{j}
 $$
 But the right hand side of this equation is twice the $i^{th}$ entry of $Du$, so
 putting the results together we get
@@ -520,7 +520,7 @@ $$
 $$
 For $\lambda$ we have
 $$
-\df{\lambda}S = -u\cdot u +1.
+\frac{\partial}{\partial \lambda}S = -u\cdot u +1.
 $$
 The critical points occur when
 $$
@@ -528,7 +528,7 @@ $$
 $$
 and
 $$
-\df{\lambda}S = 1-u\cdot u = 0
+\frac{\partial}{\partial \lambda}S = 1-u\cdot u = 0
 $$
 The first equation says that $\lambda$ must be an eigenvalue, and $u$ an eigenvector:
 $$
