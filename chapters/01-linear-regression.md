@@ -2,14 +2,14 @@
 
 ## Introduction {#sec-Intro}
 
-Suppose that we are trying to study two quantities $x$ and $y$ that we
+Suppose  studying two quantities $x$ and $y$ that we
 suspect are related -- at least approximately -- by a linear equation
 $y=ax+b$. Sometimes this linear relationship is predicted by
 theoretical considerations, and sometimes it is
 just an empirical hypothesis.
 
 For example, if we are trying to determine the velocity of an object
-travelling towards us at constant speed, and we measure measure the
+travelling towards us at constant speed, and we measure  the
 distances $d_1, d_2, \ldots, d_n$ between us and the object at a
 series of times $t_1, t_2, \ldots, t_n$, then since "distance equals
 rate times time" we have a theoretical foundation for the assumption
@@ -27,7 +27,7 @@ On the other hand, we might look at a graph such as
 models against their engine size (displacement), and observe a general
 trend in which bigger engines get lower mileage. In this situation we
 could ask for the best line of the form $y=mx+b$ that captures this
-relationship and use that to make general conclusions without
+relationship and then draw empirical conclusions about this data without
 necessarily having an underlying theory.
 
 ![MPG vs Displacement ( @irvine )](img/mpg-vs-displacement.png){#fig-mpg-vs-displacement width=50%}
@@ -35,11 +35,11 @@ necessarily having an underlying theory.
 ## Least Squares (via Calculus) {#sec-Calculus}
 
 In either of the two cases above, the question we face is to determine
-the line $y=mx+b$ that "best fits" the data $\{(x_i,y_i)_{i=1}^{N}\}$.
+the line $y=mx+b$ that "best fits" the data $\{(x_i,y_i)\}_{i=1}^{N}$.
 The classic approach is to determine the equation of a line $y=mx+b$
 that minimizes the "mean squared error":
 
-$$ MSE(m,b) = \frac{1}{N}\sum\_{i=1}^{N} (y_i-mx_i-b)^2 $$
+$$ MSE(m,b) = \frac{1}{N}\sum_{i=1}^{N} (y_i-mx_i-b)^2 $$
 
 It's worth emphasizing that the $MSE$ is a function of two variables
 -- the slope $m$ and the intercept $b$ -- and that the data points
@@ -52,8 +52,8 @@ To simplify the notation, let's abbreviate $MSE$ by $E$.
 
 $$
 \begin{aligned} \frac{\partial E}{\partial m} &=
-\frac{1}{N}\sum_{1}^{N}-2x_i(y_i-mx_i-b) \\ \frac{\partial E}{\partial
-b} &= \frac{1}{N}\sum_{1}^{N}-2(y_i-mx_i-b) \\
+-\frac{1}{N}\sum_{i=1}^{N} 2x_i(y_i-mx_i-b) \\ \frac{\partial E}{\partial
+b} &= -\frac{1}{N}\sum_{i=1}^{N} 2(y_i-mx_i-b) \\
 \end{aligned}
 $$
 
@@ -82,7 +82,7 @@ $$ \begin{aligned} m &=
 \end{aligned}
 $$ {#eq-LSAnswer}
 
-where we must have $S_{xx}-\overline{x}^2\not=0$.
+where we must have $S_{xx}-\overline{x}^2\neq 0$.
 
 ### Exercises {#sec-CalcExercises}
 
@@ -102,8 +102,8 @@ instead think of our data as consisting of *two* points in
 $\mathbf{R}^{N}$:
 
 $$ X=\left[\begin{matrix} x_1\cr x_2\cr \vdots\cr
-x_n\end{matrix}\right] \mathrm{\ and\ } Y = \left[\begin{matrix}
-y_1\cr y_2\cr \vdots\cr y_n\end{matrix}\right]
+x_N\end{matrix}\right] \mathrm{\ and\ } Y = \left[\begin{matrix}
+y_1\cr y_2\cr \vdots\cr y_N\end{matrix}\right]
 $$
 
 Let's also introduce one other vector
@@ -114,7 +114,7 @@ E = \left[\begin{matrix} 1 \cr 1 \cr \vdots \cr
 $$
 
 First, let's assume that $E$ and $X$ are linearly independent. If
-not, then $X$ is a constant vector (why?) which we already know is a
+not, then $X$ is a constant vector (why?), which we already know is a
 problem from @sec-Calculus, Exercise 2. Therefore $E$ and $X$ span a
 plane in $\mathbf{R}^{N}$.
 
@@ -144,15 +144,15 @@ $E$ is the point such that the vector $Y-\hat{Y}$ is perpendicular to
 $H$.
 
 **Proof:** See @fig-perp for an illustration -- perhaps you are
-already convinced by this, but let's be careful. $\hat{Y}=mX+bE$ such
-that $$ D = \|Y-\hat{Y}\|^2 = \|Y-mX-bE\|^2 $$ is minimal. Using some
+already convinced by this, but let's be careful. We seek $\hat{Y}=mX+bE$
+such that $$ D = \|Y-\hat{Y}\|^2 = \|Y-mX-bE\|^2 $$ is minimal. Using some
 vector calculus, we have $$ \frac{\partial D}{\partial m} =
 \frac{\partial}{\partial m} (Y-mX-bE)\cdot (Y-mX-bE) =
 -2(Y-mX-bE)\cdot X $$ and $$ \frac{\partial D}{\partial b} =
 \frac{\partial}{\partial b} (Y-mX-bE)\cdot (Y-mX-bE) =
 -2(Y-mX-bE)\cdot E. $$
 
-So both derivatives are zero exactly when $\hat{Y}=(Y-mX-bE)$ is
+So both derivatives are zero exactly when $Y-\hat{Y}=(Y-mX-bE)$ is
 orthogonal to both $X$ and $E$, and therefore every vector in $H$.
 
 We also obtain equations for $m$ and $b$ just as in our first look at
@@ -163,7 +163,7 @@ $$
 m(X\cdot X) &+ b(E\cdot X) &= (Y\cdot X) \cr \end{aligned}
 $$ {#eq-LSAnswer2}
 
-We leave it is an exercise below to check that these are the same
+We leave it as an exercise below to check that these are the same
 equations that we obtained in @eq-LSAnswer.
 
 ### Exercises
@@ -186,8 +186,8 @@ compared to a car with a transmission designed for long trips may have
 different mileage for the same engine size.
 
 Suppose we wish to use engine displacement, vehicle weight, and
-acceleration all together to predict mileage.  Instead of looking
-points $(x_i,y_i)$ where $x_i$ is the displacement of the $i^{th}$ car
+acceleration all together to predict mileage.  Instead of looking at
+points $(x_i,y_i)$ where $x_i$ is the displacement of the $i^{\text{th}}$ car
 model and we try to predict a value $y$ from a corresponding $x$ as
 $y=mx+b$ -- let's look at a situation in which our measured value $y$
 depends on multiple variables -- say displacement $d$, weight $w$, and
@@ -226,7 +226,7 @@ $N\times k$ matrix
 
 $$ X = \left(\begin{matrix} x_{11} & x_{12} & \cdots & x_{1k} \\
 x_{21} & x_{22} & \cdots & x_{2k} \\ \vdots & \vdots & \ddots & \vdots
-\\ x_{N1} & x_{k2} & \cdots & x_{Nk} \\ \end{matrix}\right)
+\\ x_{N1} & x_{N2} & \cdots & x_{Nk} \\ \end{matrix}\right)
 $$
 
 and the measured dependent variables $Y$ are a column vector
@@ -268,7 +268,7 @@ constant value $1$.
 $$
 X = \left(\begin{matrix} x_{11} & x_{12} & \cdots & x_{1k} & 1\\
 x_{21} & x_{22} & \cdots & x_{2k} & 1\\ \vdots & \vdots & \ddots &
-\vdots & 1\\ x_{N1} & x_{k2} & \cdots & x_{Nk} & 1\\
+\vdots & 1\\ x_{N1} & x_{N2} & \cdots & x_{Nk} & 1\\
 \end{matrix}\right)
 $$
 
@@ -309,7 +309,7 @@ first work out the derivatives in a nice form for later.
 **Proposition:** The gradient of $MSE(M)=E$ is given by
 
 $$
-\nabla E = \left[\begin{matrix} \frac{\partial}{\partial M_1}E \\ \frac{\partial}{\partial M_2}E \\ \vdots \\
+\nabla E = \left[\begin{matrix} \frac{\partial}{\partial m_1}E \\ \frac{\partial}{\partial m_2}E \\ \vdots \\
 \frac{\partial}{\partial m_{k+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
 X^{\intercal}XM
 $${#eq-gradient}
@@ -338,9 +338,7 @@ this means
 $$
 \nabla E = -2X^{\intercal}(Y-XM)=-2X^{\intercal}Y+2X^{\intercal}XM
 $$
-as claimed. 
-
-
+as claimed.
 
 **Proposition:** Assume that $D=X^{\intercal}X$ is invertible (notice
 that it is a $(k+1)\times(k+1)$ square matrix so this makes sense).
@@ -362,22 +360,22 @@ $$ X^{\intercal}Y = X^{\intercal}XM $$
 
 Here is how to think about this:
 
-   1. As $M$ varies, the $N\times 1$ matrix $XM$ varies over the space
+1. As $M$ varies, the $N\times 1$ matrix $XM$ varies over the space
    spanned by the columns of the matrix $X$.
-   So as $M$ varies $XM$ is a general element of the subspace $H$ of $R^{N}$ spanned by the $k+1$ columns of $X$.
+   So as $M$ varies, $XM$ is a general element of the subspace $H$ of $\mathbf{R}^{N}$ spanned by the $k+1$ columns of $X$.
 
-   2. The product $X^{\intercal}XM$ is a $(k+1)\times 1$ matrix.  Each
+2. The product $X^{\intercal}XM$ is a $(k+1)\times 1$ matrix.  Each
    entry is the dot product of the general element
    of $H$ with one of the $k+1$ basis vectors of $H$.
 
-   3. The product $X^{\intercal}Y$ is a $(k+1)\times 1$ matrix whose
+3. The product $X^{\intercal}Y$ is a $(k+1)\times 1$ matrix whose
    entries are the dot product of the basis vectors of $H$ with $Y$.
 
 Therefore, this equation asks for us to find $M$ so that the vector
 $XM$ in $H$ has the same dot products with the basis vectors of $H$ as
 $Y$ does.  The condition
 
-$$ X^{\intercal}\cdot (Y-XM)=0 $$
+$$ X^{\intercal}(Y-XM)=0 $$
 
 says that $Y-XM$ is orthogonal to $H$.  This argument establishes the
 following proposition.
@@ -391,18 +389,20 @@ such that $Y-\hat{Y}$ is perpendicular to $H$.
 
 Recall that we introduced the notation $D=X^{\intercal}X$, and let's
 assume, for now, that $D$ is an invertible matrix.  We have the
-formula (see @eq-projection): $$ \hat{Y} = XD^{-1}X^{\intercal}Y.  $$
+formula (see @eq-projection):
+
+$$ \hat{Y} = XD^{-1}X^{\intercal}Y. $$
 **Proposition:** The matrix $P=XD^{-1}X^{\intercal}$ is an $N\times N$
 matrix called the orthogonal projection operator onto the subspace $H$
 spanned by the columns of $X$. It has the following properties:
 
 - $PY$ belongs to the subspace $H$ for any $Y\in\mathbf{R}^{N}$.
 - $(Y-PY)$ is orthogonal to $H$.
-- $P*P = P$.
+- $PP = P$.
 
 **Proof:** First of all, $PY=XD^{-1}X^{\intercal}Y$ so $PY$ is a
 linear combination of the columns of $X$ and is therefore an element
-of $H$.  Next, we can compute the dot product of $PY$ against a basis
+of $H$.  Next, we can compute the dot product of $PY$ with each basis vector
 of $H$ by computing
 
 $$ X^{\intercal}PY = X^{\intercal}XD^{-1}X^{\intercal}Y =
@@ -411,7 +411,7 @@ $$
 
 since $X^{\intercal}X=D$. This equation means that
 $X^{\intercal}(Y-PY)=0$ which tells us that $Y-PY$ has dot product
-zero with a basis for $H$. Finally,
+zero with each basis vector of $H$. Finally,
 
 $$
 PP = XD^{-1}X^{\intercal}XD^{-1}X^{\intercal} =
@@ -426,16 +426,20 @@ matrix and what information it encodes about our data.
 
 ## Centered coordinates {#sec-centered}
 
-Recall from last section that the matrix $D=X^{\intercal}X$ is of central importance to the study of the multivariate least squares problem. Let's look at it more closely.
+Recall from the last section that the matrix $D=X^{\intercal}X$ is of central importance to the study of the multivariate least squares problem. Let's look at it more closely.
 
-**Lemma:** The $i,j$ entry of $D$ is the dot product $$
-D_{ij}=X[:,i]\cdot X[:,j] $$ of the $i^{th}$ and $j^{th}$ columns of
-$X$.
+**Lemma:** The $i,j$ entry of $D$ is the dot product
 
-**Proof:** In the matrix multiplication $X^{\intercal}X$, the $i^{th}$
-row of $X^{\intercal}$ gets "dotted" with the $j^{th}$ column of $X$
-to product the $i,j$ entry. But the $i^{th}$ row of $X^{\intercal}$
-is the $i^{th}$ column of $X$, as asserted in the statement of the
+$$
+D_{ij}=X[:,i]\cdot X[:,j]
+$$
+
+of the $i^{\text{th}}$ and $j^{\text{th}}$ columns of $X$.
+
+**Proof:** In the matrix multiplication $X^{\intercal}X$, the $i^{\text{th}}$
+row of $X^{\intercal}$ gets "dotted" with the $j^{\text{th}}$ column of $X$
+to produce the $i,j$ entry. But the $i^{\text{th}}$ row of $X^{\intercal}$
+is the $i^{\text{th}}$ column of $X$, as asserted in the statement of the
 lemma.
 
 A crucial point in our construction above relied on the matrix $D$
@@ -460,13 +464,21 @@ of basis. First recall that $X[:,k+1]$ is our column of all $1$,
 added to handle the intercept. As a result, the dot product
 $X[:,i]\cdot X[:,k+1]$ is the sum of the entries in the $i^{th}$
 column, and so if we let $\mu_{i}$ denote the average value of the
-entries in column $i$, we have $$ \mu\_{i} = \frac{1}{N}(X[:,i]\cdot
-X[:,k+1]) $$
+entries in column $i$, we have
+
+$$
+\mu_{i} = \frac{1}{N}(X[:,i]\cdot X[:,k+1])
+$$
 
 Now change the matrix $X$ by elementary column operations to obtain a
-new data matrix $X_{0}$ by setting $$ X*{0}[:,i] =
-X[:,i]-\frac{1}{N}(X[:,i]\cdot X[:,k+1])X[:,k+1] =
-X[:,i]-\mu*{i}X[:,k+1] $$ for $i=1,\ldots, k$.
+new data matrix $X_{0}$ by setting
+
+$$
+X_{0}[:,i] = X[:,i]-\frac{1}{N}(X[:,i]\cdot X[:,k+1])X[:,k+1] =
+X[:,i]-\mu_{i}X[:,k+1]
+$$
+
+for $i=1,\ldots, k$.
 
 In terms of the original data, we are changing the measurement scale
 of the data so that each feature has average value zero, and the
@@ -474,52 +486,88 @@ subspace $H$ spanned by the columns of $X_{0}$ is the same as that
 spanned by the columns of $X$. Using $X_{0}$ instead of $X$ for our
 least squares problem, we get
 
-$$ \hat{Y} = X*{0}D*{0}^{-1}X\_{0}^{\intercal}Y $$
+$$
+\hat{Y} = X_{0}D_{0}^{-1}X_{0}^{\intercal}Y
+$$
 
 and
 
-$$ M*{0} = D*{0}^{-1}X\_{0}^{\intercal}Y $$
+$$
+M_{0} = D_{0}^{-1}X_{0}^{\intercal}Y
+$$
 
 where $D_{0}=X_{0}^{\intercal}X_{0}.$
 
 **Proposition:** The matrix $D_{0}$ has a block form. Its upper left
-block is a $k\times k$ symmetric block with entries $$ (D*{0})*{ij} =
-(X[:,i]-\mu*{i}X[:,k+1])\cdot(X[:,j]-\mu*{j}X[:,k+1]) $$ Its
+block is a $k\times k$ symmetric block with entries
+
+$$
+(D_{0})_{ij} =
+(X[:,i]-\mu_{i}X[:,k+1])\cdot(X[:,j]-\mu_{j}X[:,k+1])
+$$
+
+Its
 $(k+1)^{st}$ row and column are all zero, except for the $(k+1),(k+1)$
 entry, which is $N$.
 
 **Proof:** This follows from the fact that the last row and column
-entries are (for $i\not=k+1$): $$ (X[:,i]-\mu*{i}X[:,k+1])\cdot
-X[:,k+1] = (X[:,i]\cdot X[:,k+1])-N\mu*{i} = 0 $$ and for $i=k+1$ we
-have $X[:,k+1]\cdot X[:,k+1]=N$ since that column is just $N$ $1$'s.
+entries are (for $i\not=k+1$):
+
+$$
+(X[:,i]-\mu_{i}X[:,k+1])\cdot X[:,k+1] =
+(X[:,i]\cdot X[:,k+1])-N\mu_{i} = 0
+$$
+
+and for $i=k+1$ we have $X[:,k+1]\cdot X[:,k+1]=N$ since that column is just $N$ $1$'s.
 
 **Proposition:** If the $x$ coordinates (the features) are centered so
-that they have mean zero, then the intercept $b$ is $$ \overline{Y} =
-\frac{1}{N}\sum y\_{i}. $$
+that they have mean zero, then the intercept $b$ is
+
+$$
+\overline{Y} = \frac{1}{N}\sum_{i=1}^{N} y_{i}.
+$$
 
 **Proof:** By centering the coordinates, we replace the matrix $X$ by
-$X_{0}$ and $D$ by $D_{0}$. and we are trying to minimize
+$X_{0}$ and $D$ by $D_{0}$, and we are trying to minimize
 $\|Y-X_{0}M_{0}\|^2$. Use the formula from @eq-Msolution to see that
-$$ M*{0} = D*{0}^{-1}X*{0}^{\intercal}Y. $$
+
+$$
+M_{0} = D_{0}^{-1}X_{0}^{\intercal}Y.
+$$
 The $b$ value we are
-interested in is the last entry $m*{k+1}$ in $M_{0}$. From the block
+interested in is the last entry $m_{k+1}$ in $M_{0}$. From the block
 form of $D_{0}$, we know that $D_{0}^{-1}$ has bottom row and last
 column zero except for $1/N$ in position $(k+1)\times(k+1)$. Also
 $X_{0}^{\intercal}$ has last row consisting entirely of $1$. So the
 bottom entry of $X_{0}^{\intercal}Y$ is $\sum_{i=1}^{N} y_{i}$, and
-the bottom entry $b$ of $D_{0}^{-1}X_{0}^{\intercal}Y$ is $$ \mu*{Y} =
-\frac{1}{N}\sum*{i=1}^{N} y\_{i}. $$ as claimed.
+the bottom entry $b$ of $D_{0}^{-1}X_{0}^{\intercal}Y$ is
 
-**Corollary:** If we make a further change of coordinates to define $$
+$$
+\mu_{Y} = \frac{1}{N}\sum_{i=1}^{N} y_{i}.
+$$
+
+as claimed.
+
+**Corollary:** If we make a further change of coordinates to define
+
+$$
 Y_{0} = Y - \mu_{Y}\left[\begin{matrix} 1 \\ 1 \\ \vdots \\
-1\end{matrix}\right] $$ then the associated $b$ is zero. As a result
-we can forget about the extra column of $1's$ that we added to $X$ to
+1\end{matrix}\right]
+$$
+
+then the associated $b$ is zero. As a result
+we can forget about the extra column of $1$s that we added to $X$ to
 account for it and reduce the dimension of our entire problem by $1$.
 
 Just to recap, if we center our data so that $\mu_{Y}=0$ and
 $\mu_{i}=0$ for $i=1,\ldots, k$, then the least squares problem
-reduces to minimizing $$ E(M) = \|Y-XM\|^2 $$ where $X$ is the
-$N\times k$ matrix with $j^{th}$ row $(x_{j1},x_{j2},\ldots, x_{jk})$
+reduces to minimizing
+
+$$
+E(M) = \|Y-XM\|^2
+$$
+
+where $X$ is the $N\times k$ matrix with $j^{\text{th}}$ row $(x_{j1},x_{j2},\ldots, x_{jk})$
 for $j=1,\ldots, N$ and the solutions are as given in @eq-Msolution
 and @eq-projection.
 
@@ -537,18 +585,18 @@ regression.
 
 2. When we use multilinear regression, we are assuming that changes
    in the different features have independent effects on the target
-   variable $y$. In other words, suppose that $y=ax_1+bx_2$. Then an
-   increase of $x_1$ by $1$ increases $y$ by $a$, and an increase of
-   $x_2$ by $1$ increases $y$ by $b$. These effects are independent of
+   variable $Y$. In other words, suppose that $Y=ax_1+bx_2$. Then an
+   increase of $x_1$ by $1$ increases $Y$ by $a$, and an increase of
+   $x_2$ by $1$ increases $Y$ by $b$. These effects are independent of
    one another and combine to yield an increase of $a+b$.
 
-3. We showed in our discussion above that linear regression problem
+3. We showed in our discussion above that the linear regression problem
    has a solution when the matrix $D=X^{\intercal}X$ is invertible, and
-   this happens when the columns of $D$ are linearly independent. When
+   this happens when the columns of $X$ are linearly independent. When
    working with real data, which is messy, we could have a situation in
    which the features we are studying are, in fact, dependent -- but
-   because of measurement error, the samples that we collected aren't.
-   In this case, the matrix $D$ will be "close" to being non-invertible,
+   because of measurement error, the samples that we collected need not be.
+   As a result, the matrix $D$ will be "close" to being non-invertible,
    although formally still invertible. In this case, computing $D^{-1}$
    leads to numerical instability and the solution we obtain is very
    unreliable.
@@ -559,7 +607,7 @@ Simpson's effect is a famous phenomenon that illustrates that linear
 regression can be very misleading in some circumstances. It is often
 a product of "pooling" results from multiple experiments. Suppose,
 for example, that we are studying the relationship between a certain
-measure of blood chemistry and an individual's weight gain or less on
+measure of blood chemistry and an individual's weight gain or loss on
 a particular diet. We do our experiments in three labs, the blue,
 green, and red labs. Each lab obtains similar results -- higher
 levels of the blood marker correspond to greater weight gain, with a
@@ -577,9 +625,9 @@ lead to _less_ weight gain!
 This is called Simpson's effect, or Simpson's paradox, and it shows
 that unknown factors (confounding factors) may cause linear regression
 to yield misleading results. This is particularly true when data from
-experiments conducted under different conditions is combined; in this
-case, the differences in experimental setting, called _batch effects_,
-can throw off the analysis very dramatically. See @fig-simpsons .
+experiments conducted under different conditions are combined; in this
+case, the differences in experimental settings, called _batch effects_,
+can throw off the analysis very dramatically. See @fig-simpsons.
 
 ![Simpson's Effect](img/SimpsonsEffect.png){#fig-simpsons
 width=50%}
@@ -589,7 +637,7 @@ width=50%}
 1. When proving that $D$ is invertible if and only if the columns of
    $X$ are linearly independent, we argued that if $X^{\intercal}Xm=0$
    for a nonzero vector $m$, then $Xm$ is orthogonal to the span of the
-   columns of $X$, and is also an element of that span, and is therefore
+   columns of $X$, and is also an element of that span, and therefore it is
    zero. Provide the details: show that if $H$ is a subspace of
    $\mathbf{R}^{N}$, and $x$ is a vector in $H$ such that $x\cdot h=0$
    for all $h\in H$, then $x=0$.

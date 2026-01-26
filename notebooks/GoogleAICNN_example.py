@@ -33,3 +33,4 @@ class LeNet(nn.Module):
 # Example of how to use the model:
 net = LeNet()
 print(net)
+y
