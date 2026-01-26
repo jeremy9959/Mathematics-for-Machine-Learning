@@ -426,150 +426,52 @@ matrix and what information it encodes about our data.
 
 ## Centered coordinates {#sec-centered}
 
-Recall from the last section that the matrix $D=X^{\intercal}X$ is of central importance to the study of the multivariate least squares problem. Let's look at it more closely.
-
-**Lemma:** The $i,j$ entry of $D$ is the dot product
-
+In our discussion above, we introduced an artificial column of ones into our data matrix. This accounts
+for the intercept (or "bias term") $b$ in the linear equation
 $$
-D_{ij}=X[:,i]\cdot X[:,j]
+y = m_1 x_1 + \cdots + m_k x_k + b.
 $$
 
-of the $i^{\text{th}}$ and $j^{\text{th}}$ columns of $X$.
+An alternative to this approach is to make a simple change of coordinates in our data so that the fitted
+bias becomes zero. Then we can ignore it and just work with $k$ features and weights.
 
-**Proof:** In the matrix multiplication $X^{\intercal}X$, the $i^{\text{th}}$
-row of $X^{\intercal}$ gets "dotted" with the $j^{\text{th}}$ column of $X$
-to produce the $i,j$ entry. But the $i^{\text{th}}$ row of $X^{\intercal}$
-is the $i^{\text{th}}$ column of $X$, as asserted in the statement of the
-lemma.
-
-A crucial point in our construction above relied on the matrix $D$
-being invertible. The following Lemma shows that $D$ fails to be
-invertible only when the different features (the columns of $X$) are
-linearly dependent.
-
-**Lemma:** $D$ is not invertible if and only if the columns of $X$ are
-linearly dependent.
-
-**Proof:** If the columns of $X$ are linearly dependent, then there is
-a nonzero vector $m$ so that $Xm=0$. In that case clearly
-$Dm=X^{\intercal}Xm=0$ so $D$ is not invertible. Suppose $D$ is not
-invertible. Then there is a nonzero vector $m$ with
-$Dm=X^{\intercal}Xm=0$. This means that the vector $Xm$ is orthogonal
-to all of the columns of $X$. Since $Xm$ belongs to the span $H$ of
-the columns of $X$, if it is orthogonal to $H$ it must be zero.
-
-In fact, the matrix $D$ captures some important statistical measures
-of our data, but to see this clearly we need to make a slight change
-of basis. First recall that $X[:,k+1]$ is our column of all $1$,
-added to handle the intercept. As a result, the dot product
-$X[:,i]\cdot X[:,k+1]$ is the sum of the entries in the $i^{th}$
-column, and so if we let $\mu_{i}$ denote the average value of the
-entries in column $i$, we have
-
+Remember the basic equation
 $$
-\mu_{i} = \frac{1}{N}(X[:,i]\cdot X[:,k+1])
+X^{\intercal}(Y-XM)=0
+$$
+that determines the solution to the least squares problem.  Looking at the last row of this equation, and
+using that the last column of $X$ is the $N$-dimensional column vector $E$ consisting entirely of ones, we see that
+at the solution point,
+$$
+E\cdot (Y-XM)=0.
 $$
 
-Now change the matrix $X$ by elementary column operations to obtain a
-new data matrix $X_{0}$ by setting
+But $E\cdot Y=\sum_{i=1}^{N} y_{i}$ is the sum of the target values.  Furthermore, since $XM$ is the
+vector $\hat{Y}$ of predicted values, $E\cdot XM$ is the sum of the predicted values.  Dividing by $N$,
+we see that, at the least squares solution point, the mean of $Y$ equals the mean of $\hat{Y}$.   
 
+Averaging the component equations for $\hat{y}_i$ gives
 $$
-X_{0}[:,i] = X[:,i]-\frac{1}{N}(X[:,i]\cdot X[:,k+1])X[:,k+1] =
-X[:,i]-\mu_{i}X[:,k+1]
+\hat{y}_{i} = x_{i1}m_1 + x_{i2}m_{2} + \cdots + x_{ik}m_k + b 
 $$
-
-for $i=1,\ldots, k$.
-
-In terms of the original data, we are changing the measurement scale
-of the data so that each feature has average value zero, and the
-subspace $H$ spanned by the columns of $X_{0}$ is the same as that
-spanned by the columns of $X$. Using $X_{0}$ instead of $X$ for our
-least squares problem, we get
-
+and dividing by $N$ tells us that
 $$
-\hat{Y} = X_{0}D_{0}^{-1}X_{0}^{\intercal}Y
+\overline{\hat{Y}} = \overline{x}_{1}m_1 + \overline{x}_{2}m_2 + \cdots + \overline{x}_{k}m_k + b 
+$$
+where $\overline{x}_{i}$ is the mean of the $i^{\text{th}}$ feature. As a result, we see that the bias $b$
+is
+$$
+b=\overline{Y}-\sum_{i=1}^{k}\overline{x}_{i}m_{i}
 $$
 
-and
+We can exploit this by a "trick".  Before we start our analysis, we can change coordinates for both the features
+and the target so that the mean of the target data, and the mean of each feature, is zero.  This amounts to a
+"shift" in the measurement scale of each feature, so it's essentially harmless.
 
-$$
-M_{0} = D_{0}^{-1}X_{0}^{\intercal}Y
-$$
+If we begin with this shift, then we know *a priori* that the bias is zero, and so there's no need to include it in our calculations and there's no need to introduce a column of ones into our data matrix. 
 
-where $D_{0}=X_{0}^{\intercal}X_{0}.$
+Everything else we did remains the same, but we have an $N\times k$ matrix to work with instead of $N\times (k+1)$.
 
-**Proposition:** The matrix $D_{0}$ has a block form. Its upper left
-block is a $k\times k$ symmetric block with entries
-
-$$
-(D_{0})_{ij} =
-(X[:,i]-\mu_{i}X[:,k+1])\cdot(X[:,j]-\mu_{j}X[:,k+1])
-$$
-
-Its
-$(k+1)^{st}$ row and column are all zero, except for the $(k+1),(k+1)$
-entry, which is $N$.
-
-**Proof:** This follows from the fact that the last row and column
-entries are (for $i\not=k+1$):
-
-$$
-(X[:,i]-\mu_{i}X[:,k+1])\cdot X[:,k+1] =
-(X[:,i]\cdot X[:,k+1])-N\mu_{i} = 0
-$$
-
-and for $i=k+1$ we have $X[:,k+1]\cdot X[:,k+1]=N$ since that column is just $N$ $1$'s.
-
-**Proposition:** If the $x$ coordinates (the features) are centered so
-that they have mean zero, then the intercept $b$ is
-
-$$
-\overline{Y} = \frac{1}{N}\sum_{i=1}^{N} y_{i}.
-$$
-
-**Proof:** By centering the coordinates, we replace the matrix $X$ by
-$X_{0}$ and $D$ by $D_{0}$, and we are trying to minimize
-$\|Y-X_{0}M_{0}\|^2$. Use the formula from @eq-Msolution to see that
-
-$$
-M_{0} = D_{0}^{-1}X_{0}^{\intercal}Y.
-$$
-The $b$ value we are
-interested in is the last entry $m_{k+1}$ in $M_{0}$. From the block
-form of $D_{0}$, we know that $D_{0}^{-1}$ has bottom row and last
-column zero except for $1/N$ in position $(k+1)\times(k+1)$. Also
-$X_{0}^{\intercal}$ has last row consisting entirely of $1$. So the
-bottom entry of $X_{0}^{\intercal}Y$ is $\sum_{i=1}^{N} y_{i}$, and
-the bottom entry $b$ of $D_{0}^{-1}X_{0}^{\intercal}Y$ is
-
-$$
-\mu_{Y} = \frac{1}{N}\sum_{i=1}^{N} y_{i}.
-$$
-
-as claimed.
-
-**Corollary:** If we make a further change of coordinates to define
-
-$$
-Y_{0} = Y - \mu_{Y}\left[\begin{matrix} 1 \\ 1 \\ \vdots \\
-1\end{matrix}\right]
-$$
-
-then the associated $b$ is zero. As a result
-we can forget about the extra column of $1$s that we added to $X$ to
-account for it and reduce the dimension of our entire problem by $1$.
-
-Just to recap, if we center our data so that $\mu_{Y}=0$ and
-$\mu_{i}=0$ for $i=1,\ldots, k$, then the least squares problem
-reduces to minimizing
-
-$$
-E(M) = \|Y-XM\|^2
-$$
-
-where $X$ is the $N\times k$ matrix with $j^{\text{th}}$ row $(x_{j1},x_{j2},\ldots, x_{jk})$
-for $j=1,\ldots, N$ and the solutions are as given in @eq-Msolution
-and @eq-projection.
 
 ## Caveats about Linear Regression
 
