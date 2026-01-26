@@ -315,3 +315,5 @@ $$
 for a learning rate $\lambda$.  Then reset all of the accumulators $\delta^{(i)}_{*}$ and $\nabla W^{(i)}_{*}$ to zero.
 
 Once every data point in the dataset has been considered, you have completed one *training epoch*.  Repeat until the loss stops decreasing meaningfully.
+
+## 
