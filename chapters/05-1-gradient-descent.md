@@ -10,51 +10,69 @@ this we needed to maximize a function using Lagrange multipliers.  In later lect
 
 In our discussion of PCA and linear regression, we were able to give analytic formulae for the solution to our problems.  These solutions involved (in the case of linear regression) inverting a matrix,
 and in the case of PCA, finding eigenvalues and eigenvectors.  These are elegant mathematical results,
-but at that time we begged the question of how to actually *compute* these quantities of interest in an
+but at that time we left open the question of how to actually *compute* these quantities of interest in an
 efficient way.  In this section, we will discuss the technique known as gradient descent, which is perhaps the simplest approach to minimizing a function using calculus, and which is at the foundation of many practical machine learning algorithms.
 
 ## The Key Idea
 
 
-Suppose that we have a function $f(x_0,\ldots, x_{k-1})$ and we wish to find its minimum value.  In Calculus classes, we are taught to take the derivates of the function and set them equal to zero, but for anything other than the simplest functions this problem is not solvable in practice.  In real life,
+Suppose that we have a function $f(x_0,\ldots, x_{k-1})$ and we wish to find its minimum value.  In Calculus classes, we are taught to take the derivatives of the function and set them equal to zero, but for anything other than the simplest functions this problem is not solvable in practice.  In real life,
 we use iterative methods to find the minimum of the function $f$.
 
-The main tool in this approach is a fact from multivariate calculus.  
+The main tool in this approach is the gradient of a function.  Recall
+from multivariable calculus that,  given
+a function $f(x_0,\ldots, x_{k-1})$, the *gradient* $\nabla f$  of $f$ is the vector made up
+of the partial derivatives of $f$:
+
+$$
+\nabla f = \begin{bmatrix} \frac{\partial f}{\partial x_{0}} \\\vdots \\ \frac{\partial f}{\partial x_{k-1}}\end{bmatrix}
+$${#eq-gradient-def}
+
+The gradient $\nabla f$ is an example of a *vector field*.  It is a vector whose entries are functions.  If we evaluate those functions at a point $x$, we obtain
+a vector $(\nabla f)(x)$.
+
+We can think of a vector field as a way to attach a vector $(\nabla f)(x)$ to each point $x\in\mathbf{R}^{k}$.
 
 **Proposition:** Let $f(x_0,\ldots, x_{k-1})$ be a function and let $\nabla f$ be its gradient.
 Then at each point $x$ in $\R^{k}$, the gradient $(\nabla f)(x)$ is a vector that points in
-the direction in which $f$ is increasing most rapidly from $x$ and $(-\nabla f)(x)$ points
+the direction in which $f$ is increasing most rapidly from $x$ and $(-\nabla f)(x)$ points in the direction in which it decreases most rapidly.  If $(\nabla f)(x)=0$, then $x$ 
 is a critical point of $f$. 
 
 This fact arises from thinking about the *directional derivative* of a function.  
 The directional derivative $D_{v}f$ measures the rate of change of $f$ as one moves
-with velocity vector $v$ from the point $x$ and it is defined as
+with velocity vector $v$ from a chosen point $a\in\mathbf{R}^{k}$ and it is defined as
 $$
-D_{v}f(x) = \frac{d}{dt}f(x+tv)|_{t=0}
+D_{v}f(a) = \frac{d}{dt}f(a+tv)|_{t=0}
 $$
-From the chain rule, we can compute that
-$$
-D_{v}f(x) = \sum_{i=0}^{k-1} \frac{\partial f}{\partial x_{i}}\frac{dx_{i}}{dt} = (\nabla f)\cdot v
-$$
-where
-$$
-\nabla f = \left[\frac{\partial f}{\partial x_{i}}\right]_{i=0}^{k-1}
-$$
-is the gradient of $f$. 
 
-The directional derivative $D_{v}(f)=(\nabla f)\cdot v$ measures the rate of change of $f$ if we
-travel with velocity $v$ from a point $x$.  To remove the dependence on the magnitude of $v$ (since obviously
-$f$ will change more quickly if we travel more quickly in a given direction), we scale $v$ to be a unit vector. Then, since
+If $a=(a_0,\ldots, a_{k-1})$ and $v=(v_{0},\ldots, v_{k-1})$, then
 $$
-\nabla f\cdot v=\|\nabla f\|\|v\|\cos\theta=\|\nabla f\|\cos \theta
+f(a+tv) = f(a_{0}+tv_{0},\ldots, a_{k-1}+tv_{k-1}).
 $$
-where $\theta$ is the angle between $v$ and $\nabla f$,  the dot product giving the rate is maximized when $v$ is parallel to $\nabla f$.  If $v$ is opposite to $\nabla f$, the dot product is minimized. 
+Since
+$$
+\frac{d}{dt}(a_{i}+tv_{i})=v_{i}
+$$
+we can compute from the chain rule that
+$$
+D_{v}f(a) = \sum_{i=0}^{k-1} \frac{\partial f}{\partial x_{i}}(a)v_{i} = (\nabla f)(a)\cdot v
+$$
+where $\nabla f$
+is the gradient of $f$ as in @eq-gradient-def. 
+
+If we travel from a point $a$ with velocity vector $v$, the rate of change of $f$ along our path will depend on how fast we travel as well as the direction we choose.  In other words, $D_{v}f$ depends on the magnitude of $v$, as well as its direction.  To remove this dependence on the magnitude of $v$, we scale $v$ to be a unit vector. 
+
+Now
+$$
+(\nabla f)(a)\cdot v=\|(\nabla f)(a)\|\|v\|\cos\theta=\|(\nabla f)(a)\|\cos \theta
+$$
+where $\theta$ is the angle between $v$ and $(\nabla f)(a)$.  Clearly this dot product is maximized when $v$ is parallel to $(\nabla f)(a)$ so $\cos\theta=1$.  If $v$ is opposite to $(\nabla f)(a)$, then $\cos\theta=-1$ and the dot product is minimized. 
 
 ## The Algorithm
 
 To exploit the fact that the gradient points in the direction of most rapid increase of our function $f$,
-we adopt the following strategy.  Starting from a point $x$, compute the gradient $\nabla f$ of $f$.
-Take a small step in the direction of the gradient -- that should increase the value of $f$. Then do it again, and again; each time, you move in the direction of increasing $x$, but at some point the gradient becomes very small and you stop moving much.  At that moment, you quit. This is called "gradient ascent."
+we adopt the following strategy.  Starting from a point $x$, compute the gradient $(\nabla f)(x)$ of $f$.
+Take a small step in the direction of the gradient -- that should increase the value of $f$. Then do it again, and again; each time, you move in the direction of increasing $f$, but at some point the gradient becomes very small and you stop moving much.  At that moment, you stop.  You have reached the highest value of $f$ in the immediate vicinity.  This is called "gradient ascent" to a local maximum. 
 
 If we want to *minimize*, not maximize, our function, then we want to move *opposite* to the gradient in small steps. This is the more common formulation.
 
@@ -64,7 +82,7 @@ If we want to *minimize*, not maximize, our function, then we want to move *oppo
 
 ### Gradient Descent Algorithm
 
-Given a function $f:\mathbb{R}^{k}\to \mathbb{R}$, to find a point where it is mimized, choose:
+Given a function $f:\mathbb{R}^{k}\to \mathbb{R}$, to find a point where it is minimized, choose:
 
 - a starting point $c^{(0)}$, 
 - a small constant $\nu$ (called the *learning rate*) 
@@ -72,9 +90,9 @@ Given a function $f:\mathbb{R}^{k}\to \mathbb{R}$, to find a point where it is m
 
 Iteratively compute
 $$
-c^{(n+1)}=c^{(n)} -\nu\nabla f(c^{(n)})
+c^{(n+1)}=c^{(n)} -\nu(\nabla f)(c^{(n)})
 $$
-until $|c^{(n+1)}-c^{(n)}|<\epsilon$.  
+until $\|c^{(n+1)}-c^{(n)}\|<\epsilon$.  
 
 Then $c^{(n+1)}$ is an (approximate) critical point of $f$.
 
@@ -88,15 +106,16 @@ Gradient Descent Illustrated
 :::
 
 The behavior of gradient descent, at least when all goes well,
-is illustrated in @fig-graddescentillust  for the function
+is illustrated in @fig-graddescentillust for the function
 $$
-f(x,y) = 1.3e^{-2.5((x-1.3)^2+(y-0.8)^2))}-1.2e^{-2((x-1.8)^2)+(y-1.3)^2)}.
+f(x,y) = 1.3e^{-2.5((x-1.3)^2+(y-0.8)^2)}-1.2e^{-2((x-1.8)^2+(y-1.3)^2)}.
 $$
+
 @fig-graddescentillust is a contour plot, with the black lines at constant height and the colors
 indicating the height of the function. 
 This function has two "pits" or "wells" indicated by the darker, "cooler" colored regions.  The red line
-shows the path that the gradient descent algorithm takes, from a higher, "hotter" region to a lower
-cooler one. 
+shows the gradient descent algorithm heading "downhill" towards a nearby local minimum. 
+
 
 
 To get a little more perspective on gradient descent, consider the one-dimensional case, with 
@@ -118,7 +137,7 @@ $$
 
 
 From this simple example we can see the power and also the pitfalls of this method.  Suppose we choose
-$x_0=.5$, $\nu=.01$, and do $30$ iterations of the main loop in our algorithm.  The result is shown in 
+$c^{(0)}=.5$, $\nu=.01$, and do $30$ iterations of the main loop in our algorithm.  The result is shown in 
 @fig-grad-descent-local-minimum .
 
 
@@ -132,17 +151,17 @@ handle this is to *run gradient descent multiple times with random starting coor
 ## Linear Regression via Gradient Descent
 
 In our discussion of Linear Regression in @sec-LinearRegression, we used Calculus to find the
-values of the parameters that minimzed the squared difference to the desired values.  If our features were
-stored in the matrix $X$ (with an additional column of $1$'s) and our target values in the vector $Y$, then we showed that that optimal parameters $M$ were given by
+values of the parameters that minimized the squared difference between the predicted and desired values.  If our features were
+stored in the matrix $X$ (with an additional column of $1$'s) and our target values in the vector $Y$, then we showed that the optimal parameters $M$ were given by
 
 $$
 M=D^{-1}X^{\intercal}Y
 $$
 
-where $D=X^{\intercal}X$. This set of parameters minimizes the "mean-squared-error"
+where $D=X^{\intercal}X$. This set of parameters minimizes the squared error:
 
 $$
-MSE = \frac{1}{N}\| Y-XM \|^2.
+L = \| Y-XM \|^2.
 $$
 
 See @eq-Msolution and @eq-projection.
@@ -151,8 +170,8 @@ One problem with this approach is the need to invert the matrix $D$, which is a 
 via gradient descent, using the computation of the gradient in @eq-gradient:
 
 $$ 
-\nabla E = \left[\begin{matrix} \frac{\partial}{\partial M_1}E \\ \frac{\partial}{\partial M_2}E \\ \vdots \\
-\frac{\partial}{\partial m_{M+1}}E\end{matrix}\right] = -2 X^{\intercal}Y + 2
+\nabla E = \left[\begin{matrix} \frac{\partial}{\partial M_1}L \\ \frac{\partial}{\partial M_2}L \\ \vdots \\
+\frac{\partial}{\partial M_{k+1}}L\end{matrix}\right] = -2 X^{\intercal}Y + 2
 X^{\intercal}XM 
 $$
 
@@ -162,9 +181,9 @@ The gradient descent algorithm looks like this.
 
 ### Gradient Descent Algorithm for Linear Regression
 
-Set $M^{0}$ to a random vector in $\R^{k+1}$ for an 
+Set $M^{(0)}$ to a random vector in $\R^{k+1}$ for an 
 initial guess and choose a learning rate parameter $\nu$.
-Compute $A=X^{\intercal}Y$ (an element of $\R^{k+1}$ and $D=X^{\intercal}X$ (a $(k+1)\times (k+1)$ matrix).
+Compute $A=X^{\intercal}Y$ (an element of $\R^{k+1}$) and $D=X^{\intercal}X$ (a $(k+1)\times (k+1)$ matrix).
 
 Iteratively compute
 
@@ -172,7 +191,11 @@ $$
 M^{(j+1)}=M^{(j)}-\nu(-2A+2DM^{(j)})
 $$
 
-until the entries a stopping condition is met. For example, stop if the mean squared error $\|Y-XM^{(k)}\|^2$ changes by less than some tolerance on each iteration, or the entries of $M^{(k)}$ change by less than some tolerance.
+until a stopping condition is met. For example, stop if:
+
+-  the   squared error $\|Y-XM^{(j)}\|^2$ is sufficiently small, or
+- the squared error decreases by less than some tolerance on each iteration, or
+-  the entries of $M^{(j)}$ change by less than some tolerance.
 
 :::
 
@@ -226,5 +249,4 @@ These will bounce around but trend overall downward.  When they vary by less tha
 worthwhile to shuffle the order in which you consider the points $(x,y)$ in each epoch.
 
 :::
-
 
