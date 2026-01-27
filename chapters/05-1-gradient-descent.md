@@ -209,16 +209,13 @@ us the task of computing the matrix $D=X^{\intercal}X$.  Typically $X$ has many 
 
 Stochastic Gradient Descent is a method for numerical optimization that does not require use of all the data on each iteration; rather it uses each data point in succession.  Let's look at this 
 in the context of linear regression.  Suppose we have an estimated value $M$ for the parameters.  We take one data point $x$ -- a single row
-of the data matrix $X$ -- and the associated target value $y$.  The MSE error for this particular point is
-
-$$
-MSE = \| (y-xM)\|^2 = (y-xM)\cdot (y-xM).
-$$
+of the data matrix $X$ -- and the associated target value $y$.  The error for this particular point is
+$(y-xM)|^2.$
 
 The gradient for this particular point is 
 
 $$
-\nabla MSE = -2(y-xM)x
+\nabla MSE = -2x^{\intercal}(y-xM)
 $$
 
 Notice that $y-xM$ is just a scalar so this is a scalar multiple of the vector $x$. 
@@ -230,20 +227,20 @@ through the entire set is sometimes called an "epoch."
 
 ### Stochastic Gradient Descent for Linear Regression
 
-Set $M^{0}$ to a random starting vector in $\R^{k+1}$ as an initial guess and choose a learning rate
+Set $M^{(0)}$ to a random starting vector in $\R^{k+1}$ as an initial guess and choose a learning rate
 parameter.
 
-For each data point $x$ and target value $y$, adjust the parameters by the gradient of the error
+For each data point pair $(x_{i},y_{i})$ consisting of a row of the data matrix $X$ treated as a row vector and its   corresponding target value, adjust the parameters by the gradient of the error
 associated with this point:
 
 $$
-M^{(j+1)} = M^{(j)}-\nu(-2x(y-xM)) = M^{(j)}+2\nu(y-xM)x
+M^{(j+1)} = M^{(j)}-\nu(-2x_i^{\intercal} (y_i-x_iM)) = M^{(j)}+2\nu x_i^{\intercal}(y_i-x_iM)
 $$
 
-Run through the data set multiple times and track the $MSE$ $\|(y-xM)\|^2$ for each pair $(x,y)$.
+Here $y_i-x_iM$ is a scalar. Both $x_{i}^{\intercal}$ and $M^{(j)}$ are column vectors.
+
+Run through the data set multiple times and track the error $(y_i-x_iM)^2$ for each pair $(x_i,y_i)$.  
 These will bounce around but trend overall downward.  When they vary by less than some threshold, stop.
-
-
 
 **Note:** To minimize the bias introduced by the particular order in which you read the data, it's often
 worthwhile to shuffle the order in which you consider the points $(x,y)$ in each epoch.
