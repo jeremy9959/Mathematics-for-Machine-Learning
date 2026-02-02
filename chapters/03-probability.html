@@ -249,54 +249,58 @@ $$\newcommand{\R}{\mathbb{R}}$$
 
 <section id="introduction" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3.1</span> Introduction</h2>
-<p>Probability theory is one of the three central mathematical tools in machine learning, along with multivariable calculus and linear algebra. Tools from probability allow us to manage the uncertainty inherent in data collected from real world experiments, and to measure the reliability of predictions that we might make from that data. In these notes, we will review some of the basic terminology of probability and introduce Bayesian inference as a technique in machine learning problems.</p>
-<p>This will only be a superficial introduction to ideas from probability. For a thorough treatment, see <a href="https://probability.oer.math.uconn.edu/3160-oer">this open-source introduction to probability.</a> For a more applied emphasis, I recommend the excellent online course <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-041-probabilistic-systems-analysis-and-applied-probability-fall-2010/">Probabilistic Systems Analysis and Applied Probability</a> and its associated text <span class="citation" data-cites="Bertsekas">[<a href="20-references.html#ref-Bertsekas" role="doc-biblioref">1</a>]</span>.</p>
+<p>Probability theory is one of the three central mathematical tools in machine learning, along with multivariable calculus and linear algebra. Tools from probability allow us to manage the uncertainty inherent in data collected from real-world experiments, and to measure the reliability of predictions that we make from that data. In these notes, we will review some of the basic terminology of probability and introduce Bayesian inference as a technique in machine learning problems.</p>
+<p>This is a superficial introduction to ideas from probability. For a thorough treatment, see <a href="https://probability.oer.math.uconn.edu/3160-oer">this open-source introduction to probability.</a> For a more applied emphasis, I recommend the excellent online course <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-041-probabilistic-systems-analysis-and-applied-probability-fall-2010/">Probabilistic Systems Analysis and Applied Probability</a> and its associated textbook <span class="citation" data-cites="Bertsekas">[<a href="20-references.html#ref-Bertsekas" role="doc-biblioref">1</a>]</span>.</p>
 </section>
 <section id="probability-basics" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="probability-basics"><span class="header-section-number">3.2</span> Probability Basics</h2>
-<p>The theory of probability begins with a set <span class="math inline">\(X\)</span> of possible events or outcomes, together with a “probability” function <span class="math inline">\(P\)</span> on (certain) subsets of <span class="math inline">\(X\)</span> that measures “how likely” that combination of events is to occur.</p>
-<p>The set <span class="math inline">\(X\)</span> can be discrete or continuous. For example, when flipping a coin, our set of possible events would be the discrete set <span class="math inline">\(\{H,T\}\)</span> corresponding to the possible events of flipping heads or tails. When measuring the temperature using a thermometer, our set of possible outcomes might be the set of real numbers, or perhaps an interval in <span class="math inline">\(\mathbb{R}\)</span>. The thermometer’s measurement is random because it is affected by, say, electronic noise, and so its reading is the true temperature perturbed by a random amount.</p>
-<p>The values of <span class="math inline">\(P\)</span> are between <span class="math inline">\(0\)</span>, meaning that the event <em>will not</em> happen, and <span class="math inline">\(1\)</span>, meaning that it is certain to occur. As part of our set up, we assume that the total chance of some event from <span class="math inline">\(X\)</span> occurring is <span class="math inline">\(1\)</span>, so that <span class="math inline">\(P(X)=1\)</span>; and the chance of “nothing” happening is zero, so <span class="math inline">\(P(\emptyset)=0\)</span>. And if <span class="math inline">\(U\subset X\)</span> is some collection, then <span class="math inline">\(P(U)\)</span> is the chance of an event from <span class="math inline">\(U\)</span> occurring.</p>
+<p>The theory of probability begins with a set <span class="math inline">\(X\)</span> of possible events or outcomes, together with a “probability” function <span class="math inline">\(P\)</span> on certain subsets of <span class="math inline">\(X\)</span> that measures “how likely” that combination of events is to occur.</p>
+<p>The set <span class="math inline">\(X\)</span> can be discrete or continuous. For example, when flipping a coin, our set of possible events would be the discrete set <span class="math inline">\(\{H,T\}\)</span> corresponding to the outcomes of flipping heads or tails. When measuring the temperature using a thermometer, our set of possible outcomes might be the set of real numbers, or perhaps an interval in <span class="math inline">\(\mathbb{R}\)</span>. The thermometer’s measurement is random because it is affected by, say, electronic noise, and so its reading is the true temperature perturbed by a random amount.</p>
+<p>The values of <span class="math inline">\(P\)</span> are between <span class="math inline">\(0\)</span>, meaning that the event <em>will not</em> happen, and <span class="math inline">\(1\)</span>, meaning that it is certain to occur. As part of our set up, we assume that the probability of <em>some</em> event from <span class="math inline">\(X\)</span> occurring is <span class="math inline">\(1\)</span>, so that <span class="math inline">\(P(X)=1\)</span>; and the chance of “nothing” happening is zero, so <span class="math inline">\(P(\emptyset)=0\)</span>. And if <span class="math inline">\(U\subset X\)</span> is some collection, then <span class="math inline">\(P(U)\)</span> is the chance of an event from <span class="math inline">\(U\)</span> occurring.</p>
 <p>The last ingredient of this picture of probability is additivity. Namely, we assume that if <span class="math inline">\(U\)</span> and <span class="math inline">\(V\)</span> are subsets of <span class="math inline">\(X\)</span> that are disjoint, then <span class="math display">\[
 P(U\cup V)=P(U)+P(V).
-\]</span> Even more generally, we assume that this holds for (countably) infinite collections of disjoint subsets <span class="math inline">\(U_1,U_2,\ldots\)</span>, where <span class="math display">\[
+\]</span></p>
+<p>Even more generally, we assume that this holds for countably infinite collections of disjoint subsets <span class="math inline">\(U_1,U_2,\ldots\)</span>, where</p>
+<p><span class="math display">\[
 P(U_1\cup U_2\cup\cdots)=\sum_{i=1}^{\infty} P(U_i)
 \]</span></p>
 <p><strong>Definition:</strong> The combination of a set <span class="math inline">\(X\)</span> of possible outcomes and a probability function <span class="math inline">\(P\)</span> on subsets of <span class="math inline">\(X\)</span> that satisfies <span class="math inline">\(P(X)=1\)</span>, <span class="math inline">\(0\le P(U)\le 1\)</span> for all <span class="math inline">\(U\)</span>, and is additive on countable disjoint collections of subsets of <span class="math inline">\(X\)</span> is called a (naive) probability space. <span class="math inline">\(X\)</span> is called the <em>sample space</em> and the subsets of <span class="math inline">\(X\)</span> are called <em>events</em>.</p>
 <p><strong>Warning:</strong> The reason for the term “naive” in the above definition is that, if <span class="math inline">\(X\)</span> is an uncountable set such as the real numbers <span class="math inline">\(\mathbb{R}\)</span>, then the conditions in the definition are self-contradictory. This is a deep and rather surprising fact. To make a sensible definition of a probability space, one has to restrict the domain of the probability function <span class="math inline">\(P\)</span> to certain subsets of <span class="math inline">\(X\)</span>. These ideas form the basis of the mathematical subject known as measure theory. In these notes we will work with explicit probability functions and simple subsets such as intervals that avoid these technicalities.</p>
 <section id="discrete-probability-examples" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="discrete-probability-examples"><span class="header-section-number">3.2.1</span> Discrete probability examples</h3>
-<p>The simplest probability space arises in the analysis of coin-flipping. As mentioned earlier, the set <span class="math inline">\(X\)</span> contains two elements <span class="math inline">\(\{H,T\}\)</span>. The probability function <span class="math inline">\(P\)</span> is determined by its value <span class="math inline">\(P(\{H\})=p\)</span>, where <span class="math inline">\(0\le p\le 1\)</span>, which is the chance of the coin yielding a “head”. Since <span class="math inline">\(P(X)=1\)</span>, we have <span class="math inline">\(P(\{T\})=1-p\)</span>.</p>
-<p>Other examples of discrete probability spaces arise from dice-rolling and playing cards. For example, suppose we roll two six-sided dice. There are <span class="math inline">\(36\)</span> possible outcomes from this experiment, each equally likely. If instead we consider the sum of the two values on the dice, our outcomes range from <span class="math inline">\(2\)</span> to <span class="math inline">\(12\)</span> and the probabilities of these outcomes are given by</p>
+<p>The simplest probability space arises in the analysis of coin flipping. As mentioned earlier, the set <span class="math inline">\(X\)</span> contains two elements <span class="math inline">\(\{H,T\}\)</span>. The probability function <span class="math inline">\(P\)</span> is determined by its value <span class="math inline">\(P(\{H\})=p\)</span>, where <span class="math inline">\(0\le p\le 1\)</span>, which is the chance of the coin yielding a “head”. Since <span class="math inline">\(P(X)=1\)</span>, we have <span class="math inline">\(P(\{T\})=1-p\)</span>.</p>
+<p>Other examples of discrete probability spaces arise from dice-rolling and playing cards. For example, suppose we roll two six-sided dice. There are <span class="math inline">\(36\)</span> equally likely outcomes from this experiment. If instead we consider the sum of the two values on the dice, our outcomes range from <span class="math inline">\(2\)</span> to <span class="math inline">\(12\)</span> and the probabilities of these outcomes are given by</p>
 <table class="table">
 <thead>
 <tr class="header">
-<th>2</th>
-<th>3</th>
-<th>4</th>
-<th>5</th>
-<th>6</th>
-<th>7</th>
-<th>8</th>
-<th>9</th>
-<th>10</th>
-<th>11</th>
-<th>12</th>
+<th>sum(s)</th>
+<th>probability</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td>2, 12</td>
 <td>1/36</td>
+</tr>
+<tr class="even">
+<td>3, 11</td>
 <td>1/18</td>
+</tr>
+<tr class="odd">
+<td>4, 10</td>
 <td>1/12</td>
+</tr>
+<tr class="even">
+<td>5, 9</td>
 <td>1/9</td>
+</tr>
+<tr class="odd">
+<td>6, 8</td>
 <td>5/36</td>
+</tr>
+<tr class="even">
+<td>7</td>
 <td>1/6</td>
-<td>5/36</td>
-<td>1/9</td>
-<td>1/12</td>
-<td>1/18</td>
-<td>1/36</td>
 </tr>
 </tbody>
 </table>
@@ -306,20 +310,23 @@ P(\{A_{\clubsuit},A_{\spadesuit},A_{\heartsuit},A_{\diamondsuit}\}) = 4P(\{A_{\c
 </section>
 <section id="continuous-probability-examples" class="level3" data-number="3.2.2">
 <h3 data-number="3.2.2" class="anchored" data-anchor-id="continuous-probability-examples"><span class="header-section-number">3.2.2</span> Continuous probability examples</h3>
-<p>When the set <span class="math inline">\(X\)</span> is continuous, such as in the temperature measurement, we measure <span class="math inline">\(P(U)\)</span>, where <span class="math inline">\(U\subset X\)</span>, by giving a “probability density function” <span class="math inline">\(f:X\to \mathbb{R}\)</span> and declaring that <span class="math display">\[
-P(U) = \int_{U}f(x) dX.
+<p>When the set <span class="math inline">\(X\)</span> is continuous, such as in the temperature measurement, we measure <span class="math inline">\(P(U)\)</span>, where <span class="math inline">\(U\subset X\)</span>, by giving a “probability density function” <span class="math inline">\(f:X\to [0,\infty)\)</span> and declaring that <span class="math display">\[
+P(U) = \int_{U}f(x) dx.
 \]</span> Notice that our function <span class="math inline">\(f(x)\)</span> has to satisfy the condition <span class="math display">\[
-P(X)=\int_{X} f(x)dX = 1.
+P(X)=\int_{X} f(x)dx = 1.
 \]</span></p>
-<p>For example, in our temperature measurement example, suppose the “true” outside temperature is <span class="math inline">\(t_0\)</span>, and our thermometer gives a reading <span class="math inline">\(t\)</span>. Then a good model for the random error is to assume that the error <span class="math inline">\(x=t-t_0\)</span> is governed by the density function <span class="math display">\[
+<p>For example, in our temperature measurement example, suppose the “true” outside temperature is <span class="math inline">\(t_0\)</span>, and our thermometer gives a reading <span class="math inline">\(t\)</span>. Then a good model for the random error is to assume that the error <span class="math inline">\(x=t-t_0\)</span> is governed by the density function</p>
+<p><span class="math display">\[
 f_\sigma(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-x^2/2\sigma^2}
-\]</span> where <span class="math inline">\(\sigma\)</span> is a parameter. In a continuous situation such as this one, the probability of any particular outcome in <span class="math inline">\(X\)</span> is zero since <span class="math display">\[
+\]</span></p>
+<p>where <span class="math inline">\(\sigma\)</span> is a parameter. In a continuous situation such as this one, the probability of any single point in <span class="math inline">\(X\)</span> is zero since <span class="math display">\[
 P(\{t\})=\int_{t}^{t}f_{\sigma}(x)dx = 0
-\]</span> Still, the shape of the density function does tell you where the values are concentrated – values where the density function is larger are more likely than those where it is smaller.</p>
-<p>With this density function, and x=<span class="math inline">\(t-t_0\)</span>, the error in our measurement is given by <span id="eq-normal"><span class="math display">\[
+\]</span></p>
+<p>Still, the shape of the density function does tell you where the values are concentrated – values where the density function is larger are more likely than those where it is smaller.</p>
+<p>With this density function, and <span class="math inline">\(x=t-t_0\)</span>, the error in our measurement is given by <span id="eq-normal"><span class="math display">\[
 P(|t-t_0|&lt;\delta)=\int_{-\delta}^{\delta} \frac{1}{\sigma\sqrt{2\pi}}e^{-x^2/2\sigma^2} dx
 \tag{3.1}\]</span></span></p>
-<p>The parameter <span class="math inline">\(\sigma\)</span> (called the <em>standard deviation</em>) controls how tightly the thermometer’s measurement is clustered around the true value <span class="math inline">\(t_0\)</span>; when <span class="math inline">\(\sigma\)</span> is large, the measurements are scattered widely, when small, they are clustered tightly. See <a href="#fig-density">Figure&nbsp;<span>3.1</span></a>.</p>
+<p>The parameter <span class="math inline">\(\sigma\)</span> (called the <em>standard deviation</em>) controls how tightly the thermometer’s measurement is clustered around the true value <span class="math inline">\(t_0\)</span>; when <span class="math inline">\(\sigma\)</span> is large, the measurements are scattered widely, when it is small, they are clustered tightly. See <a href="#fig-density">Figure&nbsp;<span>3.1</span></a>.</p>
 <div id="fig-density" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/density.png" class="img-fluid figure-img"></p>
@@ -330,11 +337,11 @@ P(|t-t_0|&lt;\delta)=\int_{-\delta}^{\delta} \frac{1}{\sigma\sqrt{2\pi}}e^{-x^2/
 </section>
 <section id="conditional-probability-and-bayes-theorem" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="conditional-probability-and-bayes-theorem"><span class="header-section-number">3.3</span> Conditional Probability and Bayes Theorem</h2>
-<p>The theory of conditional probability gives a way to study how partial information about an event informs us about the event as a whole. For example, suppose you draw a card at random from a deck. As we’ve seen earlier, the chance that card is an ace is <span class="math inline">\(1/13\)</span>. Now suppose that you learn that (somehow) that the card is definitely not a jack, king, or queen. Since there are 12 cards in the deck that are jacks, kings, or queens, the card you’ve drawn is one of the remaining 40 cards, which includes 4 aces. Thus the chance you are holding an ace is now <span class="math inline">\(4/40=1/10\)</span>.</p>
+<p>The theory of conditional probability gives a way to study how partial information about an event informs us about the event as a whole. For example, suppose you draw a card at random from a deck. As we’ve seen earlier, the chance that card is an ace is <span class="math inline">\(1/13\)</span>. Now suppose that you somehow learn that the card is definitely not a jack, queen, or king. Since there are 12 cards in the deck that are jacks, kings, or queens, the card you’ve drawn is one of the remaining 40 cards, which includes 4 aces. Thus the chance you are holding an ace is now <span class="math inline">\(4/40=1/10\)</span>.</p>
 <p>In terms of notation, if <span class="math inline">\(A\)</span> is the event “my card is an ace” and <span class="math inline">\(B\)</span> is the event “my card is not a jack, queen, or king” then we say that <em>the probability of <span class="math inline">\(A\)</span> given <span class="math inline">\(B\)</span></em> is <span class="math inline">\(1/10\)</span>. The notation for this is <span class="math display">\[
 P(A|B) = 1/10.
 \]</span></p>
-<p>More generally, if <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are events from a sample space <span class="math inline">\(X\)</span>, and <span class="math inline">\(P(B)&gt;0\)</span>, then <span class="math display">\[
+<p>More generally, if <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are events in a sample space <span class="math inline">\(X\)</span>, and <span class="math inline">\(P(B)&gt;0\)</span>, then <span class="math display">\[
 P(A|B) = \frac{P(A\cap B)}{P(B)},
 \]</span> so that <span class="math inline">\(P(A|B)\)</span> measures the chance that <span class="math inline">\(A\)</span> occurs among those situations in which <span class="math inline">\(B\)</span> occurs.</p>
 <section id="bayes-theorem" class="level3" data-number="3.3.1">
@@ -344,32 +351,33 @@ P(A|B) = \frac{P(A\cap B)}{P(B)},
 P(A|B) = \frac{P(B|A)P(A)}{P(B)}.
 \]</span></p>
 <p>If we use the definition of conditional probability given above, this is straightforward: <span class="math display">\[
-\frac{P(B|A)P(A)}{P(B)} = \frac{P(B\cap A)}{P(B)} = P(A|B).
+\frac{P(B|A)P(A)}{P(B)} = \frac{P(A\cap B)}{P(B)} = P(A|B).
 \]</span></p>
 </section>
 <section id="an-example" class="level3" data-number="3.3.2">
 <h3 data-number="3.3.2" class="anchored" data-anchor-id="an-example"><span class="header-section-number">3.3.2</span> An example</h3>
-<p>To illustrate conditional probability, let’s consider what happens when we administer the most reliable COVID-19 test, the PCR test, to an individual drawn from the population at large. There are two possible test results (positive and negative) and two possible true states of the person being tested (infected and not infected). Suppose I go to the doctor and get a COVID test which comes back positive. What is the probability that I actually have COVID?</p>
-<p>Let’s let <span class="math inline">\(S\)</span> and <span class="math inline">\(W\)</span> stand for infected (sick) and not infected (well), and let <span class="math inline">\(+/-\)</span> stand for test positive or negative. Note that there are four possible outcomes of our experiment:</p>
+<p>To illustrate conditional probability, let’s consider what happens when we administer the PCR test for COVID-19 to an individual drawn from the population at large. There are two possible test results (positive and negative) and two possible true states (infected and not infected). Suppose I go to the doctor and get a COVID test which comes back positive. What is the probability that I actually have COVID?</p>
+<p>Let’s let <span class="math inline">\(S\)</span> and <span class="math inline">\(W\)</span> stand for infected (sick) and not infected (well) respectively, and let <span class="math inline">\(+/-\)</span> stand for test results positive or negative respectively. Note that there are four possible outcomes of our experiment:</p>
 <ul>
 <li>test positive and infected (S+) – this is a <em>true positive</em>.</li>
 <li>test positive and not infected (W+) – this is a <em>false positive</em>.</li>
 <li>test negative and infected (S-) – this is a <em>false negative</em>.</li>
 <li>test negative and not infected (W-) – this is a <em>true negative</em>.</li>
 </ul>
-<p>The <a href="https://www.icd10monitor.com/false-positives-in-pcr-tests-for-covid-19">CDC says</a> that the chance of a false positive – that is, the percentage of samples from well people that incorrectly yields a positive result – is about one-half of one percent, or 5 in 1000.</p>
+<p>This <a href="https://www.icd10monitor.com/false-positives-in-pcr-tests-for-covid-19">ICD10 report</a> claimsthat the chance of a false positive – that is, the percentage of samples from well people that incorrectly yields a positive result – is about one-half of one percent, or 5 in 1000.</p>
+<p>(Disclaimer: these numbers are unverified and are used for illustration purposes only.)</p>
 <p>In other words, <span class="math display">\[
 P(+|W) = P(W+)/P(W) = 5/1000=1/200
 \]</span></p>
-<p>On the other hand, the CDC tells us that chance of a false negative is 1 in 4, so <span class="math display">\[
+<p>On the other hand, the same source tells us that chance of a false negative is 1 in 4, so <span class="math display">\[
 P(-|S) = P(S-)/P(S) = .25.
-\]</span> Since <span class="math inline">\(P(S-)+P(S+)=P(S).\)</span> since every test is either positive or negative, we have <span class="math display">\[
+\]</span> Since every test is either positive or negative, <span class="math inline">\(P(S-)+P(S+)=P(S)\)</span> and so <span class="math display">\[
 P(+|S) = .75.
 \]</span></p>
-<p>Suppose furthermore that the overall incidence of COVID-19 in the population is p.&nbsp;In other words, <span class="math inline">\(P(S)=p\)</span> so <span class="math inline">\(P(W)=1-p\)</span>. Then <span class="math display">\[P(S+)=P(S)P(+|S)=.75p\]</span> and <span class="math display">\[
+<p>Suppose furthermore that the overall incidence of COVID-19 in the population is <span class="math inline">\(p\)</span>. In other words, <span class="math inline">\(P(S)=p\)</span> so <span class="math inline">\(P(W)=1-p\)</span>. Then <span class="math display">\[P(S+)=P(S)P(+|S)=.75p\]</span> and <span class="math display">\[
 P(W+)=P(W)P(+|W)=.005(1-p).
 \]</span> Putting these together we get <span class="math inline">\(P(+)=.005+.745p\)</span></p>
-<p>What I’m interested in is <span class="math inline">\(P(S|+)\)</span> – the chance that I’m sick, given that my test result was positive. By Bayes Theorem, <span class="math display">\[
+<p>We are interested in <span class="math inline">\(P(S|+)\)</span> – the chance that I’m sick, given that my test result was positive. By Bayes Theorem, <span class="math display">\[
 P(S|+)=\frac{P(+|S)P(S)}{P(+)}=.75p/(.005+.745p)=\frac{750p}{5+745p}.
 \]</span></p>
 <p>As <a href="#fig-covidfn">Figure&nbsp;<span>3.2</span></a> shows, if the population incidence is low then a positive test is far from conclusive. Indeed, if the overall incidence of COVID is one percent, then a positive test result only implies a 60 percent chance that I am in fact infected.</p>
@@ -379,7 +387,7 @@ P(-) = P(S-)+P(W-)=(P(S)-P(S+))+(P(W)-P(W+))
 P(-)=1-.005+.005p-.75p = .995-.745p.
 \]</span> Using Bayes Theorem, we obtain <span class="math display">\[
 P(S|-) = \frac{P(-|S)P(S)}{P(-)} = .25p/(.995-.745p) =\frac{250p}{995-745p}.
-\]</span> In this case, even though the false negative rate is pretty high (25 percent) overall, if the population incidence is one percent, then the probability that you’re sick given a negative result is only about <span class="math inline">\(.25\)</span> percent. So negative results are very likely correct!</p>
+\]</span> In this case, even though the false negative rate is pretty high (25 percent) overall, if the population incidence is one percent, then the probability that you’re sick given a negative result is only about <span class="math inline">\(.25\)</span> percent. So negative results are very likely correct.</p>
 <div id="fig-covidfn" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/covidfn.png" class="img-fluid figure-img"></p>
