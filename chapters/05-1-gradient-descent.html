@@ -337,26 +337,26 @@ M^{(j+1)}=M^{(j)}-\nu(-2A+2DM^{(j)})
 </section>
 <section id="sec-sgd" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="sec-sgd"><span class="header-section-number">6.5</span> Stochastic Gradient Descent</h2>
-<p>Using the numerical approach to linear regression avoids computing <span class="math inline">\(D^{-1}\)</span>, but still leaves us the task of computing the matrix <span class="math inline">\(D=X^{\intercal}X\)</span>. Typically <span class="math inline">\(X\)</span> has many rows, and so this computation is time intensive. We would like to avoid having to use <em>all</em> of the data for each iteration of our algorithm.</p>
-<p>Stochastic Gradient Descent is a method for numerical optimization that does not require use of all the data on each iteration; rather it uses each data point in succession. Let’s look at this in the context of linear regression. Suppose we have an estimated value <span class="math inline">\(M\)</span> for the parameters. We take one data point <span class="math inline">\(x\)</span> – a single row of the data matrix <span class="math inline">\(X\)</span> – and the associated target value <span class="math inline">\(y\)</span>. The error for this particular point is <span class="math inline">\((y-xM)|^2.\)</span></p>
-<p>The gradient for this particular point is</p>
+<p>Using the numerical approach to linear regression avoids inverting the matrix <span class="math inline">\(D=X^{\intercal}X\)</span>, but still leaves us the task of computing it. Typically <span class="math inline">\(X\)</span> has many rows, and so this computation is time-intensive. We would like to avoid having to use <em>all</em> of the data for each iteration of our algorithm.</p>
+<p>Stochastic gradient descent is a method for numerical optimization that does not require use of all the data on each iteration. Instead, it uses each data point sequentially. Let’s look at this in the context of linear regression. Suppose we have an estimate <span class="math inline">\(M\)</span> for the parameters. We take one data point <span class="math inline">\(x\)</span> — a single row of the data matrix <span class="math inline">\(X\)</span> — and the associated target value <span class="math inline">\(y\)</span>. The error for this particular point is <span class="math inline">\((y-xM)^2.\)</span></p>
+<p>The gradient of the squared error (SE), viewed as a function of the weights <span class="math inline">\(M\)</span>, at this particular point is</p>
 <p><span class="math display">\[
-\nabla MSE = -2x^{\intercal}(y-xM)
+\nabla SE = -2x^{\intercal}(y-xM)
 \]</span></p>
-<p>Notice that <span class="math inline">\(y-xM\)</span> is just a scalar so this is a scalar multiple of the vector <span class="math inline">\(x\)</span>.</p>
-<p>Now we iterate over the data, adjusting the parameters <span class="math inline">\(M\)</span> by this partial gradient. Each pass through the entire set is sometimes called an “epoch.”</p>
+<p>Notice that <span class="math inline">\(y-xM\)</span> is just a scalar, so this is a scalar multiple of the vector <span class="math inline">\(x\)</span>.</p>
+<p>Now we iterate over the data, adjusting the parameters <span class="math inline">\(M\)</span> by this per-sample gradient. Each pass through the entire set is sometimes called an “epoch.”</p>
 <div id="alg-stochastic-sgd">
 <section id="stochastic-gradient-descent-for-linear-regression" class="level3" data-number="6.5.1">
 <h3 data-number="6.5.1" class="anchored" data-anchor-id="stochastic-gradient-descent-for-linear-regression"><span class="header-section-number">6.5.1</span> Stochastic Gradient Descent for Linear Regression</h3>
-<p>Set <span class="math inline">\(M^{(0)}\)</span> to a random starting vector in <span class="math inline">\(\R^{k+1}\)</span> as an initial guess and choose a learning rate parameter.</p>
-<p>For each data point pair <span class="math inline">\((x_{i},y_{i})\)</span> consisting of a row of the data matrix <span class="math inline">\(X\)</span> treated as a row vector and its corresponding target value, adjust the parameters by the gradient of the error associated with this point:</p>
+<p>Set <span class="math inline">\(M^{(0)}\)</span> to a random starting vector in <span class="math inline">\(\R^{k+1}\)</span> and choose a learning rate parameter <span class="math inline">\(\nu\)</span>.</p>
+<p>For each sample <span class="math inline">\((x_{i},y_{i})\)</span> consisting of a row of the data matrix <span class="math inline">\(X\)</span> and its corresponding target value, adjust the parameters by the gradient of the error associated with this point:</p>
 <p><span class="math display">\[
-M^{(j+1)} = M^{(j)}-\nu(-2x_i^{\intercal} (y_i-x_iM)) = M^{(j)}+2\nu x_i^{\intercal}(y_i-x_iM)
+M^{(j+1)} = M^{(j)}-\nu(-2x_i^{\intercal} (y_i-x_iM^{(j)})) = M^{(j)}+2\nu x_i^{\intercal}(y_i-x_iM^{(j)})
 \]</span></p>
-<p>Here <span class="math inline">\(y_i-x_iM\)</span> is a scalar. Both <span class="math inline">\(x_{i}^{\intercal}\)</span> and <span class="math inline">\(M^{(j)}\)</span> are column vectors.</p>
-<p>Run through the data set multiple times and track the error <span class="math inline">\((y_i-x_iM)^2\)</span> for each pair <span class="math inline">\((x_i,y_i)\)</span>.<br>
-These will bounce around but trend overall downward. When they vary by less than some threshold, stop.</p>
-<p><strong>Note:</strong> To minimize the bias introduced by the particular order in which you read the data, it’s often worthwhile to shuffle the order in which you consider the points <span class="math inline">\((x,y)\)</span> in each epoch.</p>
+<p>Here <span class="math inline">\(x_{i}^{\intercal}\)</span> and <span class="math inline">\(M^{(j)}\)</span> are column vectors and <span class="math inline">\(y_i-x_iM^{(j)}\)</span> is a scalar.</p>
+<p>Run through the data set multiple times and track the error <span class="math inline">\((y_i-x_iM^{(j)}S)^2\)</span> for each pair <span class="math inline">\((x_i,y_i)\)</span>.<br>
+These errors will bounce around but trend overall downward. When the error becomes smaller than a threshold, or when the difference between successive errors becomes smaller than a threshold, stop.</p>
+<p><strong>Note:</strong> To minimize the bias introduced by the particular order in which you process the data, it’s often worthwhile to shuffle the order in which you consider the points <span class="math inline">\((x,y)\)</span> in each epoch.</p>
 </section>
 </div>
 
