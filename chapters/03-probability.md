@@ -5,31 +5,31 @@
 
 Probability theory is one of the three central mathematical tools in machine learning, along with
 multivariable calculus and linear algebra.  Tools from probability allow us to manage the uncertainty
-inherent in data collected from real world experiments, and to measure the reliability of predictions
-that we might make from that data.  In these notes, we will review some of the basic terminology
+inherent in data collected from real-world experiments, and to measure the reliability of predictions
+that we make from that data.  In these notes, we will review some of the basic terminology
 of probability and introduce Bayesian inference as a technique in machine learning problems.
 
-This will only be a superficial introduction to ideas from probability.  For a thorough treatment,
+This is a superficial introduction to ideas from probability.  For a thorough treatment,
 see [this open-source introduction to probability.](https://probability.oer.math.uconn.edu/3160-oer)
 For a  more applied emphasis, I recommend the excellent online course
 [Probabilistic Systems Analysis and Applied Probability](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-041-probabilistic-systems-analysis-and-applied-probability-fall-2010/) and its associated
-text @Bertsekas.
+textbook @Bertsekas.
 
 ## Probability Basics
 
 The theory of probability begins with a set $X$ of possible events or outcomes, together with a
-"probability" function $P$ on (certain)
+"probability" function $P$ on certain
 subsets of $X$ that measures "how likely" that combination of events is to occur.
 
 The set $X$ can be discrete or continuous. For example,
 when flipping a coin, our set of possible events would be the discrete set $\{H,T\}$ corresponding to the
-possible events of flipping heads or tails.  When measuring the temperature using a thermometer,
+outcomes of flipping heads or tails.  When measuring the temperature using a thermometer,
 our set of possible outcomes might be the set of real numbers, or perhaps an interval in $\mathbb{R}$.
 The thermometer's measurement is random because it
 is affected by, say, electronic noise, and so its reading is the true temperature perturbed by a random amount.
 
 The values of $P$ are between $0$, meaning that the event *will not* happen, and $1$, meaning that it is
-certain to occur.  As part of our set up, we assume that the total chance of some event from $X$ occurring
+certain to occur.  As part of our set up, we assume that the probability of *some* event from $X$ occurring
 is $1$, so that $P(X)=1$; and the chance of "nothing" happening is zero, so $P(\emptyset)=0$.
 And if $U\subset X$ is some collection, then $P(U)$ is the chance of an event from $U$ occurring.
 
@@ -38,8 +38,10 @@ if $U$ and $V$ are subsets of $X$ that are disjoint, then
 $$
 P(U\cup V)=P(U)+P(V).
 $$
-Even more generally, we assume that this holds for (countably) infinite collections of disjoint subsets
+
+Even more generally, we assume that this holds for countably infinite collections of disjoint subsets
 $U_1,U_2,\ldots$, where
+
 $$
 P(U_1\cup U_2\cup\cdots)=\sum_{i=1}^{\infty} P(U_i)
 $$
@@ -58,21 +60,26 @@ with explicit probability functions and simple subsets such as intervals that av
 
 ### Discrete probability examples
 
-The simplest probability space arises in the analysis of coin-flipping.
+The simplest probability space arises in the analysis of coin flipping.
 As mentioned earlier, the set $X$ contains two elements $\{H,T\}$.  The probability function
 $P$ is determined by its value $P(\{H\})=p$,
 where $0\le p\le 1$, which is the chance of the coin yielding a "head".  Since $P(X)=1$, we have
 $P(\{T\})=1-p$.
 
 Other examples of discrete probability spaces arise from dice-rolling and playing cards.  For
-example, suppose we roll two six-sided dice.  There are $36$ possible outcomes from
-this experiment, each equally likely.  If instead we consider the sum of the two values on the
+example, suppose we roll two six-sided dice.  There are $36$ equally likely outcomes from
+this experiment.  If instead we consider the sum of the two values on the
 dice, our outcomes range from $2$ to $12$ and the probabilities of these outcomes
 are given by
 
-|2  |3  |4  |5  |6  |7  |8  |9  |10 |11 |12 |
-|---|---|---|---|---|---|---|---|---|---|---|
-|1/36|1/18|1/12|1/9|5/36|1/6|5/36|1/9|1/12|1/18|1/36|
+|sum(s)|probability|
+|---|---|
+|2, 12|1/36|
+|3, 11|1/18|
+|4, 10|1/12|
+|5, 9|1/9|
+|6, 8|5/36|
+|7|1/6|
 
 A traditional deck of $52$ playing cards contains $4$ aces.  Assuming that the chance
 of drawing any card is the same (and is therefore equal to $1/52$), the probability of drawing an ace
@@ -84,38 +91,41 @@ $$
 ### Continuous probability examples
 
 When the set $X$ is continuous, such as in the temperature measurement, we measure $P(U)$,
-where $U\subset X$, by giving a "probability density function" $f:X\to \mathbb{R}$
+where $U\subset X$, by giving a "probability density function" $f:X\to [0,\infty)$
 and declaring that
 $$
-P(U) = \int_{U}f(x) dX.
+P(U) = \int_{U}f(x) dx.
 $$
 Notice that our function $f(x)$ has to satisfy the condition
 $$
-P(X)=\int_{X} f(x)dX = 1.
+P(X)=\int_{X} f(x)dx = 1.
 $$
 
 For example, in our temperature measurement example, suppose the "true" outside temperature is $t_0$,
 and our thermometer gives a reading $t$. Then a good model for the random error is to assume
 that the error $x=t-t_0$ is governed by the density function
+
 $$
 f_\sigma(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-x^2/2\sigma^2}
 $$
+
 where $\sigma$ is a parameter.   In a continuous situation such as this one, the probability
-of any particular outcome in $X$ is zero since
+of any single point in $X$ is zero since
 $$
 P(\{t\})=\int_{t}^{t}f_{\sigma}(x)dx = 0
 $$
+
 Still, the shape of the density function does tell you where the values are concentrated -- values
 where the density function is larger are more likely than those where it is smaller.
 
-With this density function, and x=$t-t_0$, the error in our measurement is given by
+With this density function, and $x=t-t_0$, the error in our measurement is given by
 $$
 P(|t-t_0|<\delta)=\int_{-\delta}^{\delta} \frac{1}{\sigma\sqrt{2\pi}}e^{-x^2/2\sigma^2} dx
 $${#eq-normal}
 
 The parameter $\sigma$ (called the *standard deviation*) controls how tightly the thermometer's measurement
 is clustered around the true value $t_0$; when $\sigma$ is large, the measurements are scattered widely,
-when small, they are clustered tightly.   See @fig-density.
+when it is small, they are clustered tightly.   See @fig-density.
 
 ![Normal Density](img/density.png){#fig-density}
 
@@ -123,8 +133,8 @@ when small, they are clustered tightly.   See @fig-density.
 
 The theory of conditional probability gives a way to study how partial information about an event
 informs us about the event as a whole.  For example, suppose you draw a card at random from a deck.
-As we've seen earlier, the chance that card is an ace is $1/13$.  Now suppose that you learn that
-(somehow) that the card is definitely not a jack, king, or queen.  Since there are 12 cards in the
+As we've seen earlier, the chance that card is an ace is $1/13$.  Now suppose that you somehow learn that
+the card is definitely not a jack, queen, or king.  Since there are 12 cards in the
 deck that are jacks, kings, or queens, the card you've drawn is one of the remaining 40 cards,
 which includes 4 aces.  Thus the chance you are holding an ace is now $4/40=1/10$.  
 
@@ -135,7 +145,7 @@ $$
 P(A|B) = 1/10.
 $$
 
-More generally, if $A$ and $B$ are events from a sample space $X$, and $P(B)>0$, then
+More generally, if $A$ and $B$ are events in a sample space $X$, and $P(B)>0$, then
 $$
 P(A|B) = \frac{P(A\cap B)}{P(B)},
 $$
@@ -152,20 +162,20 @@ $$
 
 If we use the definition of conditional probability given above, this is straightforward:
 $$
-\frac{P(B|A)P(A)}{P(B)} = \frac{P(B\cap A)}{P(B)} = P(A|B).
+\frac{P(B|A)P(A)}{P(B)} = \frac{P(A\cap B)}{P(B)} = P(A|B).
 $$
 
 ### An example
 
 To illustrate conditional probability, let's consider what happens when we administer
-the most reliable COVID-19 test, the PCR test, to an individual drawn from the population
+ the PCR test for COVID-19 to an individual drawn from the population
 at large.    There are two possible test results (positive and negative) and two possible
-true states of the person being tested (infected and not infected). Suppose I go to the doctor
+true states  (infected and not infected). Suppose I go to the doctor
 and get a COVID test which comes back positive.  What is the probability that I actually have
 COVID?  
 
 Let's let $S$ and $W$ stand
-for infected (sick)  and not infected (well), and let $+/-$ stand for test positive or negative.
+for infected (sick)  and not infected (well) respectively, and let $+/-$ stand for test results positive or negative respectively.
 Note that there are four possible outcomes of our experiment:
 
 - test positive and infected (S+) -- this is a *true positive*.
@@ -173,26 +183,28 @@ Note that there are four possible outcomes of our experiment:
 - test negative and infected (S-) -- this is a *false negative*.
 - test negative and not infected (W-) -- this is a *true negative*.
 
-The [CDC says](https://www.icd10monitor.com/false-positives-in-pcr-tests-for-covid-19) that the chance
+This [ICD10 report](https://www.icd10monitor.com/false-positives-in-pcr-tests-for-covid-19) claimsthat the chance
 of a false positive
 -- that is, the percentage of samples from well people that incorrectly yields a positive result
 -- is about one-half of one percent, or 5 in 1000.
+
+(Disclaimer: these numbers are unverified and are used for illustration purposes only.)
 
 In other words,
 $$
 P(+|W) = P(W+)/P(W) = 5/1000=1/200
 $$
 
-On the other hand, the CDC tells us that chance of a false negative is 1 in 4, so
+On the other hand, the same source tells us that chance of a false negative is 1 in 4, so
 $$
 P(-|S) = P(S-)/P(S) = .25.
 $$
-Since $P(S-)+P(S+)=P(S).$ since every test is either positive or negative, we have
+Since every test is either positive or negative, $P(S-)+P(S+)=P(S)$ and so 
 $$
 P(+|S) = .75.
 $$
 
-Suppose furthermore that the overall incidence of COVID-19 in the population is p.  In other
+Suppose furthermore that the overall incidence of COVID-19 in the population is $p$.  In other
 words, $P(S)=p$ so $P(W)=1-p$.  Then
 $$P(S+)=P(S)P(+|S)=.75p$$
 and
@@ -201,7 +213,7 @@ P(W+)=P(W)P(+|W)=.005(1-p).
 $$
 Putting these together we get $P(+)=.005+.745p$
 
-What I'm interested in is $P(S|+)$ -- the chance that I'm sick, given that my test result was positive.
+We are interested in  $P(S|+)$ -- the chance that I'm sick, given that my test result was positive.
 By Bayes Theorem,
 $$
 P(S|+)=\frac{P(+|S)P(S)}{P(+)}=.75p/(.005+.745p)=\frac{750p}{5+745p}.
@@ -225,7 +237,7 @@ P(S|-) = \frac{P(-|S)P(S)}{P(-)} = .25p/(.995-.745p) =\frac{250p}{995-745p}.
 $$
 In this case, even though the false negative rate is pretty high (25 percent) overall,
 if the population incidence is one percent, then the probability that you're sick given a negative result
-is only about $.25$ percent.  So negative results  are very likely correct!
+is only about $.25$ percent.  So negative results  are very likely correct.
 
 ![P(S|+) vs P(S)](img/covidfn.png){#fig-covidfn}
 
@@ -855,4 +867,3 @@ Y=X\beta+\epsilon
 $$
 and a similar calculation again shows that the least squares estimates for $\beta$ are the maximum
 likelihood values for this model.
-
