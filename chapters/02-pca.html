@@ -444,9 +444,9 @@ S = X_{0}a.
 <figcaption class="figure-caption">Figure&nbsp;2.5: Projecting the datapoints</figcaption>
 </figure>
 </div>
-<p>Recall that if the unit vector is defined by coordinates <span class="math inline">\(u=[u_0,u_1]\)</span>, then the orthogonal projection of the point <span class="math inline">\(x\)</span> with coordinates <span class="math inline">\((x_0,x_1)\)</span> is <span class="math inline">\((x\cdot u)u\)</span>. Now <span class="math display">\[
-x\cdot u = u_0 x_0 + u_1 x_1
-\]</span> so the coordinates of the points along the line defined by <span class="math inline">\(u\)</span> are the values of the score <span class="math inline">\(Z\)</span> defined by <span class="math inline">\(u=[u_0,u_1]\)</span>. Using our work in the previous section, we see that we can find all of these coordinates by matrix multiplication: <span class="math display">\[
+<p>Recall that if the unit vector is defined by coordinates <span class="math inline">\(u=[u_1,u_2]\)</span>, then the orthogonal projection of the point <span class="math inline">\(x\)</span> with coordinates <span class="math inline">\((x_1,x_2)\)</span> is <span class="math inline">\((x\cdot u)u\)</span>. Now <span class="math display">\[
+x\cdot u = u_1 x_1 + u_2 x_2
+\]</span> so the coordinates of the points along the line defined by <span class="math inline">\(u\)</span> are the values of the score <span class="math inline">\(Z\)</span> defined by <span class="math inline">\(u=[u_1,u_2]\)</span>. Using our work in the previous section, we see that we can find all of these coordinates by matrix multiplication: <span class="math display">\[
 Z = X_0 u
 \]</span> where <span class="math inline">\(X_0\)</span> is our data matrix. Now let’s add a histogram of the values of <span class="math inline">\(Z\)</span> to our picture:</p>
 <div id="fig-pcasimfig-3" class="quarto-figure quarto-figure-center anchored">
