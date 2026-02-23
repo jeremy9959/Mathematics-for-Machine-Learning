@@ -10,7 +10,7 @@ people infected with COVID-19 and people not infected, and we had a test that we
 determine which class an individual belonged to.  Because our test was not 100 percent reliable,
 a positive test result didn't guarantee that a person was infected, and we used Bayes Theorem
 to evaluate how to interpret the positive test result.  More specifically, our information
-about the test performance gave us the the conditional probabilities of positive and negative
+about the test performance gave us the conditional probabilities of positive and negative
 test results given infection status -- so for example we were given $P(+|\mathrm{infected})$,
 the chance of getting a positive test assuming the person is infected -- and we used
 Bayes Theorem to determine $P(\mathrm{infected}|+)$, the chance that a person was infected
@@ -20,7 +20,7 @@ The Naive Bayes classification method is a generalization of this idea.  We have
 belongs to one of two classes, and based on the results of a series of tests, we wish to decide
 which class a particular data point belongs to.  For one example, we are given a collection
 of product reviews from a website and we wish to classify those reviews as either
-"positive" or "negative."  This type of problem is called "sentiment analysis." For another, related example,
+"positive" or "negative."  This type of problem is called "sentiment analysis." For another related example,
 we have a collection of emails or text messages and we wish to label those that are likely "spam" emails.
 In both of these examples, the "test" that we will apply is to look for the appearance or absence
 of certain key words that make the text more or less likely to belong to a certain class.  For example,
@@ -28,7 +28,7 @@ we might find that a movie review that contains the word "great" is more likely 
 while a review that contains the word "boring" is more likely to be negative.
 
 The reason for the word "naive" in the name of this method is that we will derive our
-probabilities from empirical data, rather than from any deeper theory.
+probabilities from empirical data rather than from any deeper theory.
 For example, to find the probability that a negative
 movie review contains the word "boring", we will look at a bunch of reviews that our experts
 have said are negative, and compute the proportion of those that contain the word boring.  Indeed,
@@ -62,7 +62,7 @@ Needless to say, I wasted my money.	0
 What a waste of money and time!.	0
 ```
 As you can see, each line consists of a product review followed by a $0$ or $1$; 
-in this file the review is separated from the text by a tab character.
+in this file the review is separated from the label by a tab character.
 
 ## Bernoulli tests 
 
@@ -81,10 +81,10 @@ The appearances of great are summarized in @tbl-great . We write ~**great** for 
 | ~**great** |408   | 495  | 903      |
 | total      | 500  | 500  | 1000      |
 
-: Ocurrences of **great** by type of review {#tbl-great} 
+: Occurrences of **great** by type of review {#tbl-great} 
 
 
-In this data, positive and negative reviews are equally likely so $P(+)=P(-)=.5$
+In this data, positive and negative reviews are equally likely so $P(+)=P(-)=.5$.
 From this table, and Bayes Theorem, we obtain the empirical probabilities (or "naive" probabilities).
 
 $$
@@ -115,7 +115,7 @@ $$
 In other words, *not* seeing the word great gives a little evidence that the review
 is negative (there's a 55% chance it's negative) but it's not that conclusive.
 
-The word **waste** is associated with negative reviews.  It's statistics are summarized
+The word **waste** is associated with negative reviews.  Its statistics are summarized
 in @tbl-waste . 
 
 |            | + | - | total |
@@ -124,7 +124,7 @@ in @tbl-waste .
 | ~**waste** | 500  | 486   | 986      |
 | total      | 500  | 500  |  1000     |
 
-: Ocurrences of **waste** by type of review {#tbl-waste} 
+: Occurrences of **waste** by type of review {#tbl-waste} 
 
 Based on this data, the "naive" probabilities we are interested in are:
 
@@ -148,7 +148,7 @@ assumption, but one that makes a simple analysis possible.
 
 **Assumption:** We assume that the presence or absence of the words **great** and
 **waste** in a particular review (positive or negative) are independent events. More generally, given
-a collection of words $w_1,\ldots, w_k$, we assume that their occurences in a
+a collection of words $w_1,\ldots, w_k$, we assume that their occurrences in a
 given review are independent events.
 
 Independence means that we have
@@ -175,7 +175,7 @@ L(+|\mathbf{great},\sim\mathbf{waste}) = (.184)(1)(.5) = .092
 $$
 and
 $$
-L(-|\mathbf{great},\sim\mathbf{waste}) = (.01)(.028)(.5) = .00014
+L(-|\mathbf{great},\sim\mathbf{waste}) = (.01)(.972)(.5) = .00486
 $$
 so our data suggests strongly that this is a positive review.
 
@@ -191,7 +191,7 @@ $$
 P(w_{i}|\pm) = \frac{\hbox{ number of $\pm$ reviews that mention $w_{i}$}}{\hbox{ number of $\pm$ reviews total}}
 $$
 
-Notice that we only count *reviews*, not *ocurrences*,
+Notice that we only count *reviews*, not *occurrences*,
 so that if a word occurs multiple times in a review it only contributes 1 to the count.  That's why this
 is called the *Bernoulli* Naive Bayes -- we are thinking of each keyword as yielding a yes/no test 
 on each review.  
@@ -199,7 +199,7 @@ on each review.
 
 Given a review, we look to see whether each of our $k$ keywords appears or does not.  We encode
 this information as a vector of length $k$ containing $0$'s and $1$'s indicating the absence
-or presence of the $k$th keyword.  Let's call this vector the *feature vector* for the review.
+or presence of the corresponding keyword.  Let's call this vector the *feature vector* for the review.
 
 For example, if our keywords are $w_1=\mathbf{waste}$, $w_2=\mathbf{great}$, and $w_3=\mathbf{useless}$, 
 and our review says
@@ -208,7 +208,7 @@ This phone is useless, useless, useless!  What a waste!
 ```
 then the associated feature vector is $f=(1,0,1)$. 
 
-For the purposes of classification of our reviews, we are going to forget entirely about the text
+For the purpose of classifying our reviews, we are going to forget entirely about the text
 of our reviews and work only with the feature vectors.  From an abstract perspective, then, by choosing our $k$ keywords,
 our "training set" of $N$ labelled reviews can be replaced by an $N\times k$ matrix $X=(x_{ij})$ with entries $0$ or $1$,
 where $x_{ij}=1$ if and only if the $j^{th}$ keyword appears in the $i^{th}$ review.
@@ -221,8 +221,8 @@ In fact, $Y^{\intercal}X$ is the sum of the rows of $X$ corresponding to positiv
 $$
 P_{+} = \frac{1}{N_{+}}Y^{\intercal}X = \left[\begin{array}{cccc} P(w_{1}|+)& P(w_{2}|+) & \cdots &P(w_{k}|+)\end{array}\right].
 $$
-Similarly, since $Y$ and $X$ have zero and one entries only, if we write $1-Y$ and $1-X$ for the matrices obtained
-by replacing every entry $z$ by $1-z$ in each matrix, we have:
+Similarly, since $Y$ and $X$ have zero and one entries only, if we write $1-Y$ for the matrix obtained
+by replacing every entry $z$ by $1-z$, we have:
 $$
 P_{-} = \frac{1}{N_{-}}(1-Y)^{\intercal}X =  \left[\begin{array}{cccc} P(w_{1}|-)& P(w_{2}|-) & \cdots &P(w_{k}|-)\end{array}\right].
 $$
@@ -234,7 +234,7 @@ Since  $P(+)$ is the fraction of positive reviews among all reviews, we can comp
 
 If a review has an associated feature vector $f=(f_1,\ldots, f_k)$, then by independence
 the probability of that
-feature vector ocurring within one of the $\pm$ classes is
+feature vector occurring within one of the $\pm$ classes is
 $$
 P(f|\pm) = \prod_{i: f_{i}=1} P(w_{i}|\pm)\prod_{i: f_{i}=0}(1-P(w_{i}|\pm))
 $$
@@ -249,9 +249,13 @@ $$
 \log P(f|\pm) = \sum_{i=1}^{k} f_{i}\log P(w_{i}|\pm) + (1-f_{i})\log(1-P(w_{i}|\pm))
 $${#eq-loglikelihood}
 
-If we have a group of reviews $N$ organized in a matrix $X$, where each row is the feature vector associated
-to the corresponding review, then we can compute all of this at once.  We'll write $\log P_{\pm}=\log P(X|\pm)$ as the
-row vector whose $i^{th}$ entry is $\log P(f_{i}|\pm)$:
+If we have a group of $N$ reviews organized in a matrix $X$, where each row is the feature vector associated
+to the corresponding review, then we can compute all of this at once.  We'll write $\log P(X|\pm)$ as the
+column vector whose $i^{th}$ entry is $\log P(f_{i}|\pm)$:
+
+Here there are two different vector objects: $P_{\pm}$ is a $1\times k$ vector of per-word probabilities
+($P(w_j|\pm)$), while $P(X|\pm)$ is an $N\times 1$ vector of per-review likelihoods ($P(f_i|\pm)$).
+The matrix formula below uses $P_{\pm}$ as input and outputs the $N\times 1$ vector $P(X|\pm)$.
 
 $$
 \log P(X|\pm) = X(\log P_{\pm})^{\intercal}+(1-X)(\log (1-P_{\pm}))^{\intercal}.
@@ -279,7 +283,7 @@ $\log P(f|+)+\log P(+)$ and $\log P(f|-)+\log P(-)$ computed using @eq-loglikeli
 
 - a review is positive if $\log P(f|+)+\log P(+)>\log P(f|-)+\log P(-)$ and negative otherwise.
 
-Again we can exploit the matrix structure to do this for a bunch of reviews at once.   Using @eq-matrixlikelihood
+Again we can exploit the matrix structure to do this for a bunch of reviews at once. Using @eq-matrixlikelihood
 and the vectors $P_{\pm}$ we can compute column vectors corresponding to both sides of our decision
 inequality and subtract them.  The positive entries indicate positive reviews, and the negative ones, negative reviews.
 
@@ -337,24 +341,24 @@ From Bayes Theorem, we have
 $$
 P(\pm|\mathbf{f}) = \frac{P(\mathbf{f}|\pm)P(\pm)}{P(\mathbf{f})}
 $$
-where $P(\pm)$ is estimated by the fraction of documents (total) in each class.
+where $P(\pm)$ is estimated by the fraction of documents in each class.
 
 We classify our document by considering $P(\pm|\mathbf{f})$ and concluding:
 
 - a document with feature vector $\mathbf{f}$  is in class $+$ if $\log P(+|\mathbf{f})>\log P(-|\mathbf{f})$.
 
 In this comparison, both the constant (the multinomial coefficient) and the denominator cancel out,
-so we only need to compare $\log L(\mathbf{f}|+)+\log P(+)$ with $\log L(\mathbf{f}|-)+\log P(-)$
+so we only need to compare $\log L(\mathbf{f}|+)+\log P(+)$ with $\log L(\mathbf{f}|-)+\log P(-)$.
 We have
 $$
 \log L(\mathbf{f}|\pm) = \sum_{i=1}^{k} f_{i}\log P(w_{i}|\pm)
 $$
 or, in vector form, 
 $$
-\log P(\mathbf{f}|\pm) = \mathbf{f}\log P_{\pm}^{\intercal}
+\log L(\mathbf{f}|\pm) = \mathbf{f}\log P_{\pm}^{\intercal}
 $$
 
-Therefore, just as in the Bernoulli case, we can package up our document $i$ as an $N\times k$ data matrix $X$,
+Therefore, just as in the Bernoulli case, we can package up our documents as an $N\times k$ data matrix $X$,
 where position $ij$ gives the number of times word $j$ occurs in document $i$.  Then we can compute
 the vector 
 $$
@@ -366,7 +370,7 @@ and assign those documents where $\hat{Y}>0$ to the $+$ class and the rest to th
 ## Other applications
 
 We developed the Naive Bayes method for sentiment analysis, but once
-we chose a set of keywords our training data was reduced to an
+we chose a set of keywords, our training data was reduced to an
 $N\times k$ matrix $X$ of $0/1$ entries, together with an $N\times 1$
 target column vector $Y$.  Then our classification problem is to
 decide whether a given vector of $k$ entries, all $0$ or $1$, is more
@@ -374,24 +378,15 @@ likely to carry a $0$ or $1$ label. All of the parameters we needed
 for Naive Bayes -- the various probabilities -- can be extracted from
 the matrix $X$.
 
-For example, suppose
-we have a collection of images represented as black/white pixels in a grid that belong to one of two classes.
-For example, we might have $28x28$ bitmaps of handwritten zeros and ones that are labelled, and we wish to construct
-a classifier that can decide whether a new $28x28$ bitmap is a zero or one.  An example of such a bitmap
-is given in @fig-mnist0.   We can view each $28x28$ bitmap as
+For example, suppose we have a collection of images represented as black-and-white pixels in a grid that belong to one of two classes.
+We might have $28\times 28$ bitmaps of handwritten zeros and ones that are labelled, and we wish to construct
+a classifier that can decide whether a new $28\times 28$ bitmap is a zero or one.  An example of such a bitmap
+is given in @fig-mnist0.  We can view each $28\times 28$ bitmap as
 a vector of length $784$ with $0/1$ entries and apply the same approach outlined above. 
 However, there are other methods that are more commonly used for this problem, such as logistic regression
-and  neural networks. 
+and neural networks.
 
 ![Handwritten 0](img/mnist_data_10_0.png){#fig-mnist0 width=2in}
-
-
-
-
-
-
-
-
 
 
 
