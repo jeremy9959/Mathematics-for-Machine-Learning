@@ -98,7 +98,7 @@ Our goal is to maximize it.
 
 One step that simplifies matters is to consider the logarithm of the likelihood:
 $$
-\log L (a,b)= \sum_{i=0}^{6} \left[ c_{i}\log(p(x_{i})) + (100-c_{i})\log(1-p(x_{i}))\right] +C''
+\log L (a,b)= \sum_{i=1}^{7} \left[ c_{i}\log(p(x_{i})) + (100-c_{i})\log(1-p(x_{i}))\right] +C''
 $$
 where $C''$ is yet another constant.  Since our ultimate goal is to maximize this, the value of $C''$ is irrelevant and we can drop it.
 
@@ -122,14 +122,14 @@ If, as above, we think of each row of the matrix as an independent trial, then t
 function as in @eq-logistic_a_b. 
 The likelihood of the results we obtained is therefore:
 $$
-L(a,b) = C \prod_{i=0}^{N-1} p(x_i)^{y_i}(1-p(x_i))^{(1-y_i)}
+L(a,b) = C \prod_{i=1}^{N} p(x_i)^{y_i}(1-p(x_i))^{(1-y_i)}
 $$
 where $C$ is a constant and we are exploiting the trick that, since $y_i$ is either zero or one, $1-y_i$ is correspondingly one or zero.  Thus only $p(x_i)$ or $1-p(x_i)$
 occurs in each term of the product.  If we group the terms according to $x_i$ we obtain our earlier formula for $L(a,b)$.
 
 This expression yields an apparently similar formula for the log-likelihood (up to an irrelevant constant):
 $$
-\log L(X,a,b) = \sum_{i=0}^{N-1} y_i\log p(x_i) + (1-y_i)\log (1-p(x_i)).
+\log L(X,a,b) = \sum_{i=1}^{N} y_i\log p(x_i) + (1-y_i)\log (1-p(x_i)).
 $$
 Using vector notation, this can be further simplified, where again we drop irrelevant constants:
 $$
@@ -137,7 +137,7 @@ $$
 $$
 To be absolutely concrete, in this formula, $p(X)$ is a vector 
 $$
-p(X)=[p(x_i)]_{i=0}^{N-1} = \left[\frac{1}{1+e^{-ax_i-b}} \right]_{i=0}^{N-1}
+p(X)=[p(x_i)]_{i=1}^{N} = \left[\frac{1}{1+e^{-ax_i-b}} \right]_{i=1}^{N}
 $$
 so its entries are functions of the unknown parameters $a$ and $b$. 
 
@@ -150,7 +150,7 @@ we do so we will look at some generalizations and broader applications of the lo
 The next generalization we can consider of the logistic model is the situation where the log-odds of our event of interest depend linearly on multiple parameters.
 In other words, we have
 $$
-\log\frac{p}{1-p} = m_0 x_0 + m_1 x_1 + \cdots + m_{k-1} x_{k-1} + b 
+\log\frac{p}{1-p} = m_1 x_1 + m_2 x_2 + \cdots + m_k x_k + b 
 $$
 where the $m_i$ and $b$ are constants.  Under this model, notice that *the incremental effects of changes to the different parameters $x_i$ have independent effects on the probability.*
 So, for example, if $x_1$ were the number of times our potential customer saw an online advertisement and $x_2$ were the number of times they saw a print advertisement, by adopting this model
@@ -158,14 +158,14 @@ we are assuming that the impact of seeing more online ads is completely unrelate
 
 The probability is again given by a sigmoid function
 $$
-p(x_0,\ldots, x_{k-1}) = \frac{1}{1+e^{-(\sum_{i=0}^{k-1} m_i x_i + b)}}
+p(x_1,\ldots, x_{k}) = \frac{1}{1+e^{-(\sum_{i=1}^{k} m_i x_i + b)}}
 $$
 
-This model has an $N\times k$ feature matrix whose rows are the values $x_0,\ldots, x_{k-1}$ for each sample.  The outcome of our experiment is recorded in an $N\times 1$ column vector $Y$ whose entries
+This model has an $N\times k$ feature matrix whose rows are the values $x_1,\ldots, x_{k}$ for each sample.  The outcome of our experiment is recorded in an $N\times 1$ column vector $Y$ whose entries
 are $0$ or $1$.  The likelihood function is formally equivalent to what we computed in the case of a single feature, but it will be useful to be a bit careful about vector notation.  
 
 Following the same pattern we adopted for linear regression, let $X$ be the $N\times (k+1)$ matrix whose first $k$ columns contain the values $x_i$ for each sample, and whose last column is all $1$.
-Rename the intercept parameter as $m_k$ and organize these parameters into a $(k+1)\times 1$ matrix $M$.  Then
+Rename the intercept parameter as $m_{k+1}$ and organize these parameters into a $(k+1)\times 1$ matrix $M$.  Then
 $$
 p(X)=\sigma(XM)
 $$
@@ -227,27 +227,27 @@ $$
 -\nabla \log L(M) = X^{\intercal}(\sigma(XM)-Y).
 $$
 Notice that the right side of this equation yields a $(k+1)\times 1$ column vector.  The entries of this
-vector are the partial derivatives with respect to the coefficients $m_{i}$ for $i=0,\ldots, k$.
+vector are the partial derivatives with respect to the coefficients $m_{i}$ for $i=1,\ldots, k+1$.
 :::
 
 **Proof:** This is yet another exercise in the chain rule and keeping track of indices.
 Let's first look at the term $Y\cdot \log\sigma(XM)$.  Writing it out, we have
 $$
-Y\cdot \log\sigma(XM)=\sum_{i=0}^{N-1}y_{i}\log\sigma(\sum_{j=0}^{k}x_{ij}m_{j}).
+Y\cdot \log\sigma(XM)=\sum_{i=1}^{N}y_{i}\log\sigma(\sum_{j=1}^{k+1}x_{ij}m_{j}).
 $$
 Applying $\partial/\partial m_{s}$ to this yields
 $$
-\sum_{i=0}^{N-1}y_{i}(1-\sigma(\sum_{j=0}^{k}x_{ij}m_{j}))x_{is}
+\sum_{i=1}^{N}y_{i}(1-\sigma(\sum_{j=1}^{k+1}x_{ij}m_{j}))x_{is}
 $$
 where we've used the chain rule and the differential equation for $\sigma$ discussed above. At the same
 time, we can apply $\partial/\partial m_{s}$ to the second term $(1-Y)\cdot\log(1-\sigma(XM))$
 and obtain
 $$
--\sum_{i=0}^{N-1}(1-y_{i})\sigma(\sum_{j=0}^{k}x_{ij}m_{j})x_{is}.
+-\sum_{i=1}^{N}(1-y_{i})\sigma(\sum_{j=1}^{k+1}x_{ij}m_{j})x_{is}.
 $$
-The term $\sum_{i=0}^{N-1} y_{i}\sigma(\sum_{j=0}^{k}x_{ij}m_{j})x_{is}$ cancels, yielding
+The term $\sum_{i=1}^{N} y_{i}\sigma(\sum_{j=1}^{k+1}x_{ij}m_{j})x_{is}$ cancels, yielding
 $$
-\frac{\partial \log L(M)}{\partial m_{s}} = -\sum_{i=0}^{N-1} (y_{i}-\sigma(\sum_{j=0}^{k}x_{ij}m_{j}))x_{is}.
+\frac{\partial \log L(M)}{\partial m_{s}} = -\sum_{i=1}^{N} (y_{i}-\sigma(\sum_{j=1}^{k+1}x_{ij}m_{j}))x_{is}.
 $$  
 Since our weights $M$ are naturally a $(k+1)\times 1$ column vector, 
 looked at properly this is our desired formula:
@@ -326,8 +326,8 @@ $$
 p(x)=\frac{1}{1+e^{-xM}}
 $$ 
 is close to $1$ if $x$ represents a one, and is close to zero if $x$ represents zero.  Essentially we think of $p(x)$ as giving the probability that the vector $x$
-represents an image of a one.  If we want a definite choice, then we can set a threshold value $p_0$ and say that the image $x$ is a one if $p(x)>p_0$ and
-zero otherwise.  The natural choice of $p_0=.5$ amounts to saying that we choose the more likely of the two options under the model.
+represents an image of a one.  If we want a definite choice, then we can set a threshold value $p_{\mathrm{th}}$ and say that the image $x$ is a one if $p(x)>p_{\mathrm{th}}$ and
+zero otherwise.  The natural choice of $p_{\mathrm{th}}=.5$ amounts to saying that we choose the more likely of the two options under the model.
 
  Since we are applying the logistic model we are assuming:
 
@@ -349,7 +349,7 @@ The logistic model
 says that, for an image vector $x$, the log-odds that the image is a one is
 given by
 $$
-\log \frac{p}{1-p} = \sum_{i=0}^{783} M_{i}x_{i} + M_{784}.
+\log \frac{p}{1-p} = \sum_{i=1}^{784} M_{i}x_{i} + M_{785}.
 $$
 This means that if the value of $M_{i}$ is positive, then large values in the $i^{th}$ pixel *increase* the chance that our image is a one;
 while if $M_{i}$ is negative, large values *decrease* the chance.  However, the values $x_{i}$ are
@@ -386,10 +386,10 @@ in the position corresponding to the digit.  So, for example, if our image is of
 the vector of probabilities
 
 $$
-\left[ \begin{matrix} p_0 & p_1 & p_2 &\cdots & p_8 & p_9\\\end{matrix}\right]=\left[\begin{matrix} 0 &0 & 1 & \cdots & 0 & 0\\\end{matrix}\right]
+\left[ \begin{matrix} p_1 & p_2 & p_3 &\cdots & p_9 & p_{10}\\\end{matrix}\right]=\left[\begin{matrix} 0 &0 & 1 & \cdots & 0 & 0\\\end{matrix}\right]
 $$
 
-where $p_i$ is the probability that our image is the digit $i$. Notice also that the probabilities $p_i$ must sum to one.  We encode the class membership of our samples by constructing an $N\times r$ matrix $Y$,
+where $p_j$ is the probability that our image is the digit $j-1$. Notice also that the probabilities $p_j$ must sum to one.  We encode the class membership of our samples by constructing an $N\times r$ matrix $Y$,
 each row of which has a one in column $j$ if that sample belongs to class $j$, and zeros elsewhere.
 This type of representation is sometimes called "one-hot" encoding. 
 
@@ -464,8 +464,8 @@ $$
 
 This is the multiclass generalization of @eq-logisticregressionlikelihood.  To see the connection,
 notice that, in the case where we have only two
-classes, $y_1=1-y_0$ and
-$p_{1}(x;M)=1-p_{0}(x;M)$, so this sum is the same as in the two class situation.
+classes, $y_2=1-y_1$ and
+$p_{2}(x;M)=1-p_{1}(x;M)$, so this sum is the same as in the two class situation.
 
 ### Multiclass logistic regression - the gradient.
 
@@ -475,9 +475,9 @@ $$
 p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
 $$
 The gradient of this is made up of the derivatives with respect to the $m_{bq}$
-where $b=0,\ldots, k$ and $q=1,\dots, r$ so it's natural to think of this
+where $b=1,\ldots, k+1$ and $q=1,\dots, r$ so it's natural to think of this
 gradient as a $(k+1)\times r$ matrix, the same shape as $M$.  Remember that each $m_s$ is
-the $s^{th}$ column of $M$ so is made up of $m_{bs}$ for $b=0,\ldots, k$.
+the $s^{th}$ column of $M$ so is made up of $m_{bs}$ for $b=1,\ldots, k+1$.
 
 Looking at 
 $$
@@ -491,7 +491,7 @@ $$
 $$
 In vector terms:
 $$
-[\frac{\partial p_{s}}{\partial m_{bq}}]_{b=0}^{k}=-p_{q}p_{s}[x_{b}]_{b=0}^{k}
+[\frac{\partial p_{s}}{\partial m_{bq}}]_{b=1}^{k+1}=-p_{q}p_{s}[x_{b}]_{b=1}^{k+1}
 $$ 
 as an equality of $k+1$-entry row vectors. This can be written more simply as a vector equation:
 $$
@@ -563,8 +563,6 @@ iterate over each data point $x$ and associated target $y$ and make adjustments 
 To do this we use the gradient from @eq-multiclassgradient in the much simpler case where $X$
 is a single row of the data matrix and $Y$ is a row vector that is zero except for a one in the
 spot corresponding to the target class for $X$.
-
-
 
 
 

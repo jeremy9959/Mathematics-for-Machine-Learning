@@ -16,16 +16,16 @@ efficient way.  In this section, we will discuss the technique known as gradient
 ## The Key Idea
 
 
-Suppose that we have a function $f(x_0,\ldots, x_{k-1})$ and we wish to find its minimum value.  In Calculus classes, we are taught to take the derivatives of the function and set them equal to zero, but for anything other than the simplest functions this problem is not solvable in practice.  In real life,
+Suppose that we have a function $f(x_1,\ldots, x_{k})$ and we wish to find its minimum value.  In Calculus classes, we are taught to take the derivatives of the function and set them equal to zero, but for anything other than the simplest functions this problem is not solvable in practice.  In real life,
 we use iterative methods to find the minimum of the function $f$.
 
 The main tool in this approach is the gradient of a function.  Recall
 from multivariable calculus that,  given
-a function $f(x_0,\ldots, x_{k-1})$, the *gradient* $\nabla f$  of $f$ is the vector made up
+a function $f(x_1,\ldots, x_{k})$, the *gradient* $\nabla f$  of $f$ is the vector made up
 of the partial derivatives of $f$:
 
 $$
-\nabla f = \begin{bmatrix} \frac{\partial f}{\partial x_{0}} \\\vdots \\ \frac{\partial f}{\partial x_{k-1}}\end{bmatrix}
+\nabla f = \begin{bmatrix} \frac{\partial f}{\partial x_{1}} \\\vdots \\ \frac{\partial f}{\partial x_{k}}\end{bmatrix}
 $${#eq-gradient-def}
 
 The gradient $\nabla f$ is an example of a *vector field*.  It is a vector whose entries are functions.  If we evaluate those functions at a point $x$, we obtain
@@ -33,7 +33,7 @@ a vector $(\nabla f)(x)$.
 
 We can think of a vector field as a way to attach a vector $(\nabla f)(x)$ to each point $x\in\mathbf{R}^{k}$.
 
-**Proposition:** Let $f(x_0,\ldots, x_{k-1})$ be a function and let $\nabla f$ be its gradient.
+**Proposition:** Let $f(x_1,\ldots, x_{k})$ be a function and let $\nabla f$ be its gradient.
 Then at each point $x$ in $\R^{k}$, the gradient $(\nabla f)(x)$ is a vector that points in
 the direction in which $f$ is increasing most rapidly from $x$ and $(-\nabla f)(x)$ points in the direction in which it decreases most rapidly.  If $(\nabla f)(x)=0$, then $x$ 
 is a critical point of $f$. 
@@ -45,9 +45,9 @@ $$
 D_{v}f(a) = \frac{d}{dt}f(a+tv)|_{t=0}
 $$
 
-If $a=(a_0,\ldots, a_{k-1})$ and $v=(v_{0},\ldots, v_{k-1})$, then
+If $a=(a_1,\ldots, a_{k})$ and $v=(v_{1},\ldots, v_{k})$, then
 $$
-f(a+tv) = f(a_{0}+tv_{0},\ldots, a_{k-1}+tv_{k-1}).
+f(a+tv) = f(a_{1}+tv_{1},\ldots, a_{k}+tv_{k}).
 $$
 Since
 $$
@@ -55,7 +55,7 @@ $$
 $$
 we can compute from the chain rule that
 $$
-D_{v}f(a) = \sum_{i=0}^{k-1} \frac{\partial f}{\partial x_{i}}(a)v_{i} = (\nabla f)(a)\cdot v
+D_{v}f(a) = \sum_{i=1}^{k} \frac{\partial f}{\partial x_{i}}(a)v_{i} = (\nabla f)(a)\cdot v
 $$
 where $\nabla f$
 is the gradient of $f$ as in @eq-gradient-def. 
@@ -246,4 +246,3 @@ These errors will bounce around but trend overall downward.  When the error beco
 worthwhile to shuffle the order in which you consider the points $(x,y)$ in each epoch.
 
 :::
-
