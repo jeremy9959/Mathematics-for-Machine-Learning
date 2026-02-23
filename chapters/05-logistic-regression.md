@@ -9,11 +9,11 @@ format:
 
 Suppose that we are trying to convince customers to buy our product by showing them advertising.  Our experience teaches
 us that there is no deterministic relationship between how often a potential customer sees one of our ads and whether or not
-they purchase our product, nevertheless it is the case that as they see more ads they become more likely to make a purchase.
-Logistic regression is a statistical model that  captures this idea.
+they purchase our product; nevertheless, it is the case that as they see more ads they become more likely to make a purchase.
+Logistic regression is a statistical model that captures this idea.
 
 To formulate this situation mathematically, let's imagine that we are trying to model a random event that depends on a parameter.
-The random event might be a user deciding to make  a purchase from a website, which, in our very simple model,
+The random event might be a user deciding to make a purchase from a website, which, in our very simple model,
 depends on how many times the user saw an advertisement for the product in question.  But we could imagine other situations where
 the chance of an event happening depends on a parameter.  For example, we could imagine that a student's score on a certain test depends on how much studying they
 do, with the likelihood of passing the test increasing with the amount of studying.  
@@ -50,20 +50,20 @@ is called the *logistic function* and yields an S-shaped curve.
 ![Logistic Curve](img/logistic_curve.png){#fig-logistic-curve width=50%}
 
 To put the logistic model in perspective, let's choose some explicit parameters and look at what data arising from such a model
-would look like.  Imagine therefore that $a=\log 2$ and $b=0$, so that the probability of the event we are interested occurring is given by the
+would look like.  Imagine therefore that $a=\log 2$ and $b=0$, so that the probability of the event we are interested in occurring is given by the
 formula
 $$
 p(x) = \frac{1}{1+e^{-(\log 2)x}} = \frac{1}{1+(.5)^x}.
 $$
 Our data consists of counts of how often our event happened for a range of values of $x$.  To generate this data, we can pick $x$ values from the
-set $\{-3,-2,-1,0,1,2,3\}$ yielding probabilities $\{.11,.2,.33,.4,.56,.67,.8\}$.  Now our data consists of,  for each value of $x$, the result of $100$ independent
+set $\{-3,-2,-1,0,1,2,3\}$ yielding probabilities $\{.11,.20,.33,.50,.67,.80,.89\}$.  Now our data consists, for each value of $x$, of the result of $100$ independent
 Bernoulli trials with probability $p(x)$.  For example, we might find that our event occurred $\{10, 18, 38, 50, 69, 78, 86\}$ times respectively for each of the $x$ values.  As you can see, the event occurs more frequently when $x$ is large, although the number of occurrences is still random.
 
 
 ## Likelihood and Logistic Regression
 
 In applications, our goal is to choose the parameters of a logistic model to accurately predict the likelihood of the event under study occurring as a function
-of the measured parameter.  Let's imagine that we collected the data that we generated above, without knowing that it's source was a logistic model.  So
+of the measured parameter.  Let's imagine that we collected the data that we generated above, without knowing that its source was a logistic model.  So
 @tbl-logistic-data shows the number of times the event occurred, for each of the measured values of the $x$ parameter.
 
 |$x$ |-3 | -2 | -1 | 0 | 1 | 2 | 3 |
@@ -98,7 +98,7 @@ Our goal is to maximize it.
 
 One step that simplifies matters is to consider the logarithm of the likelihood:
 $$
-\log L (a,b)= \sum_{i=0}^{6} \left[ x_{i}\log(p(x_{i})) + (100-x_{i})\log(1-p(x_{i}))\right] +C''
+\log L (a,b)= \sum_{i=0}^{6} \left[ c_{i}\log(p(x_{i})) + (100-c_{i})\log(1-p(x_{i}))\right] +C''
 $$
 where $C''$ is yet another constant.  Since our ultimate goal is to maximize this, the value of $C''$ is irrelevant and we can drop it.
 
@@ -106,12 +106,12 @@ where $C''$ is yet another constant.  Since our ultimate goal is to maximize thi
 
 In @tbl-logistic-data we summarize the results of our experiments in groups by the value of the $x$ parameter.  We can think of the data somewhat differently,
 by instead considering each event separately, corresponding to a parameter value $x$ and an outcome $0$ or $1$.  From this point of view the data summarized in @tbl-logistic-data
-would correspond to a vector with  $700$ rows.  The first $100$ rows (corresponding to the first column of the table) would have first entry $-3$, the next $100$ would have $-2$, or so on.
+would correspond to a vector with  $700$ rows.  The first $100$ rows (corresponding to the first column of the table) would have first entry $-3$, the next $100$ would have $-2$, and so on.
 So our parameter values form a  vector $X$. Meanwhile, the outcomes form a vector $Y$ with entries $0$ or $1$. 
 
 More generally,  imagine we are studying our advertising data and, for each potential customer, we record how many times they saw our ad.  We create a vector $X$ whose entries are
 these numbers.  Then we create another vector $Y$, of the same length, whose entries are 
-either $0$ or $1$ depending of whether or not the customer purchased our product.  
+either $0$ or $1$ depending on whether or not the customer purchased our product.  
 
 One way to think about logistic regression in this setting is that we are trying to fit a function that, given the value $x_i$, tries to yield the corresponding value $y_i$.
 However, instead of finding a deterministic function, as we did in linear regression,
@@ -127,7 +127,7 @@ $$
 where $C$ is a constant and we are exploiting the trick that, since $y_i$ is either zero or one, $1-y_i$ is correspondingly one or zero.  Thus only $p(x_i)$ or $1-p(x_i)$
 occurs in each term of the product.  If we group the terms according to $x_i$ we obtain our earlier formula for $L(a,b)$.
 
-This expresssion yields an apparently similar formula for the log-likelihood (up to an irrelevant constant):
+This expression yields an apparently similar formula for the log-likelihood (up to an irrelevant constant):
 $$
 \log L(X,a,b) = \sum_{i=0}^{N-1} y_i\log p(x_i) + (1-y_i)\log (1-p(x_i)).
 $$
@@ -150,33 +150,33 @@ we do so we will look at some generalizations and broader applications of the lo
 The next generalization we can consider of the logistic model is the situation where the log-odds of our event of interest depend linearly on multiple parameters.
 In other words, we have
 $$
-\log\frac{p}{1-p} = m_0 x_0 + m_1 x _1 + \cdots + m_{k-1} x_{k-1} + b 
+\log\frac{p}{1-p} = m_0 x_0 + m_1 x_1 + \cdots + m_{k-1} x_{k-1} + b 
 $$
-where the $a_i$ and $b$ are constants.  Under this model, notice that *the incremental effects of changes to the different parameters $x_i$ have independent effects on the probability.*
+where the $m_i$ and $b$ are constants.  Under this model, notice that *the incremental effects of changes to the different parameters $x_i$ have independent effects on the probability.*
 So, for example, if $x_1$ were the number of times our potential customer saw an online advertisement and $x_2$ were the number of times they saw a print advertisement, by adopting this model
 we are assuming that the impact of seeing more online ads is completely unrelated to the impact of seeing more print ads.
 
 The probability is again given by a sigmoid function
 $$
-p(x_1,\ldots, x_k) = \frac{1}{1+e^{-\sum_{i=0}^{k-1} m_i x_i +b}}
+p(x_0,\ldots, x_{k-1}) = \frac{1}{1+e^{-(\sum_{i=0}^{k-1} m_i x_i + b)}}
 $$
 
-This model has an $N\times k$ feature matrix whose rows are the values $x_0,\ldots, x_{k-1}$ for each sample.  The outcome of our experimemt is recorded in an $N\times 1$ column vector $Y$ whose entries
+This model has an $N\times k$ feature matrix whose rows are the values $x_0,\ldots, x_{k-1}$ for each sample.  The outcome of our experiment is recorded in an $N\times 1$ column vector $Y$ whose entries
 are $0$ or $1$.  The likelihood function is formally equivalent to what we computed in the case of a single feature, but it will be useful to be a bit careful about vector notation.  
 
 Following the same pattern we adopted for linear regression, let $X$ be the $N\times (k+1)$ matrix whose first $k$ columns contain the values $x_i$ for each sample, and whose last column is all $1$.
-Rename the "intercept" variable as $a_{k+1}$ and organize these parameters into a $(k+1)\times 1$ matrix $M$.  Then
+Rename the intercept parameter as $m_k$ and organize these parameters into a $(k+1)\times 1$ matrix $M$.  Then
 $$
 p(X)=\sigma(XM)
 $$
 and our likelihood becomes
 $$
-\log L(M) = Y\cdot \log\sigma(XM) + (1-Y)\cdot(1-\log\sigma(XM)).
+\log L(M) = Y\cdot \log\sigma(XM) + (1-Y)\cdot\log(1-\sigma(XM)).
 $${#eq-logisticregressionlikelihood}
 
 ## Finding the maximum likelihood solution by gradient descent
 
-Given a set of features $X$ and targets $Y$ for a logistic model, we now want to find the values $M$ so that the log-likelihood of the model for those paramters, given
+Given a set of features $X$ and targets $Y$ for a logistic model, we now want to find the values $M$ so that the log-likelihood of the model for those parameters, given
 the data, is maximized.  While in linear regression we could find a nice closed form solution to this problem, the presence of the non-linear function $\sigma(x)$ in the
 likelihood makes that impossible for logistic regression.  Thus we need to use a numerical approximation.  The most straightforward such method is called gradient descent.
 It is at the foundation of many numerical optimization algorithms, and so while we will develop it here for logistic regression we will have other opportunities to apply it and we will discuss it more thoroughly on its own later.
@@ -184,17 +184,17 @@ It is at the foundation of many numerical optimization algorithms, and so while 
 
 ## Gradient Descent and Logistic Regression
 
-We can use gradient descent, as discussed in @sec-gradient_descent,  to find the maximum likelihood set of parameters for our logistic model.
+We can use gradient descent, as discussed in @sec-gradient_descent, to find the maximum likelihood set of parameters for our logistic model.
 As we saw earlier, in @eq-logisticregressionlikelihood, we have the log likelihood function
 $$
 \log L(M) = Y\cdot \log\sigma(XM) + (1-Y)\cdot\log(1-\sigma(XM))
 $$
-where $Y$ are the target $0/1$ values, $X$ is our $N\times (k+1)$ data matrix whose last column
+where $Y$ is the vector of target $0/1$ values, $X$ is our $N\times (k+1)$ data matrix whose last column
 is all ones, and $M$ is the $k+1\times 1$ column vector of unknown parameters.
-Since gradient descent is naturally a *minimizing* algorithm, we will minimize the function $-L(M)$.
+Since gradient descent is naturally a *minimizing* algorithm, we will minimize the function $-\log L(M)$.
 
-The key piece of information that we need is the gradient $-\nabla L$, where the variables are the entries
-of $M$.  The complicating features is the presence of the nonlinear function $\sigma$, so let's start
+The key piece of information that we need is the gradient $-\nabla \log L$, where the variables are the entries
+of $M$.  The complicating feature is the presence of the nonlinear function $\sigma$, so let's start
 with a simple observation about this function.
 
 **Lemma:** The logistic function $\sigma(x)$ satisfies the differential equation
@@ -218,11 +218,11 @@ $$\begin{aligned}
 $$
 which is what we claimed.
 
-We apply this differential equation to compute the gradient of $L$.
+We apply this differential equation to compute the gradient of $\log L$.
 
 ::: {#thm-logisticgradient}
 
-**Proposition:** The gradient $-\nabla L(M)$ is given by 
+**Proposition:** The gradient $-\nabla \log L(M)$ is given by 
 $$
 -\nabla \log L(M) = X^{\intercal}(\sigma(XM)-Y).
 $$
@@ -247,7 +247,7 @@ $$
 $$
 The term $\sum_{i=0}^{N-1} y_{i}\sigma(\sum_{j=0}^{k}x_{ij}m_{j})x_{is}$ cancels, yielding
 $$
-\frac{\partial L(M)}{m_{s}} = -\sum_{i=0}^{N-1} (y_{i}-\sigma(\sum_{j=0}^{k}x_{ij}m_{j}))x_{is}.
+\frac{\partial \log L(M)}{\partial m_{s}} = -\sum_{i=0}^{N-1} (y_{i}-\sigma(\sum_{j=0}^{k}x_{ij}m_{j}))x_{is}.
 $$  
 Since our weights $M$ are naturally a $(k+1)\times 1$ column vector, 
 looked at properly this is our desired formula:
@@ -266,16 +266,16 @@ With the probability given as
 $$
 p(x) = \frac{1}{1+e^{-ax-b}}
 $$
-we make an initial guess of $a=1$ and $b=0$ set a learning rate $\nu=.001$, and run the
+we make an initial guess of $a=1$ and $b=0$, set a learning rate $\nu=.001$, and run the
 gradient descent algorithm for $30$ iterations.  We plot the negative log-likelihood 
-for this algorithm one the left in @fig-logisticloglike, where we see that it drops swiftly to a minimum value.
-The corresponding parameter values are $a=.6717$ and $b=-.0076$, and the fit of the the corresponding
+for this algorithm on the left in @fig-logisticloglike, where we see that it drops swiftly to a minimum value.
+The corresponding parameter values are $a=.6717$ and $b=-.0076$, and the fit of the corresponding
 logistic curve to the observed data is shown on the right in @fig-logisticloglike.
 
 ![Max Likelihood Gradient Descent for Logistic Fitting](img/LogisticLogLikelihoodAndFit.png){#fig-logisticloglike width=100%}
 
 
-The parameters used to generate the data are close to this; they were $a=log(2)=$.6931$ and $b=0$.
+The parameters used to generate the data are close to this; they were $a=\log(2)=.6931$ and $b=0$.
 
 ### Gradient Descent and Logistic Regression on "real" data
 
@@ -293,32 +293,32 @@ We therefore fit a logistic model to the data.  The result is shown in @fig-food
 
 ![Logistic Model for Food Marketing](img/FoodLogisticFit.png){#fig-foodlogisticfit width=50%}
 
-## Logistic Regression and classification
+## Logistic Regression and Classification
 
 Beyond the kind of probability prediction that we have discussed up to this point, logistic regression is one of the most powerful
 techniques for attacking the classification problem.  Let's start our discussion with a sample problem that is a simplified version of one
 of the most famous machine learning benchmark problems, the MNIST (Modified National Institute of Science
 and Technology) dataset of handwritten numerals.  This dataset consists of $60000$ labelled grayscale 
-images of handwritten digits from $0$ to $9$.  Each image is stored as a $28x28$ array of integers from $0$ to $255$.  Each
+images of handwritten digits from $0$ to $9$.  Each image is stored as a $28\times 28$ array of integers from $0$ to $255$.  Each
 cell of the array corresponds to a "pixel" in the image, and the contents of that cell is a grayscale value.  See @MNISTDatabase
-for the a more detailed description of how the dataset was constructed.
+for a more detailed description of how the dataset was constructed.
 
 In @fig-MNISTOne is a picture of a handwritten "1" from the MNIST dataset.  
 
 ![Handwritten One from MNIST](img/MNISTOne.png){#fig-MNISTOne width=100%}
 
-**Classification Problem for MNIST:** Given a $28x28$ array of grayscale values, determine which digit is represented. 
+**Classification Problem for MNIST:** Given a $28\times 28$ array of grayscale values, determine which digit is represented. 
 
 At first glance, this does not look like a logistic regression problem.  To make the connection clearer, let's simplify the problem
 and imagine that our database contains only labelled images of zeros and ones -- we'll worry about how to handle the full problem later.
 So now our task is to determine which images are zeros, and which are ones.  
 
-Our approach will be to view each image as a vector of length $784=28*28$ by stringing the pixel values row by row into a one dimensional vector,
+Our approach will be to view each image as a vector of length $784=28*28$ by stringing the pixel values row by row into a one-dimensional vector,
 which following our conventions yields a matrix of size $N\times 784$ where $N$ is the number of images.   Since we may also need an "intercept",
 we add a column of $1$'s to our images yielding a data matrix $X$ of size $N\times 785$. The labels $y$ form a column vector 
 of size $N$ containing zeros and ones.
 
-We will also simplify the data but converting the gray-scale images to monochrome by converting gray levels
+We will also simplify the data by converting the gray-scale images to monochrome by converting gray levels
 up to $128$ as "white" and beyond $128$ as "black".
 
 The logistic regression approach asks us to find the "best" vector $M$ so that, for a given image vector $x$ (extended by adding a one at the end), the function
@@ -343,7 +343,7 @@ one can easily find $M$ so that the logistic model predicts the correct classifi
 
 ### Weights as filters
 
-One interesting aspect of using logistic regression on images for classification is that the we can interpret the optimum set of coefficients $M$
+One interesting aspect of using logistic regression on images for classification is that we can interpret the optimum set of coefficients $M$
 as a kind of filter for our images.  Remember that $M$ is a vector with $785$ entries, the last of which is an "intercept".  
 The logistic model
 says that, for an image vector $x$, the log-odds that the image is a one is
@@ -352,7 +352,7 @@ $$
 \log \frac{p}{1-p} = \sum_{i=0}^{783} M_{i}x_{i} + M_{784}.
 $$
 This means that if the value of $M_{i}$ is positive, then large values in the $i^{th}$ pixel *increase* the chance that our image is a one;
-while if $M_{i}$ is negative, large values *decrease* the chance.  If $M_{i}$ is negative, the reverse is true.  However, the values $x_{i}$ are
+while if $M_{i}$ is negative, large values *decrease* the chance.  However, the values $x_{i}$ are
 the gray scale "darkness" of the image, so the entries of $M$ emphasize or de-emphasize dark pixels according to whether that dark pixel is more or less
 likely to occur in a one compared to a zero. 
 
@@ -381,7 +381,7 @@ different possibilities.  It is this type of multiclass logistic regression that
 
 Our goal is to build a model that, given an unknown image, returns a vector of ten probabilities,
 each of which we can interpret as the chance that our unknown image is in fact of a particular digit.
-If we *know* the image's class, then it's probability vector *should* be nine zeros with a single one
+If we *know* the image's class, then its probability vector *should* be nine zeros with a single one
 in the position corresponding to the digit.  So, for example, if our image is of a two, then
 the vector of probabilities
 
@@ -405,15 +405,15 @@ These $r$ values are linear functions of the features, but we need probabilities
 case, we used the logistic function $\sigma$ to convert our linear function to probabilities.  In
 this higher dimensional case we use a generalization of $\sigma$ called the "softmax" function.
 
-**Definition:** Let $F:\mathbf{R}^r\to\mathbf{R}^{r}$ be the function
+**Definition:** Let $F:\mathbf{R}^r\to\mathbf{R}$ be the function
 $$
-F(z_1,\ldots, z_r) = \sum_{j=1}^{r} e^{z_{i}}
+F(z_1,\ldots, z_r) = \sum_{j=1}^{r} e^{z_{j}}
 $$
 and let $\sigma:\mathbf{R}^{r}\to \mathbf{R}^{r}$ be the function
 $$
-\sigma(z_1,\ldots, z_n) = \left[\begin{matrix} \frac{e^{z_1}}{F} & \cdots & \frac{e^{z_{r}}}{F}\end{matrix}\right].
+\sigma(z_1,\ldots, z_r) = \left[\begin{matrix} \frac{e^{z_1}}{F} & \cdots & \frac{e^{z_{r}}}{F}\end{matrix}\right].
 $$
-Notice that the coordinates of the vector $\sigma(z_1,\ldots,z_n)$ are all between $0$ and $1$, and their
+Notice that the coordinates of the vector $\sigma(z_1,\ldots,z_r)$ are all between $0$ and $1$, and their
 sum is one.
 
 Our multiclass logistic model will say that the probability vector that gives the probabilities
@@ -431,18 +431,18 @@ $$
 
 ### Multiclass logistic regression - the likelihood
 
-The probability vector $[p_{t}(x;M)]$ encodes the probabilities that the $x$-value
+The probability vector $[p_{t}(x;M)]$ encodes the probabilities that the sample with feature vector $x$
 belongs to each of the possible classes.  That is,
 $$
-p_{j}(x;M)=\hbox{The chance that x is in class j}.
+p_{j}(x;M)=\hbox{the chance that $x$ is in class $j$}.
 $$
 
-We have captured the class membership of the samples in a $(k+1)\times r$ matrix $Y$
-which is "one-hot" encoded.  Each row of this matrix has is zero in each place, except in the "correct" class, where it is one.  Let $y=Y[i,:]$ be the $i^{th}$ row
+We have captured the class membership of the samples in an $N\times r$ matrix $Y$
+which is "one-hot" encoded.  Each row of this matrix has a zero in each place, except in the "correct" class, where it is one.  Let $y=Y[i,:]$ be the $i^{th}$ row
 of this matrix, so it is an $r$-entry row vector which is $1$ in the position
 giving the "correct" class for our sample $x$. 
 
-So we can represent the chance that sample $j$ belongs to class $i$
+So we can represent the chance that sample $i$ belongs to class $j$
 as
 $$
 P(\hbox{ sample i in class j})=\prod_{s=1}^{r} p_{s}(x;M)^{y_{s}}.
@@ -453,7 +453,7 @@ $$
 \log P = \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
 $${#eq-multiclasslikelihood}
 
-Since each sample is independent, the total likelihood is the product of these probabilites, and the log-likelihood the corresponding sum:
+Since each sample is independent, the total likelihood is the product of these probabilities, and the log-likelihood the corresponding sum:
 $$
 \log L(M) = \sum_{X,Y} \sum_{s=1}^{r} y_{s}\log p_{s}(x;M).
 $$
@@ -475,7 +475,7 @@ $$
 p_{s}(x;M) = \frac{e^{x\cdot m_s}}{\sum_{t=1}^{r} e^{x\cdot m_{t}}}
 $$
 The gradient of this is made up of the derivatives with respect to the $m_{bq}$
-where $b=0,\ldots, k$ and $q=1,\dots, r$ so its natural to think of this
+where $b=0,\ldots, k$ and $q=1,\dots, r$ so it's natural to think of this
 gradient as a $(k+1)\times r$ matrix, the same shape as $M$.  Remember that each $m_s$ is
 the $s^{th}$ column of $M$ so is made up of $m_{bs}$ for $b=0,\ldots, k$.
 
@@ -484,36 +484,36 @@ $$
 \frac{\partial p_{s}}{\partial m_{bq}}
 $$
 there are two cases to consider.  The first is when $q$ and $s$ are different,
-so the numerator of $p_{s}$ doesn't involve $m_{pq}$.  In this case the derivative
+so the numerator of $p_{s}$ doesn't involve $m_{bq}$.  In this case the derivative
 is
 $$
 \frac{\partial p_{s}}{\partial m_{bq}}=-\frac{e^{x\cdot m_{s}}e^{x\cdot m_{q}}x_b}{(\sum_{t=1}^{r} e^{x\cdot m_{t}})^2}=-p_{s}p_{q}x_{b}
 $$
 In vector terms:
 $$
-[\frac{\partial p_{s}}{\partial m_{bq}}]_{b=1}^{k}=-p_{q}p_{s}[x_{b}]_{b=1}^{k}
+[\frac{\partial p_{s}}{\partial m_{bq}}]_{b=0}^{k}=-p_{q}p_{s}[x_{b}]_{b=0}^{k}
 $$ 
 as an equality of $k+1$-entry row vectors. This can be written more simply as a vector equation:
 $$
-\frac{\partial p_{s}}{\partial m_{q}}=-p_{q}p_{s}x.\qquad (q\not=s).
+\frac{\partial p_{s}}{\partial m_{q}}=-p_{q}p_{s}x^{\intercal}.\qquad (q\not=s).
 $$
 When $q=s$, we have
 $$
 \frac{\partial p_{s}}{\partial m_{bs}}
-=\frac{e^{x\cdot m_{bs}}x_b}{\sum_{t=1}^{r}e^{x\cdot m_{t}}}-\frac{e^{x\cdot m_{s}}e^{x\cdot m_{s}}x_b}{(\sum_{t=1}^{r} e^{x\cdot m_{t}})^2}=p_{s}(1-p_{s})x_b
+=\frac{e^{x\cdot m_{s}}x_b}{\sum_{t=1}^{r}e^{x\cdot m_{t}}}-\frac{e^{x\cdot m_{s}}e^{x\cdot m_{s}}x_b}{(\sum_{t=1}^{r} e^{x\cdot m_{t}})^2}=p_{s}(1-p_{s})x_b
 $$
 or in vector terms
 $$
 \frac{\partial p_{s}}{\partial m_{s}}=p_{s}(1-p_{s})x^{\intercal}.
 $$
 
-**Important:** The gradient on the left is properly seen as a column vector (because $m_{s}$ is a column of the matrix $M$, with $k+1$ entries), and since $x$ is a row of the data matrix, so to keep the indices
+**Important:** The gradient on the left is properly seen as a column vector (because $m_{s}$ is a column of the matrix $M$, with $k+1$ entries), and since $x$ is a row of the data matrix, to keep the indices
 straight, we  need $x^{\intercal}$ on the right.
 
 Now we can use these formulae together with the expression for $\log L(M)$ to 
 obtain the gradient. Using the vector form, we have
 $$
-\frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y}\sum_{s=1}^{r} y_{s}\frac{\partial \log p_{s}}{m_{q}}.
+\frac{\partial \log L(M)}{\partial m_{q}} = \sum_{X,Y}\sum_{s=1}^{r} y_{s}\frac{\partial \log p_{s}}{\partial m_{q}}.
 $$
 Using our computations above, the chain rule, and the derivative of the logarithm,
 this  is the sum
@@ -542,7 +542,7 @@ Given:
 
 -  an $N\times(k+1)$ data matrix $X$ whose last column is all $1$, 
 -  an $N\times r$ matrix $Y$ that "one-hot" encodes the labels of the classification problem;
-- a random $(k+1)\times r$ matrix $M$ of initial guesses for the parameters
+- a random $(k+1)\times r$ matrix $M$ of initial guesses for the parameters;
 - a "learning rate" $\nu$, 
 
 Iterate:
@@ -563,11 +563,6 @@ iterate over each data point $x$ and associated target $y$ and make adjustments 
 To do this we use the gradient from @eq-multiclassgradient in the much simpler case where $X$
 is a single row of the data matrix and $Y$ is a row vector that is zero except for a one in the
 spot corresponding to the target class for $X$.
-
-
-
-
-
 
 
 
