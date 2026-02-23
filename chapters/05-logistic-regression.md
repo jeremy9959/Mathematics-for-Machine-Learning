@@ -178,8 +178,7 @@ $${#eq-logisticregressionlikelihood}
 
 Given a set of features $X$ and targets $Y$ for a logistic model, we now want to find the values $M$ so that the log-likelihood of the model for those parameters, given
 the data, is maximized.  While in linear regression we could find a nice closed form solution to this problem, the presence of the non-linear function $\sigma(x)$ in the
-likelihood makes that impossible for logistic regression.  Thus we need to use a numerical approximation.  The most straightforward such method is called gradient descent.
-It is at the foundation of many numerical optimization algorithms, and so while we will develop it here for logistic regression we will have other opportunities to apply it and we will discuss it more thoroughly on its own later.
+likelihood makes that impossible for logistic regression.  Instead, we will use the gradient descent method from @sec-gradient_descent .
 
 
 ## Gradient Descent and Logistic Regression
