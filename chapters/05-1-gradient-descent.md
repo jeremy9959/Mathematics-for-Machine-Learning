@@ -16,16 +16,16 @@ efficient way.  In this section, we will discuss the technique known as gradient
 ## The Key Idea
 
 
-Suppose that we have a function $f(x_0,\ldots, x_{k-1})$ and we wish to find its minimum value.  In Calculus classes, we are taught to take the derivatives of the function and set them equal to zero, but for anything other than the simplest functions this problem is not solvable in practice.  In real life,
+Suppose that we have a function $f(x_1,\ldots, x_{k})$ and we wish to find its minimum value.  In Calculus classes, we are taught to take the derivatives of the function and set them equal to zero, but for anything other than the simplest functions this problem is not solvable in practice.  In real life,
 we use iterative methods to find the minimum of the function $f$.
 
 The main tool in this approach is the gradient of a function.  Recall
 from multivariable calculus that,  given
-a function $f(x_0,\ldots, x_{k-1})$, the *gradient* $\nabla f$  of $f$ is the vector made up
+a function $f(x_1,\ldots, x_{k})$, the *gradient* $\nabla f$  of $f$ is the vector made up
 of the partial derivatives of $f$:
 
 $$
-\nabla f = \begin{bmatrix} \frac{\partial f}{\partial x_{0}} \\\vdots \\ \frac{\partial f}{\partial x_{k-1}}\end{bmatrix}
+\nabla f = \begin{bmatrix} \frac{\partial f}{\partial x_{1}} \\\vdots \\ \frac{\partial f}{\partial x_{k}}\end{bmatrix}
 $${#eq-gradient-def}
 
 The gradient $\nabla f$ is an example of a *vector field*.  It is a vector whose entries are functions.  If we evaluate those functions at a point $x$, we obtain
@@ -33,7 +33,7 @@ a vector $(\nabla f)(x)$.
 
 We can think of a vector field as a way to attach a vector $(\nabla f)(x)$ to each point $x\in\mathbf{R}^{k}$.
 
-**Proposition:** Let $f(x_0,\ldots, x_{k-1})$ be a function and let $\nabla f$ be its gradient.
+**Proposition:** Let $f(x_1,\ldots, x_{k})$ be a function and let $\nabla f$ be its gradient.
 Then at each point $x$ in $\R^{k}$, the gradient $(\nabla f)(x)$ is a vector that points in
 the direction in which $f$ is increasing most rapidly from $x$ and $(-\nabla f)(x)$ points in the direction in which it decreases most rapidly.  If $(\nabla f)(x)=0$, then $x$ 
 is a critical point of $f$. 
@@ -45,9 +45,9 @@ $$
 D_{v}f(a) = \frac{d}{dt}f(a+tv)|_{t=0}
 $$
 
-If $a=(a_0,\ldots, a_{k-1})$ and $v=(v_{0},\ldots, v_{k-1})$, then
+If $a=(a_1,\ldots, a_{k})$ and $v=(v_{1},\ldots, v_{k})$, then
 $$
-f(a+tv) = f(a_{0}+tv_{0},\ldots, a_{k-1}+tv_{k-1}).
+f(a+tv) = f(a_{1}+tv_{1},\ldots, a_{k}+tv_{k}).
 $$
 Since
 $$
@@ -55,7 +55,7 @@ $$
 $$
 we can compute from the chain rule that
 $$
-D_{v}f(a) = \sum_{i=0}^{k-1} \frac{\partial f}{\partial x_{i}}(a)v_{i} = (\nabla f)(a)\cdot v
+D_{v}f(a) = \sum_{i=1}^{k} \frac{\partial f}{\partial x_{i}}(a)v_{i} = (\nabla f)(a)\cdot v
 $$
 where $\nabla f$
 is the gradient of $f$ as in @eq-gradient-def. 
@@ -203,47 +203,46 @@ Notice that this algorithm does not need computation of $D^{-1}$.
 
 ## Stochastic Gradient Descent {#sec-sgd}
 
-Using the numerical approach to  linear regression avoids computing $D^{-1}$, but still leaves
-us the task of computing the matrix $D=X^{\intercal}X$.  Typically $X$ has many rows, and so this computation is time intensive.  We would like to avoid having to use *all* of the data for each iteration of our algorithm. 
+Using the numerical approach to  linear regression avoids inverting the matrix $D=X^{\intercal}X$, but still leaves
+us the task of computing it.  Typically $X$ has many rows, and so this computation is time-intensive.  We would like to avoid having to use *all* of the data for each iteration of our algorithm. 
 
+Stochastic gradient descent is a method for numerical optimization that does not require use of all the data on each iteration. Instead, it uses each data point sequentially.  Let's look at this 
+in the context of linear regression.  Suppose we have an estimate $M$ for the parameters.  We take one data point $x$ --- a single row
+of the data matrix $X$ --- and the associated target value $y$.  The error for this particular point is
+$(y-xM)^2.$
 
-Stochastic Gradient Descent is a method for numerical optimization that does not require use of all the data on each iteration; rather it uses each data point in succession.  Let's look at this 
-in the context of linear regression.  Suppose we have an estimated value $M$ for the parameters.  We take one data point $x$ -- a single row
-of the data matrix $X$ -- and the associated target value $y$.  The error for this particular point is
-$(y-xM)|^2.$
-
-The gradient for this particular point is 
+The gradient of the squared error (SE), viewed as a function of the weights $M$,
+at this particular point is 
 
 $$
-\nabla MSE = -2x^{\intercal}(y-xM)
+\nabla SE = -2x^{\intercal}(y-xM)
 $$
 
-Notice that $y-xM$ is just a scalar so this is a scalar multiple of the vector $x$. 
+Notice that $y-xM$ is just a scalar, so this is a scalar multiple of the vector $x$. 
 
-Now we iterate over the data, adjusting the parameters $M$ by this partial gradient.  Each pass
+Now we iterate over the data, adjusting the parameters $M$ by this per-sample gradient.  Each pass
 through the entire set is sometimes called an "epoch."
 
 ::: {#alg-stochastic-sgd}
 
 ### Stochastic Gradient Descent for Linear Regression
 
-Set $M^{(0)}$ to a random starting vector in $\R^{k+1}$ as an initial guess and choose a learning rate
-parameter.
+Set $M^{(0)}$ to a random starting vector in $\R^{k+1}$  and choose a learning rate
+parameter $\nu$.
 
-For each data point pair $(x_{i},y_{i})$ consisting of a row of the data matrix $X$ treated as a row vector and its   corresponding target value, adjust the parameters by the gradient of the error
+For each sample  $(x_{i},y_{i})$ consisting of a row of the data matrix $X$  and its   corresponding target value, adjust the parameters by the gradient of the error
 associated with this point:
 
 $$
-M^{(j+1)} = M^{(j)}-\nu(-2x_i^{\intercal} (y_i-x_iM)) = M^{(j)}+2\nu x_i^{\intercal}(y_i-x_iM)
+M^{(j+1)} = M^{(j)}-\nu(-2x_i^{\intercal} (y_i-x_iM^{(j)})) = M^{(j)}+2\nu x_i^{\intercal}(y_i-x_iM^{(j)})
 $$
 
-Here $y_i-x_iM$ is a scalar. Both $x_{i}^{\intercal}$ and $M^{(j)}$ are column vectors.
+Here $x_{i}^{\intercal}$  and $M^{(j)}$ are  column vectors and $y_i-x_iM^{(j)}$ is a scalar. 
 
-Run through the data set multiple times and track the error $(y_i-x_iM)^2$ for each pair $(x_i,y_i)$.  
-These will bounce around but trend overall downward.  When they vary by less than some threshold, stop.
+Run through the data set multiple times and track the error $(y_i-x_iM^{(j)}S)^2$ for each pair $(x_i,y_i)$.  
+These errors will bounce around but trend overall downward.  When the error becomes smaller than a threshold, or when the difference between successive errors becomes smaller than a threshold,  stop.
 
-**Note:** To minimize the bias introduced by the particular order in which you read the data, it's often
+**Note:** To minimize the bias introduced by the particular order in which you process the data, it's often
 worthwhile to shuffle the order in which you consider the points $(x,y)$ in each epoch.
 
 :::
-

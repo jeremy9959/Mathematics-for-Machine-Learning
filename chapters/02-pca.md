@@ -318,14 +318,14 @@ as shown in @fig-pcasimfig-2.
 
 ![Projecting the datapoints](img/PCAsimulated-3.png){#fig-pcasimfig-2 width=50%}
 
-Recall that if the unit vector is defined by coordinates $u=[u_0,u_1]$, then the
-orthogonal projection of the point $x$ with coordinates $(x_0,x_1)$ is $(x\cdot u)u$.
+Recall that if the unit vector is defined by coordinates $u=[u_1,u_2]$, then the
+orthogonal projection of the point $x$ with coordinates $(x_1,x_2)$ is $(x\cdot u)u$.
 Now
 $$
-x\cdot u = u_0 x_0 + u_1 x_1
+x\cdot u = u_1 x_1 + u_2 x_2
 $$
 so the coordinates of the points along the line defined by $u$ are the values of the score $Z$
-defined by $u=[u_0,u_1]$.  Using our work in the previous section, we see that we can
+defined by $u=[u_1,u_2]$.  Using our work in the previous section, we see that we can
 find all of these coordinates by matrix multiplication:
 $$
 Z = X_0 u
