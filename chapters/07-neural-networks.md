@@ -107,7 +107,7 @@ From our earlier work, we know that this model relies on an $N\times M$ weight m
 is $F(x) = S(xW)$, where $S$ is the softmax function defined by
 $$
 S(z)_{i} = \frac{e^{z_{i}}}{\sum_{j=1}^{M} e^{z_{j}}}.
-$$
+$$pwd
 
 The graphical representation of this neural network is shown in @fig-logistic-network.
 
@@ -163,7 +163,7 @@ that exploits the architecture of the neural network.  The algorithm for this co
 and we will discuss it in the next section.
 
 ## Backpropagation
-
+pwd
 Our neural network is made up of $n$ layers, with the output of the final $n$th layer serving as input to the loss function. The nodes at the $j$th layer have values $z^{(j)}_{k}$. The idea behind backpropagation is, for each data point $(x^{[i]},y^{[i]})$,  to compute vectors
 $$
 \delta^{(j)}_{k} = \frac{\partial L_{W}}{\partial z^{(j)}_{k}}
@@ -316,4 +316,45 @@ for a learning rate $\lambda$.  Then reset all of the accumulators $\delta^{(i)}
 
 Once every data point in the dataset has been considered, you have completed one *training epoch*.  Repeat until the loss stops decreasing meaningfully.
 
-## 
+## Convolution
+
+In this section, we will look at convolution, an important idea in mathematics generally that plays a key role in neural networks, especially in image recognition.  Before
+looking at its application there we will first talk about it more generally.
+
+Let's start with a function $f(t)$ of one variable that represents some underlying trend together with random fluctuations.  For example, $f(t)$
+might be the price of the stock of a company that is overall growing but that bounces up and down in response to short-term events.  We show a sample graph of such a function in @fig-signal_with_noise .
+
+![A Noisy Signal](img/noisy_signal.png){#fig-signal_with_noise}
+
+We are interested in identifying the underlying trend, and filtering out the noise.  One standard method for doing this is to use a "moving average" -- that is, to replace each value $f(t)$ by the average of the values of $f$ in a window near $t$.  More formally we choose a step size $\delta$ and a "window size" $k$ and let
+$$
+\hat{f}(t) = \frac{1}{2k+1}\sum_{i=-k}^{k} f(t+i*\delta)
+$$
+
+We have to make some decisions here about what to do at the beginning and end
+of the domain of $f$, but this is mainly a detail so let's ignore this problem for now. 
+In many applications, we have $f$ given to us as a discrete series of numbers, such as the daily prices of a stock, and in that case the moving average is just the average over some number of days around the given day. 
+
+The effect of the moving average is, in general, to shrink the random variability in the signal, since the average of a random signal will, in general, have lower variance then the original random signal.  
+
+In our graph above, if we take $\delta=1$ and $k=5$, we get the result shown in
+@fig-smoothed_signal .  As you can see, the red line bounces around much less than the blue one. 
+
+![Moving Average of Noisy Signal](img/smoothed_signal.png){#fig-smoothed_signal}
+
+This idea of a "moving average" isn't limited to one dimensional data; it can be applied to data in any dimension.  For example, suppose our data is an image represented by a $28\times 28$ array of numbers between $0$ and $255$. Each array cell is a pixel, and the number is how dark that pixel is, from white (255) to black (0).
+
+Figure @fig-image_sample is such an image. 
+
+![Sample Image Data](img/mnist_sample.png){#fig-image_sample}
+
+In this situation, our "moving average" can mean replacing each cell by the average
+value of that cell and its 8 neighbors. For boundary cells, we need to make some kind of choice -- for example, we can compute the average of neighboring cells that lie within the $28\times 28$ array.  Applying this to the image above "smooths" out the image.   We can see the effect of this in @fig-image_smoothed .
+
+![Smoothed Image Data](img/mnist_smoothed.png){#fig-image_smoothed}
+
+
+
+
+
+
