@@ -353,6 +353,38 @@ value of that cell and its 8 neighbors. For boundary cells, we need to make some
 
 ![Smoothed Image Data](img/mnist_smoothed.png){#fig-image_smoothed}
 
+Convolution is essentially a generalization of the moving average, where replace the simple average with an arbitrary weighted average. That is, we take another function $h(t)$, which we think of as a "filter", and we use the values of $h$ to weight the
+values of $f$ in our average.  The transform of $f$ under this type of convolution is written $h\star f$, and in the general continuous case it's an integral:
+$$
+(h\star f)(t) = \int_{s=-\infty}^{\infty}\sum h(s)f(t-s) dt
+$$
+
+In machine learning, we have discrete data, and so we can simplify this a bit.
+Our function $h$, our "filter", is a function $h(k)$ of integers,
+and
+$$
+(h\star f)(t) = \sum_{s=-\infty}^{\infty} h(s)f(t+s\delta)
+$$
+where $\delta$ is a step size.  To make this a proper "average" we 
+need to normalize this by assuming that the total integral
+$$
+\int_{-\infty}^{\infty} h(t) dt = 1
+$$
+
+
+From this fancier point of view, the moving average over a window of length, say, $5$, is the case where $h(k)=1/5$ for $k=-2,-1,0,1,2$ and is zero elsewhere.  Then
+$$
+(h\star f)(t) = \frac{f(t-2\delta)+f(t-\delta)+f(t)+f(t+\delta)+f(t+2\delta})}{5}
+$$
+which is the usual average. 
+
+
+As an example,  consider the technique called "exponential smoothing", in which we replace the value of $f$ at a time $t$ with the average of some window of its past values, but we weight those past values with an exponentially decaying factor $\lambda$.  We
+let $h(k)=\lambda^{k}(\lambda-1)/(\lambda^{N+1}-1)$ for $N\ge k\ge 0$ and $h(k)=0$ for $k<0$ and $k>N$.   The constant $(\lambda-1)/(\lambda^{N+1}-1)$ is chosen
+so that the sum of the values of $h$ add up to one.  From convolution we obtain:
+$$
+(h\star f)(t) = \frac{\lambda-1}{\lambda^{N+1}-1}\sum_{k=0}^{N} \lambda^{-k}f(t-k\delta).
+$$
 
 
 
