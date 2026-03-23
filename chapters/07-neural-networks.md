@@ -328,7 +328,7 @@ might be the price of the stock of a company that is overall growing but that bo
 
 We are interested in identifying the underlying trend, and filtering out the noise.  One standard method for doing this is to use a "moving average" -- that is, to replace each value $f(t)$ by the average of the values of $f$ in a window near $t$.  More formally we choose a step size $\delta$ and a "window size" $k$ and let
 $$
-\hat{f}(t) = \frac{1}{2k+1}\sum_{i=-k}^{k} f(t+i*\delta)
+\hat{f}(t) = \frac{1}{2k+1}\sum_{i=-k}^{k} f(t+i\delta)
 $$
 
 We have to make some decisions here about what to do at the beginning and end
@@ -374,16 +374,20 @@ $$
 
 From this fancier point of view, the moving average over a window of length, say, $5$, is the case where $h(k)=1/5$ for $k=-2,-1,0,1,2$ and is zero elsewhere.  Then
 $$
-(h\star f)(t) = \frac{f(t-2\delta)+f(t-\delta)+f(t)+f(t+\delta)+f(t+2\delta})}{5}
+(h\star f)(t) = \frac{f(t-2\delta)+f(t-\delta)+f(t)+f(t+\delta)+f(t+2\delta}{5}
 $$
 which is the usual average. 
 
 
 As an example,  consider the technique called "exponential smoothing", in which we replace the value of $f$ at a time $t$ with the average of some window of its past values, but we weight those past values with an exponentially decaying factor $\lambda$.  We
-let $h(k)=\lambda^{k}(\lambda-1)/(\lambda^{N+1}-1)$ for $N\ge k\ge 0$ and $h(k)=0$ for $k<0$ and $k>N$.   The constant $(\lambda-1)/(\lambda^{N+1}-1)$ is chosen
+let 
+$$h(k)=\lambda^{k}(\lambda-1)/(\lambda^{N+1}-1)$$
+ for $N\ge k\ge 0$ and $h(k)=0$ for $k<0$ and $k>N$.   
+ 
+ The constant $(\lambda-1)/(\lambda^{N+1}-1)$ is chosen
 so that the sum of the values of $h$ add up to one.  From convolution we obtain:
 $$
-(h\star f)(t) = \frac{\lambda-1}{\lambda^{N+1}-1}\sum_{k=0}^{N} \lambda^{-k}f(t-k\delta).
+(h\star f)(t) = \frac{\lambda-1}{\lambda^{N+1}-1}\sum_{k=0}^{N} \lambda^{k}f(t-k\delta).
 $$
 
 
