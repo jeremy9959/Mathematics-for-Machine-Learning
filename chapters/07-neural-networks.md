@@ -441,9 +441,9 @@ the result in @fig-mnist-gaussian_smoothed.
 
 ### Discrete Convolution for Image Data
 
-Suppose that we have an image represented by a numerical array $X$ of size $n\times n$.
+Suppose that we have an image represented by a numerical array $X$ of size $n\times m$.
 We can represent a discrete $2d$ convolutional filter as another array $K$ of size
-$k\times k$.  We obtain the convolution $Z$ of $K$ and $X$ by "sliding" $K$
+$k\times k$. ($K$ doesn't need to be square, but for simplicity we assume it is). We obtain the convolution $Z$ of $K$ and $X$ by "sliding" $K$
 over the array $X$ and computing the values of $Z$ as the dot product of the entries
 in $K$ with the different pieces of $X$.
 
@@ -462,5 +462,50 @@ Since only $8$ copies of $K$ "fit" across the $10$ columns of $X$, the convoluti
 $Z$ only $$ columns.    You continue this down the rows as well, so that $Z$ ends
 up being a $8\times 8$ matrix. 
 
-In general, if $X$ is $n\times n$ and $K$ is $k\times k$, 
-then $Z_{ij}$ is the dot product of the submatrix of $X$ with columns $j,j+1,j+2,\ldots, j+k-1$ and rows $i, i+1, i+2, \ldots, i+k-1$ with $K$ with $1\le i,j\le n-k+1$.
+In general, if $X$ is $n\times m$ and $K$ is $k_1\times k_2$, 
+then $Z_{ij}$ is the dot product of the submatrix of $X$ with columns $j,j+1,j+2,\ldots, j+k_2-1$ and rows $i, i+1, i+2, \ldots, i+k_1-1$ with $K$ with $1\le i\le n-k_1+1$ and
+$1\le j\le m-k_2+1$.  Thus $Z$ will be $(n-k_1+1)\times (m-k_2+1)$.
+
+#### Padding and Stride
+
+There are two additional parameters that can be introduced to the convolution described above, called "padding" and "stride."
+
+Padding refers to what happens at the edges of the matrix $X$.  A padding value of $p$ adds $p$ rows and columns of zeros all around $X$.  One can also have a padding value of $(p_1,p_2)$ which adds $p_1$ rows of zeros and $p_2$ columns of zeros.  
+
+Adding padding has the effect of increasing the effective size of $X$ from $n\times m$ to  $(n+2p_1)\times (m+2p_2)$, so the size of $Z$ will be $(n+2p_1-k_1+1)\times (m+2p_2-k_2+1).$
+
+Stride means that instead of sliding the kernel over by $1$ at each step, you slide it over by $s_1$ steps in the horizontal direction and $s_2$ steps in the vertical direction.
+
+So if $X$ is $10\times 10$, $K$ is $3\times 3$, and the stride is $2$ in each direction,
+then  $Z_{11}$ is the dot product of $K$ with the submatrix of $X$ with rows $1,2,3$ and
+columns $1,2,3$.  But $Z_{12}$ is the dot product of $K$ with the submatrix of $X$ with rows $1,2,3$ and columns $3,4,5$.
+
+Finally, if $X$ is $n\times m$, $K$ is $k_1\times k_2$, the padding is $(p_1,p_2)$,
+and the stride is $(s_1,s_2)$ then the size of the convolution $Z$ is $z_1\times z_2$ where
+
+$$
+z_1=\frac{n+2p_1-k_1}{s_1}+1
+$$
+and
+$$
+z_2 = \frac{m+2p_2-k_2}{s_2}+1.
+$$
+
+### Pooling
+
+Pooling is a variant of $2d$-convolution where, instead of computing the dot product of a filter with a submatrix of the data, one simply takes the maximum  of
+the entries in the submatrix. 
+
+So for example if $X$ is $n\times m$, and one is given a size $k_1\times k_2$, and
+a stride $(s_1,s_2)$, the entry $Z_{ij}$ of the
+pooled matrix is the maximum of the entries in the submatrix
+of $X$ with rows $1+(i-1)s_1,\ldots, (i-1)s_1+k_1+1$ and columns $(j-1)s_2+1,\ldots, (j-1)s_2+k_2+1$.  
+
+If pooling $(p_1,p_2)$ also added, then you add $p_1$ rows of $-\infty$ at the top
+and bottom, and $p_2$ columns of $-\infty$ at the left and right of $X$.
+
+The size of the pooled matrix is given by the same formulae as the convolution.
+
+### Multichannel input
+
+
