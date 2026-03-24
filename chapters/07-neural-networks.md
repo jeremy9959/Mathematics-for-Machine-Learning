@@ -107,7 +107,7 @@ From our earlier work, we know that this model relies on an $N\times M$ weight m
 is $F(x) = S(xW)$, where $S$ is the softmax function defined by
 $$
 S(z)_{i} = \frac{e^{z_{i}}}{\sum_{j=1}^{M} e^{z_{j}}}.
-$$pwd
+$$
 
 The graphical representation of this neural network is shown in @fig-logistic-network.
 
@@ -374,14 +374,17 @@ $$
 
 From this fancier point of view, the moving average over a window of length, say, $5$, is the case where $h(k)=1/5$ for $k=-2,-1,0,1,2$ and is zero elsewhere.  Then
 $$
-(h\star f)(t) = \frac{f(t-2\delta)+f(t-\delta)+f(t)+f(t+\delta)+f(t+2\delta}{5}
+(h\star f)(t) = \frac{f(t-2\delta)+f(t-\delta)+f(t)+f(t+\delta)+f(t+2\delta)}{5}
 $$
 which is the usual average. 
 
 
 As an example,  consider the technique called "exponential smoothing", in which we replace the value of $f$ at a time $t$ with the average of some window of its past values, but we weight those past values with an exponentially decaying factor $\lambda$.  We
 let 
-$$h(k)=\lambda^{k}(\lambda-1)/(\lambda^{N+1}-1)$$
+$$
+h(k)=\lambda^{k}(\lambda-1)/(\lambda^{N+1}-1)
+$$
+
  for $N\ge k\ge 0$ and $h(k)=0$ for $k<0$ and $k>N$.   
  
  The constant $(\lambda-1)/(\lambda^{N+1}-1)$ is chosen
@@ -390,7 +393,74 @@ $$
 (h\star f)(t) = \frac{\lambda-1}{\lambda^{N+1}-1}\sum_{k=0}^{N} \lambda^{k}f(t-k\delta).
 $$
 
+A common version of exponential smoothing of a sequence $y_{i}$ for $i=1,\ldots,$
+is to recursively define
+$$
+z_{1} = y_{1}
+$$
+
+and, for $i=2,\ldots,$
+$$
+z_{i} = \alpha y_{i} + (1-\alpha)z_{i-1}.
+$$
+
+This is equivalent to 
+$$
+z_{i} = \alpha \sum_{j=1}^{i} (1-\alpha)^{j-1}y_{i-j+1}
+$$
+
+This is equivalent to assuming that $y_{i}$ is zero for $i<1$ and defining
+$h$ by
+$$
+h(i) = \alpha(1-\alpha)^{i}\hbox{\rm for $i\ge 0$}
+$$
+and
+$$
+h(i)=0
+$$
+for $i<0$.
+
+In the two-dimensional setting, our filter function $h$ depends on two variables $h(x,y)$ and the convolution
+is
+$$
+(h\star f)(x,y) = \int_{-\infty}^{\infty}\int_{-\infty}^{\infty} h(a,b)f(x-a,y-b) da db
+$$
+
+which reduces to a double sum in the discrete case.
+For example, we can let $h(x,y)$ be a Gaussian
+function
+$$
+h(x,y) = \frac{1}{2\pi}e^{-(x^2-y^2)/2}.
+$$
+
+If we apply convolution with this Gaussian to the image studied earlier, we obtain
+the result in @fig-mnist-gaussian_smoothed.
+
+![Gaussian Smoothing](img/mnist_gaussian.png){#fig-mnist-gaussian_smoothed}
 
 
+### Discrete Convolution for Image Data
 
+Suppose that we have an image represented by a numerical array $X$ of size $n\times n$.
+We can represent a discrete $2d$ convolutional filter as another array $K$ of size
+$k\times k$.  We obtain the convolution $Z$ of $K$ and $X$ by "sliding" $K$
+over the array $X$ and computing the values of $Z$ as the dot product of the entries
+in $K$ with the different pieces of $X$.
 
+For example, suppose that $X$ is $10\times 10$ and $K$ is $3x3$.  The
+first row of $Z$ comes from sliding $K$ across the top of $X$ and computing
+the dot products:
+    
+-  The first entry $Z_{11}$ is the dot product of the upper left
+$3x3$ submatrix of $X$ with $K$.  
+- The second entry $Z_{12}$ is the dot product of the submatrix coming from columns $2,3,4$ and rows $1,2,3$ of $X$ with $K$.
+- The third entry $Z_{13}$ is the dot product of the submatrix with columns $3,4,5$ and rows $1,2,3$...
+
+and so on.  The last entry comes from the dot product of the submatrix with columns $8,9,10$ and rows $1,2,3$ with $K$.  
+
+Since only $8$ copies of $K$ "fit" across the $10$ columns of $X$, the convolution
+$Z$ only $$ columns.    You continue this down the rows as well, so that $Z$ ends
+up being a $8\times 8$ matrix. 
+
+In general, if $X$ is $n\times n$ and $K$ is $k\times k$, 
+then $Z_{ij}$ is the dot product of the submatrix of $X$ with columns $j,j+1,j+2,\ldots, j+k-1$ and rows $i, i+1, i+2, \ldots, i+k-1$ with $K$ with $1\le i,j\le n-k+1$.
