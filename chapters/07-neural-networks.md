@@ -412,8 +412,9 @@ $$
 This is equivalent to assuming that $y_{i}$ is zero for $i<1$ and defining
 $h$ by
 $$
-h(i) = \alpha(1-\alpha)^{i}\hbox{\rm for $i\ge 0$}
+h(i) = \alpha(1-\alpha)^{i}
 $$
+for $i\ge 0$
 and
 $$
 h(i)=0
