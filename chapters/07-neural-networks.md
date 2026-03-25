@@ -485,11 +485,11 @@ and the stride is $(s_1,s_2)$ then the size of the convolution $Z$ is $z_1\times
 
 $$
 z_1=\frac{n+2p_1-k_1}{s_1}+1
-$$
+$${#eq-new_width}
 and
 $$
 z_2 = \frac{m+2p_2-k_2}{s_2}+1.
-$$
+$${#eq-new_height}
 
 ### Pooling
 
@@ -506,6 +506,131 @@ and bottom, and $p_2$ columns of $-\infty$ at the left and right of $X$.
 
 The size of the pooled matrix is given by the same formulae as the convolution.
 
-### Multichannel input
+## Convolutional Neural Networks
+
+A convolutional neural network is a multi-layer neural net that incorporates layers that carry out a discrete convolution
+on their inputs.  They have shown themselves to be extremely effective tools for a wide range of problems, particularly
+image recognition.  We will develop the key ideas behind two-dimensional convolutional networks.
+
+### Convolution Layers
+
+A standard 2d convolutional layer is described by numbers $c_{in}$ and $c_{out}$, the number of input and output channels respectively,
+together with a kernel size $(k_1,k_2)$, stride parameters $(s_{1},s_{2})$, and padding parameters $(p_{1},p_{2})$.  The
+kernel size, stride, and padding parameters tell us how an input array of size $n\times m$ is transformed via the formulae
+@eq-new_width and @eq-new_height.
+
+The channel numbers $c_{in}$ and $c_{out}$ add a "third dimension" to this picture.  The layer
+takes an input of size $c_{in}\times n\times m$ -- a "three dimensional" matrix that
+stacks $c_{in}$ matrices of size $n\times m$ -- and produces an output of size $c_{out}\times z_{1}\times z_{2}$, a "three dimensional" matrix stacking $c_{out}$ matrices of size
+$z_{1}\times z_{2}$ where the $z_{i}$ are computed from the filter size, stride, and
+padding parameters.
+
+To carry out the transformation, the layer has $c_{out}$ filters, each of size
+$c_{in}\times k_1\times k_2$.  For each $j=1,\ldots, c_{out}$, the layer
+computes the convolution of the $c_{in}\times k_1\times k_2$ filter against
+the input of size $c_{in}\times n\times m$.  This is done by computing
+the convolution of the filter in level $i$ (for $i=1,\ldots, c_{in}$) against
+the $i^{th}$ level of the input 3d-matrix and then *summing up* the results of this
+$c_{in}$ convolutions. This yields the output of size $c_{out}\times z_{1}\times z_{2}$.
+
+To further complicate the picture, in practice the convolution layer also includes a bias term for each output layer, which is added to the sum of the convolutions at each level of the output.
+
+Specifically, if our layer has $c_{out}$ output channels, stride 1, padding 0, and kernel size $k\times k$, and our input has $c_{in}$ input channels and is size $n\times m$, then
+the result of the convolution $Z_{c,i,j}$ is:
+$$
+Z_{c,i,j} = b_c + \sum_{c'=1}^{c_{in}} \sum_{p=1}^{k} \sum_{q=1}^{k} W_{c,c',p,q} \cdot X_{c',\, i+p-1,\, j+q-1}
+$$
+
+where $1\le c\le c_{out}$, $1\le i\le n-k+1$ and $1\le j\le m-k+1$. 
+
+A convolution layer with $c_{in}$ input layers, $c_{out}$ output layers, and a kernel size
+of $k_1,k_2$ will have $c_{in}c_{out}k_1 k_2$ total entries and can be thought of as
+a 4d-matrix of size $c_{out}\times c_{in}\times k_{1}\times k_{2}$.  
+
+The term *tensor* is used for matrices that may have more than $2$ dimensions; so a convolution
+layer is an example of a tensor.
+
+### Pooling Layers
+
+A pooling layer applies a pooling operation to its input.  As with convolution,
+the pooling operation is specified by its extent $k1,k2$, its stride $s_1,s_2$,
+and the padding $p_1,p_2$.  A pooling layer does not modify the number of channels,
+so it takes an input of size $c_{in}\times n\times m$ to an output of size
+$c_{in}\times z_{1}\times z_{2}$ and applies the pooling filter separately to each
+of the $c_{in}$ layers. 
+
+### A neural net classifier
+
+In figure @fig-neural_net_classifier, we show the architecture of a neural network
+that does a very good job of classifying the images in the CIFAR-10 database.
+The network is taken from the pytorch documentation (see [Training a Classifier](https://docs.pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html)); the graphic was
+drawn by [Claude](https://claude.ai).
+
+![Neural Net Classifier](img/net_diagram.png){#fig-neural_net_classifier}
+
+Let's walk through this neural network.  The input layer at the right takes an image from the CIFAR-10 dataset, which consists of $32\times 32$ color images.  These are represented as 3d-matrices (tensors) of size $3\times 32\times 32$ where each of the three layers gives the
+intensity of the Red, Green, and Blue channels (RGB).  
+
+The image is fed into the first convolutional layer, which has $3$ input channels, 
+$6$ output channels, and kernels of size $5$.  This transforms the $3\times 32\times 32$ image
+into a $6\times 28\times 28$ tensor.  Then the Relu non-linear function is applied.
+Relu is the function which does nothing to positive numbers, and sets all negative numbers to zero.
+
+After Relu, the $6\times 28\times 28$ tensor is fed into a $2x2$ max pooling layer, which reduces the size to $6\times 14\times 14$.  This is fed into a second convolutional layer, having $6$ input channels and $16$ output channels and a kernel size of $5$.  This yields
+a $16\times 10\times 10$ tensor.  
+
+We apply Relu again, then the max pool operation with filter size $2\times 2$, and obtain a
+tensor of size $16\times 5\times 5$.  
+
+To carry out the final stages of the neural network, we "flatten" our $16\times 5\times 5$ tensor into a single vector of length $(16)(5)(5)=400$.  Then we use a "linear layer",
+which is just a matrix of size $120\times 400$ together with a bias term -- a vector length $120$ -- to convert this vector into a vector of length $120$.
+
+We apply Relu to that vector, then multiply by another matrix of size $84\times 120$ plus a bias, then another Relu, then another matrix of size $10\times 84$ plus a bias.  
+
+At this point we have $10$ numbers.  We apply softmax to these ten numbers to get the $10$
+probabilites corresponding to the $10$ possible classes in the CIFAR-10 dataset.
+
+### Training the network
+
+To train the classifier, we use the multiclass entropy loss (the same
+loss function we use for multiclass linear regression).  We
+initialize all of the weights in all of the layers randomly, and
+then use the backpropagation algorithm to adjust the weights and reduce the loss until we reach a point where the network performs well (or we give up).
+
+### Counting the weights
+
+This neural network is an example of "deep learning" although by
+modern standards it is very small.  Nevertheless it is instructive
+to count the number of weights, or unknown parameters, in the network.
+
+A convolutional layer of size $3,6,5$ has $3$ filters of size $5\times 5$
+for each output channel, plus a bias term for each output channel,
+yielding $18*25+6=456$ weights.
+
+The convolutional layer of size $6,16,5$ has $6\times 16\times 25+16=2416$
+weights. 
+
+The "linear" layers have $400\times 120+120=48120$, $120\times 84=10164$,
+and $84\times 10 + 10 = 850$ weights.
+
+All together we have:
+$$
+456+2416+48120+10164+850=62006
+$$
+parameters.
+
+This is a lot, but notice that the convolutional layers have relatively
+few weights, so they help to keep the network small compared to using
+more linear layers. 
+
+The 2015 paper "Very Deep Convolutional Networks for Large-Scale Image Recognition", by Simonyan and Zisserman, outlines the author's work
+on CNN's that led them to win the "ImageNet Large Scale Visual
+Recognition Challenge" in 2014. This involved working with a dataset
+of $150000$ images and $1000$ image categories, and included both
+classification (saying what the image *was*) and localization (putting a box around the main thing in the image). See [Simonyan and Zisserman](https://arxiv.org/abs/1409.1556) and [ILSVRC2014](https://www.image-net.org/challenges/LSVRC/2014/).
+
+
+
+
 
 
