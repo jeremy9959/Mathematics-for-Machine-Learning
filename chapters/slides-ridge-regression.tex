@@ -1,0 +1,318 @@
+\documentclass{beamer}
+\usetheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{amsmath, amssymb}
+
+\title{Bayesian Regression and Ridge Regression}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% -------------------------------------------------------
+\begin{frame}{Goal}
+Add a \textbf{Bayesian prior} to linear regression.
+
+\bigskip
+Result: \textbf{ridge regression} — more robust when predictors are nearly collinear.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{The Linear Model}
+\[
+  Y = XM + \epsilon, \qquad \epsilon \sim \mathcal{N}(0,\sigma^2)
+\]
+
+\bigskip
+OLS gives the \textbf{maximum likelihood estimate} of $M$.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{A Prior on the Coefficients}
+Assume the coefficients are themselves random:
+\[
+  M \sim \mathcal{N}(0,\, \tau^2)
+\]
+
+\bigskip
+Interpretation: \emph{a priori}, we expect the coefficients to be small.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Bayes' Theorem}
+\[
+  P(M \mid Y, X) = \frac{P(Y,X \mid M)\, P(M)}{P(Y,X)}
+\]
+
+\bigskip
+We want the \textbf{posterior} distribution of $M$ given the data.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{The Posterior}
+\[
+  P(M \mid Y, X) = A\, \exp\!\left(-\frac{\|Y - XM\|^2}{2\sigma^2}\right) \exp\!\left(-\frac{\|M\|^2}{2\tau^2}\right)
+\]
+
+\bigskip
+This is a \textbf{normal distribution} in $M$.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{The Posterior, Interpreted}
+The two factors in the posterior:
+
+\bigskip
+\begin{itemize}
+  \item $\displaystyle e^{-\|Y-XM\|^2/2\sigma^2}$ \quad — \textbf{likelihood} (fit to data)
+
+  \bigskip
+  \item $\displaystyle e^{-\|M\|^2/2\tau^2}$ \quad\quad\;\; — \textbf{prior} (preference for small $M$)
+\end{itemize}
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{MAP Estimate: Setting Up}
+Maximize the posterior $\Leftrightarrow$ set gradient to zero:
+\[
+  \frac{X^\intercal Y - (X^\intercal X)M_r}{\sigma^2} - \frac{M_r}{\tau^2} = 0
+\]
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{MAP Estimate: The Ridge Formula}
+Let $s = \sigma^2/\tau^2$. Rearranging gives:
+\[
+  (X^\intercal X + sI)\, M_r = X^\intercal Y
+\]
+
+\bigskip
+The \textbf{ridge regression coefficients}:
+\[
+  \boxed{M_r = (X^\intercal X + sI)^{-1} X^\intercal Y}
+\]
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Practical Use: Standardize First}
+Ridge regression is \textbf{not scale-invariant}.
+
+\bigskip
+Standard practice: center and standardize before fitting.
+\[
+  x_i \;\mapsto\; \frac{x_i - \mu_i}{\sigma_i}, \qquad
+  y \;\mapsto\; \frac{y - \mu}{\sigma}
+\]
+
+\bigskip
+Call the standardized data matrix $X_0$. Treat $s \geq 0$ as a tuning parameter.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Effect on Invertibility}
+The covariance matrix $D_0 = \tfrac{1}{N}X_0^\intercal X_0$ may be singular.
+
+\bigskip
+Ridge regression replaces $ND_0$ by $ND_0 + sI$.
+
+\bigskip
+Eigenvalues of $ND_0 + sI$ are $N\lambda_i + s \geq s > 0$.
+
+\bigskip
+$\Rightarrow$ \textbf{always invertible}.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Condition Number}
+The \textbf{condition number} of a matrix measures numerical sensitivity:
+\[
+  \kappa = \frac{\lambda_{\max}}{\lambda_{\min}}
+\]
+
+\bigskip
+\begin{tabular}{lll}
+  Matrix & Condition number \\[4pt]
+  $ND_0$ & $\lambda_1/\lambda_k$ \\[6pt]
+  $ND_0 + sI$ & $(N\lambda_1+s)/(N\lambda_k+s)$
+\end{tabular}
+
+\bigskip
+Larger $s$ $\;\Rightarrow\;$ smaller condition number $\;\Rightarrow\;$ more stable.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Deriving the SVD: Starting Point}
+By the \textbf{Spectral Theorem}, since $D_0$ is real symmetric:
+\[
+  D_0 = P\Lambda P^\intercal
+\]
+$P$ orthogonal, $\Lambda = \mathrm{diag}(\lambda_1,\ldots,\lambda_k)$.
+
+\bigskip
+Therefore:
+\[
+  X_0^\intercal X_0 = N D_0 = P(N\Lambda)P^\intercal
+\]
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Deriving the SVD: Orthogonal Columns}
+Define $\tilde{\Lambda}_0 = \mathrm{diag}(\sqrt{N\lambda_1},\ldots,\sqrt{N\lambda_k})$, so $X_0^\intercal X_0 = P\tilde{\Lambda}_0^2 P^\intercal$.
+
+\bigskip
+Look at the matrix $X_0 P$:
+\[
+  (X_0 P)^\intercal (X_0 P) = P^\intercal(P\tilde{\Lambda}_0^2 P^\intercal)P = \tilde{\Lambda}_0^2
+\]
+
+\bigskip
+The columns of $X_0 P$ are \textbf{orthogonal} with norms $\sqrt{N\lambda_i}$.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Deriving the SVD: Constructing $U$}
+Normalize: define $U = X_0 P \tilde{\Lambda}_0^{-1}$.
+
+\bigskip
+Check:
+\[
+  U^\intercal U = \tilde{\Lambda}_0^{-1}(X_0 P)^\intercal(X_0 P)\tilde{\Lambda}_0^{-1}
+              = \tilde{\Lambda}_0^{-1}\tilde{\Lambda}_0^2\tilde{\Lambda}_0^{-1} = I_k
+\]
+
+\bigskip
+The columns of $U$ are \textbf{orthonormal}.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{The SVD of $X_0$}
+From $U = X_0 P\tilde{\Lambda}_0^{-1}$:
+\[
+  \underset{N\times k}{X_0} = \underset{N\times k}{U}\;\underset{k\times k}{\tilde{\Lambda}_0}\;\underset{k\times k}{P^\intercal}
+\]
+
+\bigskip
+\begin{itemize}
+  \item $U$ \quad — orthonormal columns (left singular vectors)
+  \item $\tilde{\Lambda}_0$ — diagonal, entries $\sqrt{N\lambda_i}$ (singular values)
+  \item $P$ \quad — orthogonal (right singular vectors / principal directions)
+\end{itemize}
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{OLS via the SVD}
+The columns $u_1,\ldots,u_k$ of $U$ form an orthonormal basis for the column space of $X_0$.
+
+\bigskip
+OLS predicted values:
+\[
+  \hat{Y} = \sum_{j=1}^{k} (u_j \cdot Y)\, u_j
+\]
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Ridge Prediction via the SVD}
+Start from $\hat{Y}_r = X_0 M_r$ and substitute the SVD $X_0 = U\tilde{\Lambda}_0 P^\intercal$:
+\[
+  \hat{Y}_r = U\tilde{\Lambda}_0 P^\intercal \bigl(P\tilde{\Lambda}_0^\intercal U^\intercal U \tilde{\Lambda}_0 P^\intercal + sI\bigr)^{-1} P\tilde{\Lambda}_0^\intercal U^\intercal Y
+\]
+
+\bigskip
+Since $U^\intercal U = I$ and $P^\intercal P = I$, and writing $\Lambda = \tilde{\Lambda}_0^2$, this simplifies to:
+\[
+  \hat{Y}_r = U\tilde{\Lambda}_0\,(\Lambda + sI)^{-1}\,\tilde{\Lambda}_0\, U^\intercal Y
+\]
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Ridge Prediction: The Middle Factor}
+All three matrices $\tilde{\Lambda}_0$, $(\Lambda+sI)^{-1}$, $\tilde{\Lambda}_0$ are $k\times k$ diagonal.
+
+\bigskip
+Their product is diagonal with $j$-th entry:
+\[
+  \sqrt{N\lambda_j} \cdot \frac{1}{N\lambda_j + s} \cdot \sqrt{N\lambda_j}
+  = \frac{N\lambda_j}{N\lambda_j + s}
+\]
+
+\bigskip
+Define $W = \tilde{\Lambda}_0(\Lambda+sI)^{-1}\tilde{\Lambda}_0 = \mathrm{diag}\!\left(\dfrac{N\lambda_j}{N\lambda_j+s}\right)$.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Ridge Prediction: Expanding $UWU^\intercal Y$}
+So $\hat{Y}_r = UWU^\intercal Y$ where $W = \mathrm{diag}(w_1,\ldots,w_k)$.
+
+\bigskip
+Writing $U = [u_1 \;\cdots\; u_k]$, we have $UWU^\intercal = \sum_j w_j\, u_j u_j^\intercal$.
+
+\bigskip
+Therefore:
+\[
+  \hat{Y}_r = \sum_{j=1}^k w_j\, u_j u_j^\intercal Y = \sum_{j=1}^k w_j\,(u_j\cdot Y)\,u_j
+\]
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Ridge Prediction: Component Form}
+\[
+  \hat{Y}_r = \sum_{j=1}^{k} \frac{N\lambda_j}{N\lambda_j + s}\,(u_j \cdot Y)\, u_j
+\]
+
+\bigskip
+Compare with OLS:
+\[
+  \hat{Y} = \sum_{j=1}^{k} (u_j \cdot Y)\, u_j
+\]
+
+\bigskip
+Each term is multiplied by the \textbf{shrinkage factor} $\dfrac{N\lambda_j}{N\lambda_j+s} \leq 1$.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{The Shrinkage Factors}
+\[
+  w_j = \frac{N\lambda_j}{N\lambda_j + s}
+\]
+
+\bigskip
+\begin{itemize}
+  \item $\lambda_j$ large \; $\Rightarrow$ \; $w_j \approx 1$ \quad (high-variance direction, little shrinkage)
+  \item $\lambda_j$ small \; $\Rightarrow$ \; $w_j \approx 0$ \quad (low-variance direction, strong shrinkage)
+\end{itemize}
+
+\bigskip
+\begin{itemize}
+  \item $s \to 0$: ridge $\to$ OLS
+  \item $s \to \infty$: $\hat{Y}_r \to 0$
+\end{itemize}
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Why ``Shrinkage''?}
+Ridge regression \textbf{downweights} directions of low variance.
+
+\bigskip
+These are precisely the directions where the data give least information — and where OLS is most unstable.
+
+\bigskip
+Shrinking them reduces variance at the cost of a small bias.
+\end{frame}
+
+% -------------------------------------------------------
+\begin{frame}{Summary}
+\begin{tabular}{@{}ll@{}}
+  Prior & $M\sim\mathcal{N}(0,\tau^2)$ \\[8pt]
+  Ridge formula & $M_r = (X^\intercal X + sI)^{-1}X^\intercal Y$ \\[8pt]
+  Parameter & $s = \sigma^2/\tau^2$, tuned in practice \\[8pt]
+  Standardize & always, before fitting \\[8pt]
+  Stability & condition number decreases with $s$ \\[8pt]
+  Shrinkage & low-variance components downweighted
+\end{tabular}
+\end{frame}
+
+\end{document}

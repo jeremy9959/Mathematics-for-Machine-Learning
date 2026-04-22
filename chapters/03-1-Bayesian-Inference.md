@@ -282,21 +282,20 @@ prior knowledge makes us a little bit biased towards $p=.5$.
 
 ### Bayesian Regression (or Ridge Regression)
 
-In this chapter we return to our discussion of linear regression and introduce some Bayesian ideas.
+In this section we return to our discussion of linear regression and introduce some Bayesian ideas.
 The combination will lead us to the notion of "ridge" regression, which is a type of linear regression that
 includes a prior distribution on the coefficients that indicates our preference for smaller rather than larger
 coefficients. Introduction of this prior leads to a form of linear regression that is more resilient in situations
 where the independent variables are less independent than we would hope.
 
-Before introducing these Bayesian ideas, let us recall from @sec-LRLike that ordinary least squares yields the
-parameters that give the "most likely" set of parameters for a model of the form
+Before introducing these Bayesian ideas, let us recall from @sec-LRLike that ordinary least squares yields the maximum likelihood estimate of the parameters. 
 $$
 Y=XM + \epsilon
 $$
 where the error $\epsilon$ is normally distributed with mean $0$ and variance $\sigma^2$, and the mean squared error becomes the maximum likelihood estimate of the variance $\sigma^2$.
 
 To put this into a Bayesian perspective, we notice that the linear regression model views $Y-XM$
-as normally distributed given $M$.  That is, we see the probability $P(Y-XM|M)$ as normal with variance
+as normally distributed given $M$.  That is, we see that the conditional distribution of $Y$, given $X$ and $M$, is normal with mean $XM$ and  variance
 $\sigma^2$.  
 
 Then we introduce a prior distribution on the coefficients $M$, assuming that they, too, are normally
@@ -364,7 +363,7 @@ of computing the inverse of  a matrix, we should look at its
 
 If the condition number of a matrix  is large, then results from numerical analysis show that it is *almost singular* and its inverse becomes very sensitive
 to small changes in the entries of the matrix.  However, the eigenvalues of $ND_0+sI$ are $N\lambda_{i}+s$ and so the condition number becomes $(N\lambda_1+s)/(N\lambda_k+s)$.
-For larger values of $\lambda$, this condition number shrinks, and so the inverse of the matrix $ND_0+sI$ becomes better behaved
+For larger values of $s$, this condition number shrinks, and so the inverse of the matrix $ND_0+sI$ becomes better behaved
 than $ND_{0}$.  In this way, ridge regression helps to improve the numerical stability of the linear regression algorithm.
 
 A second way to look at Ridge regression is to go back to the discussion of the singular value decomposition of the matrix $X_{0}$ in section @sec-svd.  There we showed that the SVD of
@@ -372,11 +371,11 @@ $X_{0}$ yields an expression
 $$
 X_{0}=U\tilde{\Lambda}P^{\intercal}
 $$
-where $U$ and $P$ are orthogonal matrices and $\Lambda$ is an $N\times k$ matrix whose upper block
-is diagonal with eigenvalues $\sqrt{N\lambda_{i}}$.  The rows of $U$ gave us an orthonormal basis
+where $U$ and $P$ are orthogonal matrices and $\tilde{\Lambda}$ is an $N\times k$ matrix whose upper block
+is diagonal with entries $\sqrt{N\lambda_{i}}$. (Note that these entries are called the *singular values* of $X_{0}$. ) The first $k$ columns of $U$ gave us an orthonormal basis
 that allowed us to write the predicted vector $\hat{Y}$ as a projection:
 $$
-\hat{Y}=\sum_{j=1}^{k} (u_j\cdot Y)u_{j}^{\intercal}.
+\hat{Y}=\sum_{j=1}^{k} (u_j\cdot Y)u_{j}.
 $$
 
 If we repeat this calculation, but using the ridge regression formula, we obtain
@@ -385,18 +384,18 @@ $$
 $$
 Since $P$ is orthogonal, $P^{\intercal}=P^{-1}$, so
 $$
-P^{\intercal}(P\tilde{\Lambda}^2P^{\intercal}+sI)^{-1}P=P^{-1}(P(\Lambda+sI)P^{-1})^{-1}P=(\Lambda+sI)^{-1}
+P^{\intercal}(P\tilde{\Lambda}^{\intercal}\tilde{\Lambda}P^{\intercal}+sI)^{-1}P=P^{-1}(P(\Lambda+sI)P^{-1})^{-1}P=(\Lambda+sI)^{-1}
 $$
-and $\Lambda+sI$ is a $k\times k$ diagonal matrix with entries $N\lambda_{i}+s$.
+where $\Lambda = \tilde{\Lambda}^{\intercal}\tilde{\Lambda}$ is the $k\times k$ diagonal matrix whose entries are $N\lambda_{i}$, the eigenvalues of $X_{0}^{\intercal}X_{0}$, and $\Lambda+sI$ is a $k\times k$ diagonal matrix with entries $N\lambda_{i}+s$.
 
 Putting the pieces together we see that
 $$
-\hat{Y}_{r}=U\tilde{\Lambda}(\Lambda+sI)^{-1}\tilde{\Lambda}U^{\intercal}Y.
+\hat{Y}_{r}=U\tilde{\Lambda}(\Lambda+sI)^{-1}\tilde{\Lambda}^{\intercal}U^{\intercal}Y.
 $$
 
 In the language of orthogonal projection, this means that
 $$
-\hat{Y}_{r} = \sum_{j=1}^{k} \frac{N\lambda_{j}}{N\lambda_{j}+s}(u_j\cdot Y)u_{j}^{\intercal}.
+\hat{Y}_{r} = \sum_{j=1}^{k} \frac{N\lambda_{j}}{N\lambda_{j}+s}(u_j\cdot Y)u_{j}.
 $$
 
 In other words, the predicted value computed by ridge regression is obtained by projecting
